@@ -1,0 +1,43 @@
+def appVersion = "0.1.0"
+
+group 'com.github.ai.autokpass'
+version appVersion
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE"
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+bootJar {
+    archiveFileName = "autokpass.${appVersion}.jar"
+}
+
+dependencies {
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "com.google.truth:truth:1.1.3"
+
+    implementation "io.insert-koin:koin-core:3.1.5"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10"
+    implementation "org.buildobjects:jproc:2.8.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-cli:0.3.4"
+    implementation "org.linguafranca.pwdb:KeePassJava2-simple:2.1.4"
+    implementation "org.linguafranca.pwdb:KeePassJava2-kdbx:2.1.4"
+    implementation "org.linguafranca.pwdb:database:2.1.4"
+}
