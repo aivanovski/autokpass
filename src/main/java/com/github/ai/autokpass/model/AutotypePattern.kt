@@ -1,16 +1,38 @@
 package com.github.ai.autokpass.model
 
 data class AutotypePattern(
-    val items: List<AutotypeItemType>
+    val items: List<PatternItemType>
 ) {
 
     companion object {
         val DEFAULT_PATTERN = AutotypePattern(
             listOf(
-                AutotypeItemType.USERNAME,
-                AutotypeItemType.TAB,
-                AutotypeItemType.PASSWORD,
-                AutotypeItemType.ENTER
+                PatternItemType.USERNAME,
+                PatternItemType.TAB,
+                PatternItemType.PASSWORD,
+                PatternItemType.ENTER
+            )
+        )
+        val USERNAME_WITH_ENTER = AutotypePattern(
+            listOf(
+                PatternItemType.USERNAME,
+                PatternItemType.ENTER
+            )
+        )
+        val PASSWORD_WITH_ENTER = AutotypePattern(
+            listOf(
+                PatternItemType.PASSWORD,
+                PatternItemType.ENTER
+            )
+        )
+        val USERNAME = AutotypePattern(
+            listOf(
+                PatternItemType.USERNAME
+            )
+        )
+        val PASSWORD = AutotypePattern(
+            listOf(
+                PatternItemType.PASSWORD
             )
         )
     }

@@ -9,11 +9,7 @@ class ErrorInteractor(
 ) {
 
     fun processAndExit(error: Result.Error): Nothing {
-        processAndExit(error.exception)
-    }
-
-    fun processAndExit(exception: Exception): Nothing {
-        printer.println(exception.toString())
+        printer.println(error.exception.toString())
         exitProcess(1)
     }
 

@@ -7,20 +7,16 @@ import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.Interactor
 import org.koin.core.context.startKoin
-import org.koin.core.parameter.parametersOf
-
-// --silent
-// --delay
 
 fun main(args: Array<String>) {
     startKoin {
-        printLogger()
         modules(KoinModule.appModule)
     }
 
     val parser: ArgumentParser = get()
     val extractor: ArgumentExtractor = get()
     val errorInteractor: ErrorInteractor = get()
+    val interactor: Interactor = get()
 
     val rawArgs = extractor.extractArguments(args)
 
@@ -30,7 +26,6 @@ fun main(args: Array<String>) {
     }
 
     val parsedArgs = parserResult.getDataOrThrow()
-    val interactor: Interactor = get(params = parametersOf(parsedArgs))
 
-    interactor.run()
+    interactor.run(parsedArgs)
 }
