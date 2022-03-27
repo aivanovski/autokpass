@@ -18,9 +18,10 @@ class PrintAllEntriesUseCase(
         }
 
         val entries = getEntriesResult.getDataOrThrow()
-        entries.forEach { entry ->
-            printer.println(entry.uid.toString() + " " + entryFormatter.format(entry))
-        }
+
+        entries
+            .filter { it.isNotEmpty() }
+            .forEach { printer.println(entryFormatter.format(it)) }
 
         return Result.Success(Unit)
     }

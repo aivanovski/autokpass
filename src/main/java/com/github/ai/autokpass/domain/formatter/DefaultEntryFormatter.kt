@@ -5,17 +5,21 @@ import com.github.ai.autokpass.model.KeepassEntry
 class DefaultEntryFormatter : EntryFormatter {
 
     override fun format(entry: KeepassEntry): String {
-        val sb = StringBuilder(entry.title.trim())
+        return StringBuilder()
+            .apply {
+                append(entry.uid).append(" ")
 
-        if (entry.username.isNotBlank()) {
-            sb.append(" ").append(entry.username.trim())
+                append(entry.title).append(": ")
 
-            if (entry.password.isNotBlank()) {
-                sb.append(":").append(entry.password.maskWith('*'))
+                if (entry.username.isNotBlank()) {
+                    append(" ").append(entry.username.trim())
+
+                    if (entry.password.isNotBlank()) {
+                        append(" - ").append(entry.password.maskWith('*'))
+                    }
+                }
             }
-        }
-
-        return sb.toString()
+            .toString()
     }
 
     private fun String.maskWith(symbol: Char): String {
