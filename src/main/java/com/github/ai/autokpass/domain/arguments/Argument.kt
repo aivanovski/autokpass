@@ -1,35 +1,27 @@
 package com.github.ai.autokpass.domain.arguments
 
-enum class Argument(val fullName: String, val shortName: String) {
+enum class Argument(
+    val fullName: String,
+    val shortName: String,
+    val description: String
+) {
 
-    FILE_PATH(
-        fullName = "file-path",
-        shortName = "f"
+    FILE(
+        fullName = "file",
+        shortName = "f",
+        description = "Path to the database file"
     ),
 
-    PATTERN(
-        fullName = "pattern",
-        shortName = "p"
+    DELAY(
+        fullName = "delay",
+        shortName = "d",
+        description = "Delay in seconds before autotype will start"
     ),
 
-    LAUNCH_MODE(
-        fullName = "launch-mode",
-        shortName = "l"
-    ),
-
-    UID(
-        fullName = "uid",
-        shortName = "u"
-    ),
-
-    PASSWORD_AT_STD_IN(
-        fullName = "password-at-std-in",
-        shortName = "s"
-    ),
-
-    DELAY_IN_SECONDS(
-        fullName = "delay-in-sec",
-        shortName = "d"
+    INPUT(
+        fullName = "input",
+        shortName = "i",
+        description = "Type of input (for debug purposes)"
     );
 
     val cliName: String = "--$fullName"

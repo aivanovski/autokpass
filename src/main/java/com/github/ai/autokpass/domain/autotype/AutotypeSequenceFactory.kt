@@ -57,9 +57,7 @@ class AutotypeSequenceFactory {
 
         var idx = 0
         while (idx < items.size) {
-            val item = items[idx]
-
-            when (item) {
+            when (val item = items[idx]) {
                 PatternItemType.USERNAME -> {
                     if (entry.username.isNotBlank()) {
                         filteredItems.add(item)

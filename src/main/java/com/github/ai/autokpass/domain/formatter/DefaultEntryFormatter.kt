@@ -7,8 +7,6 @@ class DefaultEntryFormatter : EntryFormatter {
     override fun format(entry: KeepassEntry): String {
         return StringBuilder()
             .apply {
-                append(entry.uid).append(" ")
-
                 append(entry.title).append(": ")
 
                 if (entry.username.isNotBlank()) {

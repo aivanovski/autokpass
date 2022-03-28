@@ -22,8 +22,8 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 bootJar {
     archiveFileName = "autokpass.${appVersion}.jar"
@@ -36,6 +36,7 @@ dependencies {
     implementation "io.insert-koin:koin-core:3.1.5"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10"
     implementation "org.buildobjects:jproc:2.8.0"
+    implementation 'de.gesundkrank.fzf4j:fzf4j:0.2.0'
     implementation "org.jetbrains.kotlinx:kotlinx-cli:0.3.4"
     implementation "org.linguafranca.pwdb:KeePassJava2-simple:2.1.4"
     implementation "org.linguafranca.pwdb:KeePassJava2-kdbx:2.1.4"

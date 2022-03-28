@@ -2,6 +2,7 @@ package com.github.ai.autokpass.domain
 
 import com.github.ai.autokpass.domain.printer.Printer
 import com.github.ai.autokpass.model.Result
+import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 class ErrorInteractor(
@@ -9,12 +10,22 @@ class ErrorInteractor(
 ) {
 
     fun processAndExit(error: Result.Error): Nothing {
-        printer.println(error.exception.toString())
+        printer.println(error.exception.message ?: error.exception.toString())
+        Thread.sleep(DELAY_BEFORE_EXIT)
         exitProcess(1)
     }
 
     fun exit(message: String): Nothing {
         printer.println(message)
+        Thread.sleep(DELAY_BEFORE_EXIT)
         exitProcess(1)
+    }
+
+    fun exit(): Nothing {
+        exitProcess(0)
+    }
+
+    companion object {
+        private val DELAY_BEFORE_EXIT = TimeUnit.SECONDS.toMillis(2)
     }
 }

@@ -2,11 +2,12 @@ package com.github.ai.autokpass
 
 import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.di.KoinModule
-import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
-import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.Interactor
+import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
+import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import org.koin.core.context.startKoin
+import org.koin.core.parameter.parametersOf
 
 fun main(args: Array<String>) {
     startKoin {
@@ -16,7 +17,6 @@ fun main(args: Array<String>) {
     val parser: ArgumentParser = get()
     val extractor: ArgumentExtractor = get()
     val errorInteractor: ErrorInteractor = get()
-    val interactor: Interactor = get()
 
     val rawArgs = extractor.extractArguments(args)
 
@@ -26,6 +26,8 @@ fun main(args: Array<String>) {
     }
 
     val parsedArgs = parserResult.getDataOrThrow()
+
+    val interactor: Interactor = get(params = parametersOf(parsedArgs))
 
     interactor.run(parsedArgs)
 }

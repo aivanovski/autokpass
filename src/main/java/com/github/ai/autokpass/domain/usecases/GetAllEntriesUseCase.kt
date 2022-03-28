@@ -1,6 +1,7 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.Config
+import com.github.ai.autokpass.domain.exception.IncorrectPasswordException
 import com.github.ai.autokpass.extensions.getAllEntries
 import com.github.ai.autokpass.extensions.toKeepassEntries
 import com.github.ai.autokpass.model.KeepassEntry
@@ -28,10 +29,19 @@ class GetAllEntriesUseCase {
             val input = FileInputStream(File(filePath))
             Result.Success(SimpleDatabase.load(KdbxCreds(password.toByteArray()), input))
         } catch (e: Exception) {
-            if (Config.DEBUG) {
-                e.printStackTrace()
+            if (isIncorrectPasswordException(e)) {
+                Result.Error(IncorrectPasswordException())
+            } else {
+                if (Config.DEBUG) {
+                    e.printStackTrace()
+                }
+                Result.Error(e)
             }
-            Result.Error(e)
         }
+    }
+
+    private fun isIncorrectPasswordException(exception: Exception): Boolean {
+        return exception is java.lang.IllegalStateException &&
+                exception.message?.contains("Inconsistent stream start bytes") == true
     }
 }
