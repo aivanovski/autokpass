@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.printer
+package com.github.ai.autokpass.presentation.printer
 
 class StandardOutputPrinter : Printer {
 

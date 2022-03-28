@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.selector
+package com.github.ai.autokpass.presentation.selector
 
 import de.gesundkrank.fzf4j.Fzf
 import de.gesundkrank.fzf4j.models.OrderBy

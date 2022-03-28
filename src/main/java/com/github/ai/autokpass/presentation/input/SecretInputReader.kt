@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.input
+package com.github.ai.autokpass.presentation.input
 
 class SecretInputReader : InputReader {
 

@@ -1,15 +1,15 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
-import com.github.ai.autokpass.domain.printer.Printer
-import com.github.ai.autokpass.domain.selector.OptionSelector
+import com.github.ai.autokpass.presentation.printer.Printer
+import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.Result
 
 class SelectPatternUseCase(
-    private val patternFormatter: AutotypePatternFormatter,
-    private val optionSelector: OptionSelector,
-    private val printer: Printer
+        private val patternFormatter: AutotypePatternFormatter,
+        private val optionSelector: OptionSelector,
+        private val printer: Printer
 ) {
 
     fun selectPattern(): Result<AutotypePattern?> {

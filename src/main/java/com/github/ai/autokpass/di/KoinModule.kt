@@ -2,8 +2,8 @@ package com.github.ai.autokpass.di
 
 import com.github.ai.autokpass.domain.Interactor
 import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
-import com.github.ai.autokpass.domain.process.ProcessExecutor
-import com.github.ai.autokpass.domain.process.JprocProcessExecutor
+import com.github.ai.autokpass.presentation.process.ProcessExecutor
+import com.github.ai.autokpass.presentation.process.JprocProcessExecutor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutor
@@ -13,13 +13,13 @@ import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.autotype.XdotoolAutotypeExecutor
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
-import com.github.ai.autokpass.domain.input.InputReader
-import com.github.ai.autokpass.domain.input.SecretInputReader
-import com.github.ai.autokpass.domain.input.StandardInputReader
-import com.github.ai.autokpass.domain.printer.Printer
-import com.github.ai.autokpass.domain.printer.StandardOutputPrinter
-import com.github.ai.autokpass.domain.selector.Fzf4jOptionSelector
-import com.github.ai.autokpass.domain.selector.OptionSelector
+import com.github.ai.autokpass.presentation.input.InputReader
+import com.github.ai.autokpass.presentation.input.SecretInputReader
+import com.github.ai.autokpass.presentation.input.StandardInputReader
+import com.github.ai.autokpass.presentation.printer.Printer
+import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
+import com.github.ai.autokpass.presentation.selector.Fzf4jOptionSelector
+import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase

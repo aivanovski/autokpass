@@ -1,6 +1,6 @@
 package com.github.ai.autokpass.domain
 
-import com.github.ai.autokpass.domain.printer.Printer
+import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess

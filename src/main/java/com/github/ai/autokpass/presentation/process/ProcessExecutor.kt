@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.process
+package com.github.ai.autokpass.presentation.process
 
 interface ProcessExecutor {
 

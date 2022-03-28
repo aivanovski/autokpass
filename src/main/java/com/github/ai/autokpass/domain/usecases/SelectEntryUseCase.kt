@@ -1,7 +1,7 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
-import com.github.ai.autokpass.domain.selector.OptionSelector
+import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
