@@ -13,7 +13,7 @@ echo ""
 db_path="$HOME/tmp/test.kdbx"
 
 # Setup path to 'autokpass.jar' file, which will do the main job. 
-jar_path="$HOME/dev/autokpass/build/libs/autokpass.0.1.0.jar"
+jar_path="$HOME/dev/autokpass/build/libs/autokpass.0.2.0.jar"
 
 ############## Main logic
 
