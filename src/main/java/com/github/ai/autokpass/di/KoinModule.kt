@@ -6,10 +6,13 @@ import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.github.ai.autokpass.presentation.process.JprocProcessExecutor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
+import com.github.ai.autokpass.domain.usecases.RunItselfUseCase
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutor
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.autotype.AutotypePatternParser
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
+import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFormatter
+import com.github.ai.autokpass.domain.autotype.AutotypeSequenceParser
 import com.github.ai.autokpass.domain.autotype.XdotoolAutotypeExecutor
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
@@ -37,8 +40,10 @@ object KoinModule {
         single { AutotypeSequenceFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
+        single { AutotypeSequenceFormatter() }
+        single { AutotypeSequenceParser() }
         single { ArgumentExtractor() }
-        single { ArgumentParser() }
+        single { ArgumentParser(get()) }
         single<ProcessExecutor> { JprocProcessExecutor() }
         single { ErrorInteractor(get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
@@ -64,10 +69,12 @@ object KoinModule {
         single { AutotypeUseCase(get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
         single { SelectPatternUseCase(get(), get(), get()) }
+        single { RunItselfUseCase(get(), get()) }
 
         factory { (args: ParsedArgs) ->
             Interactor(
                 get(qualifier = named(args.inputReaderType.name)),
+                get(),
                 get(),
                 get(),
                 get(),

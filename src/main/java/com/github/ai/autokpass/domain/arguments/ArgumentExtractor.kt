@@ -1,8 +1,10 @@
 package com.github.ai.autokpass.domain.arguments
 
+import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE_SEQUENCE
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
+import com.github.ai.autokpass.domain.arguments.Argument.SINGLE_PROCESS
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.cli.ArgParser
@@ -34,12 +36,28 @@ class ArgumentExtractor {
             description = INPUT.description
         )
 
+        val isSingleProcess by parser.option(
+            ArgType.Boolean,
+            shortName = SINGLE_PROCESS.shortName,
+            fullName = SINGLE_PROCESS.fullName,
+            description = SINGLE_PROCESS.description
+        )
+
+        val autotypeSequence by parser.option(
+            ArgType.String,
+            shortName = AUTOTYPE_SEQUENCE.shortName,
+            fullName = AUTOTYPE_SEQUENCE.fullName,
+            description = AUTOTYPE_SEQUENCE.description
+        )
+
         parser.parse(args)
 
         return RawArgs(
             filePath ?: EMPTY,
             delayInSeconds ?: EMPTY,
-            inputReader ?: EMPTY
+            inputReader ?: EMPTY,
+            autotypeSequence ?: EMPTY,
+            isSingleProcess ?: false
         )
     }
 }

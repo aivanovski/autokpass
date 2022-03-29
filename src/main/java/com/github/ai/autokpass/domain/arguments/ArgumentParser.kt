@@ -1,17 +1,30 @@
 package com.github.ai.autokpass.domain.arguments
 
+import com.github.ai.autokpass.domain.autotype.AutotypeSequenceParser
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.extensions.toIntSafely
+import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 import java.io.File
+import java.util.Base64
 
-class ArgumentParser {
+class ArgumentParser(
+    private val autotypeSequenceParser: AutotypeSequenceParser
+) {
 
     fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
-        val pathResult = parseFilePath(args.filePath)
+        val sequenceResult = parseAutotypeSequence(args.autotypeSequence)
+        if (sequenceResult.isFailed()) {
+            return sequenceResult.getErrorOrThrow()
+        }
+
+        val isSequenceSpecified = (sequenceResult.getDataOrThrow() != null)
+
+        val pathResult = parseFilePath(args.filePath, isSequenceSpecified)
         if (pathResult.isFailed()) {
             return pathResult.getErrorOrThrow()
         }
@@ -30,13 +43,20 @@ class ArgumentParser {
             ParsedArgs(
                 pathResult.getDataOrThrow(),
                 delayResult.getDataOrThrow(),
-                inputTypeResult.getDataOrThrow()
+                inputTypeResult.getDataOrThrow(),
+                sequenceResult.getDataOrThrow(),
+                args.isSingleProcess
             )
         )
     }
 
-    private fun parseFilePath(path: String): Result<String> {
-        if (path.isEmpty()) {
+    // TODO: should return String?
+    private fun parseFilePath(path: String, isSequenceSpecified: Boolean): Result<String> {
+        if (path.isBlank() && isSequenceSpecified) {
+            return Result.Success(EMPTY)
+        }
+
+        if (path.isBlank()) {
             return Result.Error(AutokpassException("Path is empty"))
         }
 
@@ -66,5 +86,14 @@ class ArgumentParser {
             ?: InputReaderType.SECRET
 
         return Result.Success(type)
+    }
+
+    private fun parseAutotypeSequence(sequence: String): Result<AutotypeSequence?> {
+        val decodedBytes = Base64.getDecoder().decode(sequence)
+            ?: return Result.Error(
+                AutokpassException("Failed to parse ${Argument.AUTOTYPE_SEQUENCE.cliName} argument value")
+            )
+
+        return Result.Success(autotypeSequenceParser.parse(String(decodedBytes)))
     }
 }

@@ -22,6 +22,18 @@ enum class Argument(
         fullName = "input",
         shortName = "i",
         description = "Type of input (for debug purposes)"
+    ),
+
+    SINGLE_PROCESS(
+        fullName = "single-process",
+        shortName = "s",
+        description = "" // TODO:
+    ),
+
+    AUTOTYPE_SEQUENCE(
+        fullName = "autotype-sequence",
+        shortName = "a",
+        description = "" // TODO:
     );
 
     val cliName: String = "--$fullName"

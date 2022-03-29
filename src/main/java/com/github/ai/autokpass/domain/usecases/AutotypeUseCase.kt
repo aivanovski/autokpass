@@ -5,6 +5,7 @@ import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.AutotypePattern
+import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
@@ -15,14 +16,20 @@ class AutotypeUseCase(
     private val printer: Printer
 ) {
 
-    fun doAutotype(
+    fun createSequence(
         entry: KeepassEntry,
         pattern: AutotypePattern,
-        args: ParsedArgs
-    ): Result<Unit> {
+    ): Result<AutotypeSequence> {
         val sequence = sequenceFactory.createAutotypeSequence(entry, pattern)
             ?: return Result.Error(AutokpassException("Nothing to autotype"))
 
+        return Result.Success(sequence)
+    }
+
+    fun doAutotype(
+        sequence: AutotypeSequence,
+        args: ParsedArgs
+    ): Result<Unit> {
         args.delayInSeconds?.let { delay ->
             printer.println("Autotype will start after $delay seconds delay.")
             Thread.sleep(delay * 1000)
