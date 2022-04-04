@@ -1,6 +1,7 @@
 package com.github.ai.autokpass.domain
 
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
+import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
@@ -11,6 +12,7 @@ class Interactor(
     private val selectEntryUseCase: SelectEntryUseCase,
     private val selectPatternUseCase: SelectPatternUseCase,
     private val autotypeUseCase: AutotypeUseCase,
+    private val awaitWindowUseCase: AwaitWindowChangeUseCase,
     private val errorInteractor: ErrorInteractor
 ) {
 
@@ -37,6 +39,11 @@ class Interactor(
 
         val selectedPattern = selectPatternResult.getDataOrThrow()
             ?: errorInteractor.exit()
+
+        val awaitResult = awaitWindowUseCase.awaitUntilWindowChanged()
+        if (awaitResult.isFailed()) {
+            errorInteractor.processAndExit(awaitResult.getErrorOrThrow())
+        }
 
         val autotypeResult = autotypeUseCase.doAutotype(selectedEntry, selectedPattern, args)
         if (autotypeResult.isFailed()) {
