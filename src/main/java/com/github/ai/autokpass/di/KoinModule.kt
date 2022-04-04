@@ -21,10 +21,13 @@ import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
 import com.github.ai.autokpass.presentation.selector.Fzf4jOptionSelector
 import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
+import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
+import com.github.ai.autokpass.domain.window.FocusedWindowProvider
+import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import org.koin.core.qualifier.named
@@ -44,6 +47,7 @@ object KoinModule {
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<AutotypeExecutor> { XdotoolAutotypeExecutor(get()) }
         single<OptionSelector> { Fzf4jOptionSelector() }
+        single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
 
         single<InputReader>(named(InputReaderType.STANDARD.name)) { StandardInputReader() }
         single<InputReader>(named(InputReaderType.SECRET.name)) { SecretInputReader() }
@@ -64,10 +68,12 @@ object KoinModule {
         single { AutotypeUseCase(get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
         single { SelectPatternUseCase(get(), get(), get()) }
+        single { AwaitWindowChangeUseCase(get(), get()) }
 
         factory { (args: ParsedArgs) ->
             Interactor(
                 get(qualifier = named(args.inputReaderType.name)),
+                get(),
                 get(),
                 get(),
                 get(),
