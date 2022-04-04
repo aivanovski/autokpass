@@ -5,8 +5,8 @@ import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
 
 class ReadPasswordUseCase(
-		private val printer: Printer,
-		private val inputReader: InputReader
+    private val printer: Printer,
+    private val inputReader: InputReader
 ) {
 
     fun readPassword(): Result<String> {

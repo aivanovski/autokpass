@@ -6,6 +6,7 @@ import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.Result
 
 class Interactor(
     private val readPasswordUseCase: ReadPasswordUseCase,
@@ -18,24 +19,18 @@ class Interactor(
 
     fun run(args: ParsedArgs) {
         val passwordResult = readPasswordUseCase.readPassword()
-        if (passwordResult.isFailed()) {
-            errorInteractor.processAndExit(passwordResult.getErrorOrThrow())
-        }
+        exitIfFailed(passwordResult)
 
         val password = passwordResult.getDataOrThrow()
 
         val selectEntryResult = selectEntryUseCase.selectEntry(password, args)
-        if (selectEntryResult.isFailed()) {
-            errorInteractor.processAndExit(selectEntryResult.getErrorOrThrow())
-        }
+        exitIfFailed(selectEntryResult)
 
         val selectedEntry = selectEntryResult.getDataOrThrow()
             ?: errorInteractor.exit()
 
         val selectPatternResult = selectPatternUseCase.selectPattern()
-        if (selectPatternResult.isFailed()) {
-            errorInteractor.processAndExit(selectPatternResult.getErrorOrThrow())
-        }
+        exitIfFailed(selectPatternResult)
 
         val selectedPattern = selectPatternResult.getDataOrThrow()
             ?: errorInteractor.exit()
@@ -46,8 +41,12 @@ class Interactor(
         }
 
         val autotypeResult = autotypeUseCase.doAutotype(selectedEntry, selectedPattern, args)
-        if (autotypeResult.isFailed()) {
-            errorInteractor.processAndExit(autotypeResult.getErrorOrThrow())
+        exitIfFailed(autotypeResult)
+    }
+
+    private fun exitIfFailed(result: Result<*>) {
+        if (result.isFailed()) {
+            errorInteractor.processAndExit(result.getErrorOrThrow())
         }
     }
 }
