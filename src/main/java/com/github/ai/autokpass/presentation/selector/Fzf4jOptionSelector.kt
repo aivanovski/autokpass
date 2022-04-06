@@ -1,5 +1,7 @@
 package com.github.ai.autokpass.presentation.selector
 
+import com.github.ai.autokpass.domain.exception.AutokpassException
+import com.github.ai.autokpass.model.Result
 import de.gesundkrank.fzf4j.Fzf
 import de.gesundkrank.fzf4j.models.OrderBy
 
@@ -13,22 +15,19 @@ class Fzf4jOptionSelector : OptionSelector {
             .build()
     }
 
-    override fun select(options: List<String>): Int? {
-        val selectedOption = try {
-            fzf.select(options)
-        } catch (e: Fzf.AbortByUserException) {
-            null
-        }
-
-        return if (selectedOption != null) {
+    override fun select(options: List<String>): Result<Int> {
+        return try {
+            val selectedOption = fzf.select(options)
             val idx = options.indexOf(selectedOption)
             if (idx != -1) {
-                idx
+                Result.Success(idx)
             } else {
-                null
+                Result.Error(AutokpassException("Error has occurred"))
             }
-        } else {
-            null
+        } catch (e: Fzf.AbortByUserException) {
+            Result.Error(AutokpassException("Cancelled"))
+        } catch (e: Fzf.EmptyResultException) {
+            Result.Error(AutokpassException("Nothing was selected"))
         }
     }
 }

@@ -21,8 +21,12 @@ class SelectEntryUseCase(
         val entries = getEntriesResult.getDataOrThrow()
         val options = entries.map { entryFormatter.format(it) }
 
-        val selectedIdx = optionSelector.select(options)
+        val selectionResult = optionSelector.select(options)
+        if (selectionResult.isFailed()) {
+            return selectionResult.getErrorOrThrow()
+        }
 
-        return Result.Success(selectedIdx?.let { entries[it] })
+        val selectionIdx = selectionResult.getDataOrThrow()
+        return Result.Success(entries[selectionIdx])
     }
 }
