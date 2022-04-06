@@ -18,11 +18,10 @@ class Interactor(
 ) {
 
     fun run(args: ParsedArgs) {
-        val passwordResult = readPasswordUseCase.readPassword()
+        val passwordResult = readPasswordUseCase.readPassword(args.filePath)
         exitIfFailed(passwordResult)
 
         val password = passwordResult.getDataOrThrow()
-
         val selectEntryResult = selectEntryUseCase.selectEntry(password, args)
         exitIfFailed(selectEntryResult)
 

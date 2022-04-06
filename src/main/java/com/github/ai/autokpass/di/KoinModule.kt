@@ -23,6 +23,7 @@ import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
+import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
@@ -54,17 +55,22 @@ object KoinModule {
 
         single(named(InputReaderType.STANDARD.name)) {
             ReadPasswordUseCase(
-                get(), get(qualifier = named(InputReaderType.STANDARD.name))
+                get(),
+                get(),
+                get(qualifier = named(InputReaderType.STANDARD.name))
             )
         }
         single(named(InputReaderType.SECRET.name)) {
             ReadPasswordUseCase(
-                get(), get(qualifier = named(InputReaderType.SECRET.name))
+                get(),
+                get(),
+                get(qualifier = named(InputReaderType.SECRET.name))
             )
         }
 
         // use cases
-        single { GetAllEntriesUseCase() }
+        single { ReadDatabaseUseCase() }
+        single { GetAllEntriesUseCase(get()) }
         single { AutotypeUseCase(get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
         single { SelectPatternUseCase(get(), get(), get()) }
