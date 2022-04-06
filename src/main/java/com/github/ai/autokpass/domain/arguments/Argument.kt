@@ -12,6 +12,12 @@ enum class Argument(
         description = "Path to the database file"
     ),
 
+    KEY_FILE(
+        fullName = "key-file",
+        shortName = "k",
+        description = "Path to key file"
+    ),
+
     DELAY(
         fullName = "delay",
         shortName = "d",

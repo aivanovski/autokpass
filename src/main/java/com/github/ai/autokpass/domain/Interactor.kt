@@ -6,8 +6,10 @@ import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
+import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
+import java.io.File
 
 class Interactor(
     private val readPasswordUseCase: ReadPasswordUseCase,
@@ -22,11 +24,16 @@ class Interactor(
     fun run(args: ParsedArgs) {
         greetingsUseCase.printGreetings()
 
-        val passwordResult = readPasswordUseCase.readPassword(args.filePath)
-        exitIfFailed(passwordResult)
+        val key = if (args.keyPath == null) {
+            val passwordResult = readPasswordUseCase.readPassword(args.filePath)
+            exitIfFailed(passwordResult)
 
-        val password = passwordResult.getDataOrThrow()
-        val selectEntryResult = selectEntryUseCase.selectEntry(password, args)
+            KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
+        } else {
+            KeepassKey.FileKey(File(args.keyPath))
+        }
+
+        val selectEntryResult = selectEntryUseCase.selectEntry(key, args)
         exitIfFailed(selectEntryResult)
 
         val selectedEntry = selectEntryResult.getDataOrThrow()

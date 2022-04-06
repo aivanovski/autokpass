@@ -2,6 +2,7 @@ package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
+import com.github.ai.autokpass.model.KeepassKey.PasswordKey
 import com.github.ai.autokpass.presentation.input.InputReader
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
@@ -20,7 +21,7 @@ class ReadPasswordUseCase(
 
             val password = inputReader.read()
 
-            val readDbResult = readDatabaseUseCase.readDatabase(password, filePath)
+            val readDbResult = readDatabaseUseCase.readDatabase(PasswordKey(password), filePath)
 
             when {
                 readDbResult.isFailed() && readDbResult.getErrorOrThrow().exception is InvalidPasswordException -> {

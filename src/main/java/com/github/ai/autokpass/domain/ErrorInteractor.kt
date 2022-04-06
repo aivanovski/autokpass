@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain
 
+import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
 import java.util.concurrent.TimeUnit
@@ -10,6 +11,10 @@ class ErrorInteractor(
 ) {
 
     fun processAndExit(error: Result.Error): Nothing {
+        if (error.exception !is AutokpassException) {
+            error.exception.printStackTrace()
+        }
+
         printer.println(error.exception.message ?: error.exception.toString())
         Thread.sleep(DELAY_BEFORE_EXIT)
         exitProcess(1)
