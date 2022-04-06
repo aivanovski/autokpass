@@ -1,15 +1,13 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
-import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.Result
 
 class SelectPatternUseCase(
-        private val patternFormatter: AutotypePatternFormatter,
-        private val optionSelector: OptionSelector,
-        private val printer: Printer
+    private val patternFormatter: AutotypePatternFormatter,
+    private val optionSelector: OptionSelector
 ) {
 
     fun selectPattern(): Result<AutotypePattern?> {
@@ -18,9 +16,13 @@ class SelectPatternUseCase(
                 (index + 1).toString() + " " + patternFormatter.format(pattern)
             }
 
-        val selectedIdx = optionSelector.select(options)
+        val selectionResult = optionSelector.select(options)
+        if (selectionResult.isFailed()) {
+            return selectionResult.getErrorOrThrow()
+        }
 
-        return Result.Success(selectedIdx?.let { PATTERNS[it] })
+        val selectionIdx = selectionResult.getDataOrThrow()
+        return Result.Success(PATTERNS[selectionIdx])
     }
 
     companion object {

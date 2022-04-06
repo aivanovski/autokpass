@@ -73,7 +73,7 @@ object KoinModule {
         single { GetAllEntriesUseCase(get()) }
         single { AutotypeUseCase(get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
-        single { SelectPatternUseCase(get(), get(), get()) }
+        single { SelectPatternUseCase(get(), get()) }
         single { AwaitWindowChangeUseCase(get(), get()) }
 
         factory { (args: ParsedArgs) ->
