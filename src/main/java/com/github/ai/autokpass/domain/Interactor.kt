@@ -2,6 +2,7 @@ package com.github.ai.autokpass.domain
 
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
+import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
@@ -10,6 +11,7 @@ import com.github.ai.autokpass.model.Result
 
 class Interactor(
     private val readPasswordUseCase: ReadPasswordUseCase,
+    private val greetingsUseCase: PrintGreetingsUseCase,
     private val selectEntryUseCase: SelectEntryUseCase,
     private val selectPatternUseCase: SelectPatternUseCase,
     private val autotypeUseCase: AutotypeUseCase,
@@ -18,6 +20,8 @@ class Interactor(
 ) {
 
     fun run(args: ParsedArgs) {
+        greetingsUseCase.printGreetings()
+
         val passwordResult = readPasswordUseCase.readPassword(args.filePath)
         exitIfFailed(passwordResult)
 

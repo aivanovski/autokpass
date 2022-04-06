@@ -23,6 +23,7 @@ import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
+import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
@@ -69,6 +70,7 @@ object KoinModule {
         }
 
         // use cases
+        single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase() }
         single { GetAllEntriesUseCase(get()) }
         single { AutotypeUseCase(get(), get(), get()) }
@@ -79,6 +81,7 @@ object KoinModule {
         factory { (args: ParsedArgs) ->
             Interactor(
                 get(qualifier = named(args.inputReaderType.name)),
+                get(),
                 get(),
                 get(),
                 get(),
