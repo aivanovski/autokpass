@@ -29,6 +29,20 @@ bootJar {
     archiveFileName = "autokpass.jar"
 }
 
+task createProperties(dependsOn: processResources) {
+    doLast {
+        new File("$buildDir/resources/main/version.properties").withWriter { w ->
+            Properties props = new Properties()
+            props.setProperty("version", appVersion)
+            props.store(w, null)
+        }
+    }
+}
+
+classes {
+    dependsOn createProperties
+}
+
 dependencies {
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.google.truth:truth:1.1.3"
