@@ -1,5 +1,7 @@
 package com.github.ai.autokpass.di
 
+import com.github.ai.autokpass.data.file.DefaultFileContentProvider
+import com.github.ai.autokpass.data.file.FileContentProvider
 import com.github.ai.autokpass.domain.Interactor
 import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
@@ -50,6 +52,7 @@ object KoinModule {
         single<AutotypeExecutor> { XdotoolAutotypeExecutor(get()) }
         single<OptionSelector> { Fzf4jOptionSelector() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
+        single<FileContentProvider> { DefaultFileContentProvider() }
 
         single<InputReader>(named(InputReaderType.STANDARD.name)) { StandardInputReader() }
         single<InputReader>(named(InputReaderType.SECRET.name)) { SecretInputReader() }
@@ -71,7 +74,7 @@ object KoinModule {
 
         // use cases
         single { PrintGreetingsUseCase(get()) }
-        single { ReadDatabaseUseCase() }
+        single { ReadDatabaseUseCase(get()) }
         single { GetAllEntriesUseCase(get()) }
         single { AutotypeUseCase(get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }

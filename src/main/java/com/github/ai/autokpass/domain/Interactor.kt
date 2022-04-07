@@ -7,6 +7,8 @@ import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.model.KeepassKey
+import com.github.ai.autokpass.model.KeepassKey.FileKey
+import com.github.ai.autokpass.model.KeepassKey.XmlFileKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import java.io.File
@@ -24,14 +26,7 @@ class Interactor(
     fun run(args: ParsedArgs) {
         greetingsUseCase.printGreetings()
 
-        val key = if (args.keyPath == null) {
-            val passwordResult = readPasswordUseCase.readPassword(args.filePath)
-            exitIfFailed(passwordResult)
-
-            KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
-        } else {
-            KeepassKey.FileKey(File(args.keyPath))
-        }
+        val key = getKey(args)
 
         val selectEntryResult = selectEntryUseCase.selectEntry(key, args)
         exitIfFailed(selectEntryResult)
@@ -52,6 +47,19 @@ class Interactor(
 
         val autotypeResult = autotypeUseCase.doAutotype(selectedEntry, selectedPattern, args)
         exitIfFailed(autotypeResult)
+    }
+
+    private fun getKey(args: ParsedArgs): KeepassKey {
+        return when {
+            args.keyPath == null -> {
+                val passwordResult = readPasswordUseCase.readPassword(args.filePath)
+                exitIfFailed(passwordResult)
+
+                KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
+            }
+            args.isXmlKeyFile -> XmlFileKey(File(args.keyPath))
+            else -> FileKey(File(args.keyPath))
+        }
     }
 
     private fun exitIfFailed(result: Result<*>) {

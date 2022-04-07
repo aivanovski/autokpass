@@ -37,7 +37,8 @@ class ArgumentParser {
                 pathResult.getDataOrThrow(),
                 keyPathResult.getDataOrThrow(),
                 delayResult.getDataOrThrow(),
-                inputTypeResult.getDataOrThrow()
+                inputTypeResult.getDataOrThrow(),
+                args.isXmlKeyFile
             )
         )
     }
