@@ -9,7 +9,7 @@ enum class Argument(
     FILE(
         fullName = "file",
         shortName = "f",
-        description = "Path to the database file"
+        description = "Path to KeePass database"
     ),
 
     KEY_FILE(
@@ -27,7 +27,7 @@ enum class Argument(
     DELAY(
         fullName = "delay",
         shortName = "d",
-        description = "Delay in seconds before autotype will start"
+        description = "Delay in seconds before autotype will be started"
     ),
 
     INPUT(
