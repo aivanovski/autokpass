@@ -3,6 +3,8 @@ package com.github.ai.autokpass.domain.arguments
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
+import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
+import com.github.ai.autokpass.domain.arguments.Argument.XML_KEY
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.cli.ArgParser
@@ -20,6 +22,13 @@ class ArgumentExtractor {
             description = FILE.description
         )
 
+        val keyPath by parser.option(
+            ArgType.String,
+            shortName = KEY_FILE.shortName,
+            fullName = KEY_FILE.fullName,
+            description = KEY_FILE.description
+        )
+
         val delayInSeconds by parser.option(
             ArgType.String,
             shortName = DELAY.shortName,
@@ -34,12 +43,21 @@ class ArgumentExtractor {
             description = INPUT.description
         )
 
+        val isXmlKeyFile by parser.option(
+            ArgType.Boolean,
+            shortName = XML_KEY.shortName,
+            fullName = XML_KEY.fullName,
+            description = XML_KEY.description
+        )
+
         parser.parse(args)
 
         return RawArgs(
             filePath ?: EMPTY,
+            keyPath,
             delayInSeconds ?: EMPTY,
-            inputReader ?: EMPTY
+            inputReader ?: EMPTY,
+            isXmlKeyFile ?: false
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain.arguments
 
+import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.InputReaderType
@@ -16,6 +17,11 @@ class ArgumentParser {
             return pathResult.getErrorOrThrow()
         }
 
+        val keyPathResult = parseKeyPath(args.keyPath)
+        if (keyPathResult.isFailed()) {
+            return keyPathResult.getErrorOrThrow()
+        }
+
         val delayResult = parseDelay(args.delayInSeconds)
         if (delayResult.isFailed()) {
             return delayResult.getErrorOrThrow()
@@ -29,24 +35,47 @@ class ArgumentParser {
         return Result.Success(
             ParsedArgs(
                 pathResult.getDataOrThrow(),
+                keyPathResult.getDataOrThrow(),
                 delayResult.getDataOrThrow(),
-                inputTypeResult.getDataOrThrow()
+                inputTypeResult.getDataOrThrow(),
+                args.isXmlKeyFile
             )
         )
     }
 
     private fun parseFilePath(path: String): Result<String> {
-        if (path.isEmpty()) {
-            return Result.Error(AutokpassException("Path is empty"))
+        if (path.isBlank()) {
+            return Result.Error(AutokpassException("Option ${FILE.cliName} can't be empty"))
         }
 
         val file = File(path)
         if (!file.exists()) {
-            return Result.Error(AutokpassException("File does not exist"))
+            return Result.Error(AutokpassException("File doesn't exist: $path"))
         }
 
         if (!file.isFile) {
-            return Result.Error(AutokpassException("Invalid file type"))
+            return Result.Error(AutokpassException("Specified file is directory: $path"))
+        }
+
+        return Result.Success(path)
+    }
+
+    private fun parseKeyPath(path: String?): Result<String?> {
+        if (path == null) {
+            return Result.Success(null)
+        }
+
+        if (path.isBlank()) {
+            return Result.Error(AutokpassException("Option ${Argument.KEY_FILE.cliName} can't by empty"))
+        }
+
+        val file = File(path)
+        if (!file.exists()) {
+            return Result.Error(AutokpassException("File doesn't exist: $path"))
+        }
+
+        if (!file.isFile) {
+            return Result.Error(AutokpassException("Specified file is directory: $path"))
         }
 
         return Result.Success(path)
