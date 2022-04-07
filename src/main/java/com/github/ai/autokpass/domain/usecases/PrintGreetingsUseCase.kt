@@ -9,7 +9,7 @@ class PrintGreetingsUseCase(
 
     fun printGreetings() {
         val properties = Properties()
-        properties.load(ClassLoader.getSystemClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME))
+        properties.load(PrintGreetingsUseCase::class.java.classLoader.getResourceAsStream(PROPERTIES_FILE_NAME))
 
         val version = properties[PROPERTY_VERSION]
         printer.println(String.format(GREETINGS_TEMPLATE, version))
