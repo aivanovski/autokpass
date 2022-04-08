@@ -12,6 +12,7 @@ import com.github.ai.autokpass.domain.autotype.AutotypeExecutor
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.autotype.AutotypePatternParser
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
+import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.autotype.XdotoolAutotypeExecutor
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
@@ -46,10 +47,11 @@ object KoinModule {
         single { AutotypePatternFormatter() }
         single { ArgumentExtractor() }
         single { ArgumentParser() }
+        single { ThreadThrottler() }
         single<ProcessExecutor> { JprocProcessExecutor() }
         single { ErrorInteractor(get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
-        single<AutotypeExecutor> { XdotoolAutotypeExecutor(get()) }
+        single<AutotypeExecutor> { XdotoolAutotypeExecutor(get(), get()) }
         single<OptionSelector> { Fzf4jOptionSelector() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single<FileContentProvider> { DefaultFileContentProvider() }
@@ -76,10 +78,10 @@ object KoinModule {
         single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase(get()) }
         single { GetAllEntriesUseCase(get()) }
-        single { AutotypeUseCase(get(), get(), get()) }
+        single { AutotypeUseCase(get(), get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
         single { SelectPatternUseCase(get(), get()) }
-        single { AwaitWindowChangeUseCase(get(), get()) }
+        single { AwaitWindowChangeUseCase(get(), get(), get()) }
 
         factory { (args: ParsedArgs) ->
             Interactor(

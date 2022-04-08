@@ -1,7 +1,6 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.data.file.FileContentProvider
-import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.model.KeepassKey.FileKey
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
