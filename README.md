@@ -1,3 +1,5 @@
+![https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg](https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg)
+
 # Autokpass
 Autokpass is a small utility that providers functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
 Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) to simulate keyboard typing (that mean Autokpass will work only on Linux with X.Org sever) and [KeePassJava2](https://github.com/jorabin/KeePassJava2) to read KeePass database
