@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain.usecases
 
+import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.model.Result
@@ -9,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 class AwaitWindowChangeUseCase(
     private val focusedWindowProvider: FocusedWindowProvider,
+    private val throttler: ThreadThrottler,
     private val printer: Printer
 ) {
 
@@ -40,11 +42,7 @@ class AwaitWindowChangeUseCase(
                     break
                 }
 
-                try {
-                    Thread.sleep(DELAY_BETWEEN_FOCUS_CHECK)
-                } catch (e: InterruptedException) {
-                    resultRef.set(Result.Error(e))
-                }
+                throttler.sleep(DELAY_BETWEEN_FOCUS_CHECK)
             }
         }.apply {
             start()

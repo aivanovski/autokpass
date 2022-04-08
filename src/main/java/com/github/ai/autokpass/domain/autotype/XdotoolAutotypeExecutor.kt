@@ -5,7 +5,8 @@ import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 
 class XdotoolAutotypeExecutor(
-    private val processExecutor: ProcessExecutor
+    private val processExecutor: ProcessExecutor,
+    private val threadThrottler: ThreadThrottler
 ) : AutotypeExecutor {
 
     override fun execute(sequence: AutotypeSequence) {
@@ -21,7 +22,7 @@ class XdotoolAutotypeExecutor(
                     processExecutor.execute("xdotool type ${item.text}")
                 }
                 is AutotypeSequenceItem.Delay -> {
-                    Thread.sleep(item.millis)
+                    threadThrottler.sleep(item.millis)
                 }
             }
         }

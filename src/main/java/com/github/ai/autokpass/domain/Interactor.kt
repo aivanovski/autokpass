@@ -45,7 +45,7 @@ class Interactor(
             errorInteractor.processAndExit(awaitResult.getErrorOrThrow())
         }
 
-        val autotypeResult = autotypeUseCase.doAutotype(selectedEntry, selectedPattern, args)
+        val autotypeResult = autotypeUseCase.doAutotype(selectedEntry, selectedPattern, args.delayInSeconds)
         exitIfFailed(autotypeResult)
     }
 

@@ -1,5 +1,7 @@
 package com.github.ai.autokpass.extensions
 
+import com.github.ai.autokpass.util.StringUtils
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -19,5 +21,34 @@ class StringExtKtTest {
         assertThat("-".toIntSafely()).isNull()
         assertThat("123-".toIntSafely()).isNull()
         assertThat("123abc".toIntSafely()).isNull()
+    }
+
+    @Test
+    fun `splitIntoCommandAndArgs should split command by word`() {
+        "command --arg1 value1 --arg2".apply {
+            val (command, args) = this.splitIntoCommandAndArgs()
+            assertThat(command).isEqualTo("command")
+            assertThat(args).isEqualTo(listOf("--arg1", "value1", "--arg2"))
+        }
+    }
+
+    @Test
+    fun `splitIntoCommandAndArgs should return command itself`() {
+        "command".apply {
+            val (command, args) = this.splitIntoCommandAndArgs()
+            assertThat(command).isEqualTo("command")
+            assertThat(args).isEqualTo(emptyList<String>())
+        }
+        "".apply {
+            val (command, args) = this.splitIntoCommandAndArgs()
+            assertThat(command).isEqualTo("")
+            assertThat(args).isEqualTo(emptyList<String>())
+        }
+    }
+
+    @Test
+    fun `maskSymbolWith should mask all characters with specified character`() {
+        assertThat("abc123".maskSymbolsWith('*')).isEqualTo("******")
+        assertThat(EMPTY.maskSymbolsWith('*')).isEqualTo(EMPTY)
     }
 }
