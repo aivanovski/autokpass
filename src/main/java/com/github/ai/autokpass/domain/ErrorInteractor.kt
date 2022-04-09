@@ -15,7 +15,7 @@ class ErrorInteractor(
         }
 
         printer.println(error.exception.message ?: error.exception.toString())
-        exitProcess(1)
+        exitProcess(0)
     }
 
     fun exit(): Nothing {
