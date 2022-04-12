@@ -5,5 +5,6 @@ data class ParsedArgs(
     val keyPath: String?,
     val delayInSeconds: Long?,
     val inputReaderType: InputReaderType,
+    val autotypeType: AutotypeExecutorType?,
     val isXmlKeyFile: Boolean
 )

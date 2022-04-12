@@ -30,6 +30,12 @@ enum class Argument(
         description = "Delay in seconds before autotype will be started"
     ),
 
+    AUTOTYPE(
+        fullName = "autotype",
+        shortName = "a",
+        description = "Program responsible for emulation of keyboard pressing (xdotool - for Linux, cliclick - for macOS)"
+    ),
+
     INPUT(
         fullName = "input",
         shortName = "i",

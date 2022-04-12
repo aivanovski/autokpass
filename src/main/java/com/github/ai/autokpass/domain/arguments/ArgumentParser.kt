@@ -3,6 +3,7 @@ package com.github.ai.autokpass.domain.arguments
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.extensions.toIntSafely
+import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
@@ -32,12 +33,18 @@ class ArgumentParser {
             return inputTypeResult.getErrorOrThrow()
         }
 
+        val autotypeResult = parseAutotypeExecutorType(args.autotypeType)
+        if (autotypeResult.isFailed()) {
+            return autotypeResult.getErrorOrThrow()
+        }
+
         return Result.Success(
             ParsedArgs(
                 pathResult.getDataOrThrow(),
                 keyPathResult.getDataOrThrow(),
                 delayResult.getDataOrThrow(),
                 inputTypeResult.getDataOrThrow(),
+                autotypeResult.getDataOrThrow(),
                 args.isXmlKeyFile
             )
         )
@@ -93,6 +100,13 @@ class ArgumentParser {
         val type = InputReaderType.values()
             .firstOrNull { it.cliName.equals(input, ignoreCase = true) }
             ?: InputReaderType.SECRET
+
+        return Result.Success(type)
+    }
+
+    private fun parseAutotypeExecutorType(type: String): Result<AutotypeExecutorType?> {
+        val type = AutotypeExecutorType.values()
+            .firstOrNull { it.cliName.equals(type, ignoreCase = true) }
 
         return Result.Success(type)
     }
