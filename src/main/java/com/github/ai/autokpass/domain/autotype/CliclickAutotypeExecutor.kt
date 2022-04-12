@@ -12,10 +12,10 @@ class CliclickAutotypeExecutor(
         sequence.items.forEach { item ->
             when (item) {
                 is AutotypeSequenceItem.Enter -> {
-                    processExecutor.execute("cliclick k:enter")
+                    processExecutor.execute("cliclick kp:enter")
                 }
                 is AutotypeSequenceItem.Tab -> {
-                    processExecutor.execute("cliclick k:tab")
+                    processExecutor.execute("cliclick kp:tab")
                 }
                 is AutotypeSequenceItem.Text -> {
                     processExecutor.execute("cliclick t:${item.text}")
