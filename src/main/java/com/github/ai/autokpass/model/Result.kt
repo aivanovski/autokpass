@@ -7,7 +7,11 @@ sealed class Result<out T : Any?> {
 
     fun getDataOrThrow(): T = (this as Success).data
 
+    fun getDataOrNull(): T? = (this as? Success)?.data
+
     fun getErrorOrThrow(): Error = (this as Error)
 
     fun isFailed(): Boolean = (this is Error)
+
+    fun isSucceeded(): Boolean = (this is Success)
 }

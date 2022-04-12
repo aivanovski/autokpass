@@ -5,5 +5,6 @@ data class RawArgs(
     val keyPath: String?,
     val delayInSeconds: String,
     val inputType: String,
+    val autotypeType: String,
     val isXmlKeyFile: Boolean
 )

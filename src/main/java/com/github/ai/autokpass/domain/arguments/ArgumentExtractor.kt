@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain.arguments
 
+import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
@@ -50,6 +51,13 @@ class ArgumentExtractor {
             description = XML_KEY.description
         )
 
+        val autotypeType by parser.option(
+            ArgType.String,
+            shortName = AUTOTYPE.shortName,
+            fullName = AUTOTYPE.fullName,
+            description = AUTOTYPE.description
+        )
+
         parser.parse(args)
 
         return RawArgs(
@@ -57,6 +65,7 @@ class ArgumentExtractor {
             keyPath,
             delayInSeconds ?: EMPTY,
             inputReader ?: EMPTY,
+            autotypeType ?: EMPTY,
             isXmlKeyFile ?: false
         )
     }
