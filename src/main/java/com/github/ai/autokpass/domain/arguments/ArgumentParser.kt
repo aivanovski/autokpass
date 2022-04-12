@@ -105,9 +105,13 @@ class ArgumentParser {
     }
 
     private fun parseAutotypeExecutorType(type: String): Result<AutotypeExecutorType?> {
-        val type = AutotypeExecutorType.values()
+        val autotypeExecutorType = AutotypeExecutorType.values()
             .firstOrNull { it.cliName.equals(type, ignoreCase = true) }
 
-        return Result.Success(type)
+        if (type.isNotBlank() && autotypeExecutorType == null) {
+            return Result.Error(AutokpassException("Invalid ${Argument.AUTOTYPE.cliName} option value: $type"))
+        }
+
+        return Result.Success(autotypeExecutorType)
     }
 }
