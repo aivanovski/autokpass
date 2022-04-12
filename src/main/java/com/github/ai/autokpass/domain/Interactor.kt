@@ -8,6 +8,7 @@ import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
+import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.KeepassKey.FileKey
 import com.github.ai.autokpass.model.KeepassKey.XmlFileKey
@@ -51,7 +52,7 @@ class Interactor(
         val selectedPattern = selectPatternResult.getDataOrThrow()
             ?: errorInteractor.exit()
 
-        if (osType == OSType.LINUX) {
+        if ((osType == OSType.LINUX && args.autotypeType == null) || args.autotypeType == AutotypeExecutorType.XDOTOOL) {
             val awaitResult = awaitWindowUseCase.awaitUntilWindowChanged()
             if (awaitResult.isFailed()) {
                 errorInteractor.processAndExit(awaitResult.getErrorOrThrow())
