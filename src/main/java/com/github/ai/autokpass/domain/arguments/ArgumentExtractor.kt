@@ -63,9 +63,9 @@ class ArgumentExtractor {
         return RawArgs(
             filePath ?: EMPTY,
             keyPath,
-            delayInSeconds ?: EMPTY,
-            inputReader ?: EMPTY,
-            autotypeType ?: EMPTY,
+            delayInSeconds,
+            inputReader,
+            autotypeType,
             isXmlKeyFile ?: false
         )
     }

@@ -1,16 +1,22 @@
 package com.github.ai.autokpass.domain.arguments
 
-import com.github.ai.autokpass.domain.arguments.Argument.FILE
+import com.github.ai.autokpass.data.file.FileSystemProvider
+import com.github.ai.autokpass.domain.Errors.GENERIC_EMPTY_ARGUMENT
+import com.github.ai.autokpass.domain.Errors.GENERIC_FAILED_TO_PARSE_ARGUMENT
+import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_DOES_NOT_EXIST
+import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_IS_NOT_A_FILE
 import com.github.ai.autokpass.domain.exception.AutokpassException
+import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
-import java.io.File
 
-class ArgumentParser {
+class ArgumentParser(
+    private val fileSystemProvider: FileSystemProvider
+) {
 
     fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
         val pathResult = parseFilePath(args.filePath)
@@ -52,16 +58,12 @@ class ArgumentParser {
 
     private fun parseFilePath(path: String): Result<String> {
         if (path.isBlank()) {
-            return Result.Error(AutokpassException("Option ${FILE.cliName} can't be empty"))
+            return Result.Error(ParsingException(String.format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName)))
         }
 
-        val file = File(path)
-        if (!file.exists()) {
-            return Result.Error(AutokpassException("File doesn't exist: $path"))
-        }
-
-        if (!file.isFile) {
-            return Result.Error(AutokpassException("Specified file is directory: $path"))
+        val isPathValidResult = isPathValid(path)
+        if (isPathValidResult.isFailed()) {
+            return isPathValidResult.getErrorOrThrow()
         }
 
         return Result.Success(path)
@@ -73,44 +75,72 @@ class ArgumentParser {
         }
 
         if (path.isBlank()) {
-            return Result.Error(AutokpassException("Option ${Argument.KEY_FILE.cliName} can't by empty"))
+            return Result.Error(ParsingException(String.format(GENERIC_EMPTY_ARGUMENT, Argument.KEY_FILE.cliName)))
         }
 
-        val file = File(path)
-        if (!file.exists()) {
-            return Result.Error(AutokpassException("File doesn't exist: $path"))
-        }
-
-        if (!file.isFile) {
-            return Result.Error(AutokpassException("Specified file is directory: $path"))
+        val isPathValidResult = isPathValid(path)
+        if (isPathValidResult.isFailed()) {
+            return isPathValidResult.getErrorOrThrow()
         }
 
         return Result.Success(path)
     }
 
-    private fun parseDelay(delay: String): Result<Long?> {
-        if (delay.isBlank()) {
+    private fun isPathValid(path: String): Result<Unit> {
+        if (!fileSystemProvider.exists(path)) {
+            return Result.Error(ParsingException(String.format(GENERIC_FILE_DOES_NOT_EXIST, path)))
+        }
+
+        if (!fileSystemProvider.isFile(path)) {
+            return Result.Error(ParsingException(String.format(GENERIC_FILE_IS_NOT_A_FILE, path)))
+        }
+
+        return Result.Success(Unit)
+    }
+
+    private fun parseDelay(delayStr: String?): Result<Long?> {
+        if (delayStr.isNullOrBlank()) {
             return Result.Success(null)
         }
 
-        return Result.Success(delay.toIntSafely()?.toLong())
+        val delay = delayStr.toIntSafely()
+            ?: return Result.Error(
+                ParsingException(
+                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.DELAY.cliName, delayStr)
+                )
+            )
+
+        return Result.Success(delay.toLong())
     }
 
-    private fun parseInput(input: String): Result<InputReaderType> {
+    private fun parseInput(input: String?): Result<InputReaderType> {
+        if (input == null) {
+            return Result.Success(InputReaderType.SECRET)
+        }
+
         val type = InputReaderType.values()
             .firstOrNull { it.cliName.equals(input, ignoreCase = true) }
-            ?: InputReaderType.SECRET
+            ?: return Result.Error(
+                ParsingException(
+                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.INPUT.cliName, input)
+                )
+            )
 
         return Result.Success(type)
     }
 
-    private fun parseAutotypeExecutorType(type: String): Result<AutotypeExecutorType?> {
+    private fun parseAutotypeExecutorType(type: String?): Result<AutotypeExecutorType?> {
+        if (type == null) {
+            return Result.Success(null)
+        }
+
         val autotypeExecutorType = AutotypeExecutorType.values()
             .firstOrNull { it.cliName.equals(type, ignoreCase = true) }
-
-        if (type.isNotBlank() && autotypeExecutorType == null) {
-            return Result.Error(AutokpassException("Invalid ${Argument.AUTOTYPE.cliName} option value: $type"))
-        }
+            ?: return Result.Error(
+                AutokpassException(
+                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.AUTOTYPE.cliName, type)
+                )
+            )
 
         return Result.Success(autotypeExecutorType)
     }

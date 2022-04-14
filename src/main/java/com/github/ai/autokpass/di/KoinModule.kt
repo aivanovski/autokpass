@@ -1,7 +1,7 @@
 package com.github.ai.autokpass.di
 
-import com.github.ai.autokpass.data.file.DefaultFileContentProvider
-import com.github.ai.autokpass.data.file.FileContentProvider
+import com.github.ai.autokpass.data.file.DefaultFileSystemProvider
+import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.Interactor
 import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
@@ -49,11 +49,12 @@ object KoinModule {
 
     val appModule = module {
         single<Printer> { StandardOutputPrinter() }
+        single<FileSystemProvider> { DefaultFileSystemProvider() }
         single { AutotypeSequenceFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
         single { ArgumentExtractor() }
-        single { ArgumentParser() }
+        single { ArgumentParser(get()) }
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
@@ -61,7 +62,6 @@ object KoinModule {
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<OptionSelector> { Fzf4jOptionSelector() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
-        single<FileContentProvider> { DefaultFileContentProvider() }
 
         single(named(AUTOTYPE_EXECUTORS_MAP)) {
             mapOf(
