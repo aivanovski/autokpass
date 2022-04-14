@@ -35,7 +35,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --file is empty`() {
         // arrange
-        val args = argsWith(filePath = "")
+        val args = argsWith(filePath = EMPTY)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -108,7 +108,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --key-file is empty`() {
         // arrange
-        val args = argsWith(keyPath = "")
+        val args = argsWith(keyPath = EMPTY)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -199,8 +199,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --delay is invalid`() {
         // arrange
-        val invalidDelay = "abc123"
-        val args = argsWith(delayInSeconds = invalidDelay)
+        val args = argsWith(delayInSeconds = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -208,7 +207,13 @@ class ArgumentParserTest {
 
         // assert
         assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.DELAY.cliName, invalidDelay))
+        assertThat(result).hasErrorMessage(
+            format(
+                GENERIC_FAILED_TO_PARSE_ARGUMENT,
+                Argument.DELAY.cliName,
+                INVALID_VALUE
+            )
+        )
     }
 
     @Test
@@ -242,8 +247,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --input is invalid`() {
         // arrange
-        val invalidInputType = "abc123"
-        val args = argsWith(inputType = invalidInputType)
+        val args = argsWith(inputType = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -251,7 +255,76 @@ class ArgumentParserTest {
 
         // assert
         assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.INPUT.cliName, invalidInputType))
+        assertThat(result).hasErrorMessage(
+            format(
+                GENERIC_FAILED_TO_PARSE_ARGUMENT,
+                Argument.INPUT.cliName,
+                INVALID_VALUE
+            )
+        )
+    }
+
+    @Test
+    fun `validateAndParse should return null if --autotype is not specified`() {
+        // arrange
+        val args = argsWith(autotypeExecutorType = null)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return value if --autotype is specified`() {
+        // arrange
+        val args = argsWith(autotypeExecutorType = AutotypeExecutorType.XDOTOOL.cliName)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return error if --autotype is invalid`() {
+        // arrange
+        val args = argsWith(autotypeExecutorType = INVALID_VALUE)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).hasException(ParsingException::class.java)
+        assertThat(result).hasErrorMessage(
+            format(
+                GENERIC_FAILED_TO_PARSE_ARGUMENT,
+                Argument.AUTOTYPE.cliName,
+                INVALID_VALUE
+            )
+        )
+    }
+
+    @Test
+    fun `validateAndParse should return error if all empty`() {
+        // arrange
+        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, isXmlKeyFile = false)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isFailed()
+        assertThat(result).hasException(ParsingException::class.java)
+        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName))
     }
 
     private fun argsWith(
@@ -259,7 +332,7 @@ class ArgumentParserTest {
         keyPath: String? = null,
         delayInSeconds: String? = null,
         inputType: String? = InputReaderType.SECRET.cliName,
-        autotypeExecutorType: String = AutotypeExecutorType.XDOTOOL.cliName,
+        autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
         isXmlKeyFile: Boolean = false
     ): RawArgs {
         return RawArgs(
@@ -295,5 +368,6 @@ class ArgumentParserTest {
         private const val FILE_PATH = "/tmp/filePath"
         private const val KEY_PATH = "/tmp/keyPath"
         private const val DELAY = "123"
+        private const val INVALID_VALUE = "abc123/_=[]"
     }
 }
