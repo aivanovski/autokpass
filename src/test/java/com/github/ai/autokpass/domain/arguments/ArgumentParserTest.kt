@@ -327,12 +327,56 @@ class ArgumentParserTest {
         assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName))
     }
 
+    @Test
+    fun `validateAndParse should return value if --process-key-command is specified`() {
+        // arrange
+        val args = argsWith(keyProcessingCommand = COMMAND)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return value if --process-key-command is not specified`() {
+        // arrange
+        val args = argsWith(keyProcessingCommand = null)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return error if --process-key-command is empty`() {
+        // arrange
+        val args = argsWith(keyProcessingCommand = EMPTY)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result).isFailed()
+        assertThat(result).hasException(ParsingException::class.java)
+        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName))
+    }
+
     private fun argsWith(
         filePath: String = FILE_PATH,
         keyPath: String? = null,
         delayInSeconds: String? = null,
         inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
+        keyProcessingCommand: String? = null,
         isXmlKeyFile: Boolean = false
     ): RawArgs {
         return RawArgs(
@@ -341,6 +385,7 @@ class ArgumentParserTest {
             delayInSeconds = delayInSeconds,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
+            keyProcessingCommand = keyProcessingCommand,
             isXmlKeyFile = isXmlKeyFile
         )
     }
@@ -352,6 +397,7 @@ class ArgumentParserTest {
             delayInSeconds = delayInSeconds?.toLong(),
             inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
+            keyProcessingCommand = keyProcessingCommand,
             isXmlKeyFile = isXmlKeyFile
         )
 
@@ -369,5 +415,6 @@ class ArgumentParserTest {
         private const val KEY_PATH = "/tmp/keyPath"
         private const val DELAY = "123"
         private const val INVALID_VALUE = "abc123/_=[]"
+        private const val COMMAND = "gpg --decrypt"
     }
 }

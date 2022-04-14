@@ -5,6 +5,7 @@ import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
+import com.github.ai.autokpass.domain.usecases.ProcessKeyUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
@@ -26,6 +27,7 @@ class Interactor(
     private val getOsTypeUseCase: GetOSTypeUseCase,
     private val determineAutotypeUseCase: DetermineAutotypeExecutorTypeUseCase,
     private val autotypeUseCase: AutotypeUseCase,
+    private val processKeyUseCase: ProcessKeyUseCase,
     private val errorInteractor: ErrorInteractor
 ) {
 
@@ -75,6 +77,12 @@ class Interactor(
                 exitIfFailed(passwordResult)
 
                 KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
+            }
+            args.keyProcessingCommand != null -> {
+                val processedKeyResult = processKeyUseCase.processKeyWithCommand(args.keyProcessingCommand, args.keyPath)
+                exitIfFailed(processedKeyResult)
+
+                KeepassKey.PasswordKey(processedKeyResult.getDataOrThrow())
             }
             args.isXmlKeyFile -> XmlFileKey(File(args.keyPath))
             else -> FileKey(File(args.keyPath))

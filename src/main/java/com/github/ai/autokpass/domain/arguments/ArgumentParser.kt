@@ -43,6 +43,11 @@ class ArgumentParser(
             return autotypeResult.getErrorOrThrow()
         }
 
+        val keyProcessingCommandResult = parseKeyProcessingCommand(args.keyProcessingCommand)
+        if (keyProcessingCommandResult.isFailed()) {
+            return keyProcessingCommandResult.getErrorOrThrow()
+        }
+
         return Result.Success(
             ParsedArgs(
                 pathResult.getDataOrThrow(),
@@ -50,6 +55,7 @@ class ArgumentParser(
                 delayResult.getDataOrThrow(),
                 inputTypeResult.getDataOrThrow(),
                 autotypeResult.getDataOrThrow(),
+                keyProcessingCommandResult.getDataOrThrow(),
                 args.isXmlKeyFile
             )
         )
@@ -142,5 +148,21 @@ class ArgumentParser(
             )
 
         return Result.Success(autotypeExecutorType)
+    }
+
+    private fun parseKeyProcessingCommand(command: String?): Result<String?> {
+        if (command == null) {
+            return Result.Success(null)
+        }
+
+        if (command.isBlank()) {
+            return Result.Error(
+                ParsingException(
+                    String.format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName)
+                )
+            )
+        }
+
+        return Result.Success(command)
     }
 }
