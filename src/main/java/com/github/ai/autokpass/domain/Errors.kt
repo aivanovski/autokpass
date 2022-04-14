@@ -10,4 +10,10 @@ object Errors {
     """.trimIndent()
 
     const val FAILED_TO_DETERMINE_OS_TYPE = "Can't determine OS type"
+
+    // Argument parsing error
+    const val GENERIC_EMPTY_ARGUMENT = "Option %s can't be empty"
+    const val GENERIC_FILE_DOES_NOT_EXIST = "Specified file doesn't exist: %s"
+    const val GENERIC_FILE_IS_NOT_A_FILE = "Specified file is not a file: %s"
+    const val GENERIC_FAILED_TO_PARSE_ARGUMENT = "Failed to parse %s value: %s"
 }

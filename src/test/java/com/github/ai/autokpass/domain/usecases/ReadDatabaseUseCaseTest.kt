@@ -1,6 +1,6 @@
 package com.github.ai.autokpass.domain.usecases
 
-import com.github.ai.autokpass.data.file.FileContentProvider
+import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.model.KeepassKey.FileKey
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
@@ -20,7 +20,7 @@ class ReadDatabaseUseCaseTest {
     @Test
     fun `readDatabase should return db with password`() {
         // arrange
-        val fileProvider = mockk<FileContentProvider>()
+        val fileProvider = mockk<FileSystemProvider>()
         every { fileProvider.openFile(DB_PATH) }.returns(resourceAsStream("db-with-password.kdbx"))
 
         // act
@@ -38,7 +38,7 @@ class ReadDatabaseUseCaseTest {
     @Test
     fun `readDatabase should return InvalidPasswordException in case incorrect password`() {
         // arrange
-        val fileProvider = mockk<FileContentProvider>()
+        val fileProvider = mockk<FileSystemProvider>()
         every { fileProvider.openFile(DB_PATH) }.returns(resourceAsStream("db-with-password.kdbx"))
 
         // act
@@ -53,7 +53,7 @@ class ReadDatabaseUseCaseTest {
     @Test
     fun `readDatabase should return db with key file`() {
         // arrange
-        val fileProvider = mockk<FileContentProvider>()
+        val fileProvider = mockk<FileSystemProvider>()
         every { fileProvider.openFile(DB_PATH) }.returns(resourceAsStream("db-with-bin-key.kdbx"))
         every { fileProvider.openFile(KEY_PATH) }.returns(resourceAsStream("bin-key"))
 
@@ -73,7 +73,7 @@ class ReadDatabaseUseCaseTest {
     @Test
     fun `readDatabase should return db with xml key`() {
         // arrange
-        val fileProvider = mockk<FileContentProvider>()
+        val fileProvider = mockk<FileSystemProvider>()
         every { fileProvider.openFile(DB_PATH) }.returns(resourceAsStream("db-with-xml-key.kdbx"))
         every { fileProvider.openFile(KEY_PATH) }.returns(resourceAsStream("xml-key"))
 
