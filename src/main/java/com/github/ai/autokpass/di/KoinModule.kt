@@ -31,6 +31,7 @@ import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseC
 import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
+import com.github.ai.autokpass.domain.usecases.ProcessKeyUseCase
 import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
@@ -100,10 +101,12 @@ object KoinModule {
         single { AwaitWindowChangeUseCase(get(), get(), get()) }
         single { GetOSTypeUseCase(get()) }
         single { DetermineAutotypeExecutorTypeUseCase() }
+        single { ProcessKeyUseCase(get(), get()) }
 
         factory { (args: ParsedArgs) ->
             Interactor(
                 get(qualifier = named(args.inputReaderType.name)),
+                get(),
                 get(),
                 get(),
                 get(),

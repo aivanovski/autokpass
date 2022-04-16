@@ -4,6 +4,7 @@ import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
+import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.domain.arguments.Argument.XML_KEY
 import com.github.ai.autokpass.model.RawArgs
@@ -58,6 +59,13 @@ class ArgumentExtractor {
             description = AUTOTYPE.description
         )
 
+        val keyCommand by parser.option(
+            ArgType.String,
+            shortName = PROCESS_KEY_COMMAND.shortName,
+            fullName = PROCESS_KEY_COMMAND.fullName,
+            description = PROCESS_KEY_COMMAND.description
+        )
+
         parser.parse(args)
 
         return RawArgs(
@@ -66,6 +74,7 @@ class ArgumentExtractor {
             delayInSeconds,
             inputReader,
             autotypeType,
+            keyCommand,
             isXmlKeyFile ?: false
         )
     }

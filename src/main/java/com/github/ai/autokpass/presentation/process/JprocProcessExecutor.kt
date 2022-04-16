@@ -20,4 +20,13 @@ class JprocProcessExecutor : ProcessExecutor {
             .run()
             .outputString
     }
+
+    override fun execute(input: ByteArray, command: String): String {
+        val (com, args) = command.splitIntoCommandAndArgs()
+
+        return ProcBuilder(com, *args.toTypedArray())
+            .withInput(input)
+            .run()
+            .outputString
+    }
 }

@@ -40,6 +40,12 @@ enum class Argument(
         fullName = "input",
         shortName = "i",
         description = "Type of input (for debug purposes)"
+    ),
+
+    PROCESS_KEY_COMMAND(
+        fullName = "process-key-command",
+        shortName = "c",
+        description = "Executes shell commands on file specified in --key-file and uses it to unlock database"
     );
 
     val cliName: String = "--$fullName"
