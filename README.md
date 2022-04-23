@@ -2,14 +2,21 @@
 
 # Autokpass
 Autokpass is a small utility that providers functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
-Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) to simulate keyboard typing (that mean Autokpass will work only on Linux with X.Org sever) and [KeePassJava2](https://github.com/jorabin/KeePassJava2) to read KeePass database
+For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) on Linux and [cliclick](https://github.com/BlueM/cliclick)  on macOS and [KeePassJava2](https://github.com/jorabin/KeePassJava2) to read KeePass database
 
 ## Demo
 ![demo](https://github.com/aivanovski/autokpass/blob/main/screenshots/autokpass-demo.gif)
 
-## Installation
+## Installation 
+#### Linux
 - Install Java version >= 11
-- Download `autokpass.jar` from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can download latest build from [CI page](https://github.com/aivanovski/autokpass/actions)
+- Install [xdotool](https://github.com/jordansissel/xdotool)
+- Download `autokpass.jar` from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
+
+#### macOS
+- Install Java version >= 11
+- Install [cliclick](https://github.com/BlueM/cliclick)
+- Download `autokpass.jar` from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
 
 ## How to run
 Open a Terminal and execute downloaded `autokpass.jar` with `java`.
@@ -27,6 +34,7 @@ $ java -jar autokpass.jar [OPTIONS]
 - `-d, --delay`: delay in seconds before autotype will be started
 - `-k, --key-file`: path to key file
 - `-x, --xml-key`: interpret key file as xml file
+- `-c, --process-key-command`: executes shell command on file specified in `--key-file` and uses it to unlock database
 - `-h, --help`: print usage info
 
 ## Building from sources
@@ -41,13 +49,23 @@ Then to build the project run:
 After build is finished `autokpass.jar` can be found at `autokpass/build/libs`
 
 ## Usage examples
-#### Password database unlock
+#### Unlock database with password
 ```
 $ java -jar autokpass.jar \
   --file PATH_TO_KEEPASS_FILE
 ```
 
-#### Key file database unlock
+#### Unlock database with password but without a need to type it every time
+Write your passwrd to a file and encrypt it, for example with `gpg`.
+Then encrypted password can be decrypted by Autokpass with `--process-key-command` option
+```
+$ java -jar autokpass.jar \
+  --file PATH_TO_KEEPASS_FILE \
+  --key-file PATH_TO_ENCRYPTED_FILE_WITH_PASSWORD \
+  --process-key-command 'gpg --decrypt ...'
+```
+
+#### Unlock database with key file
 ```
 $ java -jar autokpass.jar \
   --file PATH_TO_KEEPASS_FILE \
