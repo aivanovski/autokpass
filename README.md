@@ -57,7 +57,7 @@ $ java -jar autokpass.jar \
 
 #### Unlock database with password but without a need to type it every time
 Write your passwrd to a file and encrypt it, for example with `gpg`.
-Then encrypted password can be decrypted by `Autokpass` with `--process-key-command` option
+Then encrypted password can be decrypted by Autokpass with `--process-key-command` option
 ```
 $ java -jar autokpass.jar \
   --file PATH_TO_KEEPASS_FILE \
