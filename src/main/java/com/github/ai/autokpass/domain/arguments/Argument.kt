@@ -33,7 +33,11 @@ enum class Argument(
     AUTOTYPE(
         fullName = "autotype",
         shortName = "a",
-        description = "Program responsible for emulation of keyboard pressing (xdotool - for Linux, cliclick - for macOS)"
+        description = """Program responsible for emulation of keyboard pressing, available options:
+            xdotool - default for Linux (xdotool should be installed on the host machine)
+            cliclick - default for macOS (cliclick should be installed on the host machine)
+            osascript - optional for macOS (keyboard pressing will be emulated via AppleScript)
+            """
     ),
 
     INPUT(
