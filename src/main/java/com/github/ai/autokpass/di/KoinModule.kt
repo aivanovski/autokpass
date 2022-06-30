@@ -14,6 +14,7 @@ import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.autotype.AutotypePatternParser
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.autotype.CliclickAutotypeExecutor
+import com.github.ai.autokpass.domain.autotype.OsaScriptAutotypeExecutor
 import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.autotype.XdotoolAutotypeExecutor
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
@@ -67,7 +68,8 @@ object KoinModule {
         single(named(AUTOTYPE_EXECUTORS_MAP)) {
             mapOf(
                 AutotypeExecutorType.XDOTOOL to XdotoolAutotypeExecutor(get(), get()),
-                AutotypeExecutorType.CLICLICK to CliclickAutotypeExecutor(get(), get())
+                AutotypeExecutorType.CLICLICK to CliclickAutotypeExecutor(get(), get()),
+                AutotypeExecutorType.OSA_SCRIPT to OsaScriptAutotypeExecutor(get(), get())
             )
         }
 

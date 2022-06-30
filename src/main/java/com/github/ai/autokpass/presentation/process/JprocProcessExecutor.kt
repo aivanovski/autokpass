@@ -12,6 +12,12 @@ class JprocProcessExecutor : ProcessExecutor {
             .outputString
     }
 
+    override fun executeWithBash(command: String): String {
+        return ProcBuilder("bash", "-c", command)
+            .run()
+            .outputString
+    }
+
     override fun execute(input: String, command: String): String {
         val (com, args) = command.splitIntoCommandAndArgs()
 
