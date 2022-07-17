@@ -1,6 +1,5 @@
 package com.github.ai.autokpass.extensions
 
-import com.github.ai.autokpass.util.StringUtils
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
