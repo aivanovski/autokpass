@@ -1,10 +1,10 @@
+package com.github.ai.autokpass.domain.arguments
+
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.Errors.GENERIC_EMPTY_ARGUMENT
 import com.github.ai.autokpass.domain.Errors.GENERIC_FAILED_TO_PARSE_ARGUMENT
 import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_DOES_NOT_EXIST
 import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_IS_NOT_A_FILE
-import com.github.ai.autokpass.domain.arguments.Argument
-import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType

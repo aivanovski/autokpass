@@ -9,7 +9,10 @@ sealed class Result<out T : Any?> {
 
     fun getDataOrNull(): T? = (this as? Success)?.data
 
+    // TODO: rename to asErrorOrThrow()
     fun getErrorOrThrow(): Error = (this as Error)
+
+    fun getExceptionOrThrow(): Exception = (this as Error).exception
 
     fun isFailed(): Boolean = (this is Error)
 

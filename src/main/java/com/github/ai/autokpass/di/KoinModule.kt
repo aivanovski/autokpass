@@ -2,6 +2,7 @@ package com.github.ai.autokpass.di
 
 import com.github.ai.autokpass.data.file.DefaultFileSystemProvider
 import com.github.ai.autokpass.data.file.FileSystemProvider
+import com.github.ai.autokpass.data.keepass.KeepassDatabaseFactoryProvider
 import com.github.ai.autokpass.domain.Interactor
 import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
@@ -104,6 +105,7 @@ object KoinModule {
         single { GetOSTypeUseCase(get()) }
         single { DetermineAutotypeExecutorTypeUseCase() }
         single { ProcessKeyUseCase(get(), get()) }
+        single { KeepassDatabaseFactoryProvider(get()) }
 
         factory { (args: ParsedArgs) ->
             Interactor(
