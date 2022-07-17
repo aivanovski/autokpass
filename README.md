@@ -2,7 +2,7 @@
 
 # Autokpass
 Autokpass is a small utility that providers functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
-For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) on Linux and [cliclick](https://github.com/BlueM/cliclick) or AppleScript via [osascript](https://ss64.com/osx/osascript.html) on macOS and [KeePassJava2](https://github.com/jorabin/KeePassJava2) to read KeePass database
+For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) on Linux and [cliclick](https://github.com/BlueM/cliclick) or AppleScript via [osascript](https://ss64.com/osx/osascript.html) on macOS. Access to KeePass database is provided by [Kotpass](https://github.com/Anvell/kotpass).
 
 ## Demo
 ![demo](https://github.com/aivanovski/autokpass/blob/main/screenshots/autokpass-demo.gif)
@@ -33,7 +33,6 @@ $ java -jar autokpass.jar [OPTIONS]
 - `-f, --file`: path to KeePass database file
 - `-d, --delay`: delay in seconds before autotype will be started
 - `-k, --key-file`: path to key file
-- `-x, --xml-key`: interpret key file as xml file
 - `-a, --autotype`: programm responsible for keyboard emulation; available options: `xdotool`, `cliclick`, `osascript`; default options: `xdotool` for Linux, `cliclick` for macOS;
 - `-c, --process-key-command`: executes shell command on file specified in `--key-file` and uses it to unlock database
 - `-h, --help`: print usage info
