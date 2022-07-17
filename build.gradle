@@ -70,8 +70,5 @@ dependencies {
     implementation "org.buildobjects:jproc:2.8.0"
     implementation 'de.gesundkrank.fzf4j:fzf4j:0.2.0'
     implementation "org.jetbrains.kotlinx:kotlinx-cli:0.3.4"
-    implementation "org.linguafranca.pwdb:KeePassJava2-simple:2.1.4"
-    implementation "org.linguafranca.pwdb:KeePassJava2-kdbx:2.1.4"
-    implementation "org.linguafranca.pwdb:database:2.1.4"
     implementation "com.github.anvell:kotpass:0.4.9"
 }

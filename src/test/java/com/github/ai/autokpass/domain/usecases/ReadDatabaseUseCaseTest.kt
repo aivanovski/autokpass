@@ -25,7 +25,7 @@ class ReadDatabaseUseCaseTest {
         val db = mockk<KeepassDatabase>()
         val key = PasswordKey(DB_PASSWORD)
 
-        every { factoryProvider.getFactory(KeepassImplementation.KEEPASS_JAVA_2) }.returns(factory)
+        every { factoryProvider.getFactory(KeepassImplementation.KOTPASS) }.returns(factory)
         every { factory.open(key, DB_PATH) }.returns(Result.Success(db))
 
         // act
@@ -33,7 +33,7 @@ class ReadDatabaseUseCaseTest {
             .readDatabase(PasswordKey(DB_PASSWORD), DB_PATH)
 
         // assert
-        verify { factoryProvider.getFactory(KeepassImplementation.KEEPASS_JAVA_2) }
+        verify { factoryProvider.getFactory(KeepassImplementation.KOTPASS) }
         verify { factory.open(key, DB_PATH) }
         confirmVerified()
 

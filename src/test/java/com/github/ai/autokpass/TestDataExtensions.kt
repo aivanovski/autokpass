@@ -8,22 +8,7 @@ import com.github.ai.autokpass.utils.resourceAsStream
 import io.github.anvell.kotpass.cryptography.EncryptedValue
 import io.github.anvell.kotpass.database.KeePassDatabase
 import io.github.anvell.kotpass.database.decode
-import org.linguafranca.pwdb.Credentials
-import org.linguafranca.pwdb.kdbx.KdbxCreds
-import org.linguafranca.pwdb.kdbx.simple.SimpleDatabase
 import java.io.File
-
-fun TestDatabase.loadKeepassJava2Database(): SimpleDatabase {
-    return SimpleDatabase.load(key.toKeepassJava2Credentials(), resourceAsStream(filename))
-}
-
-fun TestKey.toKeepassJava2Credentials(): Credentials {
-    return when (this) {
-        is TestKey.PasswordKey -> KdbxCreds(password.toByteArray())
-        is TestKey.FileKey -> KdbxCreds(resourceAsBytes(filename))
-        is TestKey.XmlFileKey -> KdbxCreds(byteArrayOf(), resourceAsStream(filename))
-    }
-}
 
 fun TestDatabase.loadKotpassDatabase(): KeePassDatabase {
     return KeePassDatabase.decode(resourceAsStream(filename), key.toKotpassCredentials())

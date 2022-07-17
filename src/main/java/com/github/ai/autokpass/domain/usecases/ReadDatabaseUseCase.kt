@@ -11,7 +11,7 @@ class ReadDatabaseUseCase(
 ) {
 
     fun readDatabase(key: KeepassKey, filePath: String): Result<KeepassDatabase> {
-        val dbFactory = dbFactoryProvider.getFactory(KeepassImplementation.KEEPASS_JAVA_2)
+        val dbFactory = dbFactoryProvider.getFactory(KeepassImplementation.KOTPASS)
         return dbFactory.open(key, filePath)
     }
 }
