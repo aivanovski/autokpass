@@ -1,12 +1,10 @@
-package com.github.ai.autokpass.data.keepass.keepassjava2
+package com.github.ai.autokpass.data.keepass.kotpass
 
-import com.github.ai.autokpass.TestData.DB_WITH_BINARY_KEY
+import com.github.ai.autokpass.TestData
 import com.github.ai.autokpass.TestData.DB_WITH_PASSWORD
-import com.github.ai.autokpass.TestData.DB_WITH_XML_KEY
 import com.github.ai.autokpass.TestData.INVALID_PASSWORD
 import com.github.ai.autokpass.asFileKey
 import com.github.ai.autokpass.asPasswordKey
-import com.github.ai.autokpass.asXmlFileKey
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.getFilePath
 import com.github.ai.autokpass.model.KeepassKey
@@ -19,7 +17,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.io.IOException
 
-class KeepassJava2DatabaseFactoryTest {
+class KotpassDatabaseFactoryTest {
 
     @Test
     fun `open should load database with password`() {
@@ -33,7 +31,7 @@ class KeepassJava2DatabaseFactoryTest {
         )
 
         // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
+        val result = KotpassDatabaseFactory(fsProvider)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()
@@ -50,7 +48,7 @@ class KeepassJava2DatabaseFactoryTest {
     @Test
     fun `open should load database with binary key`() {
         // arrange
-        val db = DB_WITH_BINARY_KEY
+        val db = TestData.DB_WITH_BINARY_KEY
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             data = listOf(
@@ -60,35 +58,7 @@ class KeepassJava2DatabaseFactoryTest {
         )
 
         // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
-            .open(
-                key = key.toKeepassKey(),
-                filePath = db.getFilePath()
-            )
-
-        // assert
-        verify { fsProvider.openFile(key.getFilePath()) }
-        verify { fsProvider.openFile(db.getFilePath()) }
-        confirmVerified()
-
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isNotNull()
-    }
-
-    @Test
-    fun `open should load database with xml key`() {
-        // arrange
-        val db = DB_WITH_XML_KEY
-        val key = db.key.asXmlFileKey()
-        val fsProvider = mockFSProvider(
-            data = listOf(
-                db.getFilePath() to db.asStream(),
-                key.getFilePath() to key.asStream()
-            )
-        )
-
-        // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
+        val result = KotpassDatabaseFactory(fsProvider)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()
@@ -114,7 +84,7 @@ class KeepassJava2DatabaseFactoryTest {
         )
 
         // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
+        val result = KotpassDatabaseFactory(fsProvider)
             .open(
                 key = KeepassKey.PasswordKey(INVALID_PASSWORD),
                 filePath = db.getFilePath()
@@ -139,7 +109,7 @@ class KeepassJava2DatabaseFactoryTest {
         )
 
         // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
+        val result = KotpassDatabaseFactory(fsProvider)
             .open(
                 key = KeepassKey.PasswordKey(INVALID_PASSWORD),
                 filePath = db.getFilePath()
@@ -156,16 +126,16 @@ class KeepassJava2DatabaseFactoryTest {
     @Test
     fun `open should return IOException if key file not found`() {
         // arrange
-        val db = DB_WITH_BINARY_KEY
+        val db = TestData.DB_WITH_BINARY_KEY
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             errors = listOf(
-               key.getFilePath() to IOException()
+                key.getFilePath() to IOException()
             )
         )
 
         // act
-        val result = KeepassJava2DatabaseFactory(fsProvider)
+        val result = KotpassDatabaseFactory(fsProvider)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()

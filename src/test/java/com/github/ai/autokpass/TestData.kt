@@ -2,14 +2,12 @@ package com.github.ai.autokpass
 
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.utils.resourceAsStream
-import org.linguafranca.pwdb.Credentials
-import org.linguafranca.pwdb.kdbx.KdbxCreds
-import org.linguafranca.pwdb.kdbx.simple.SimpleDatabase
 import java.io.InputStream
 import java.util.UUID
 
 object TestData {
 
+    const val INVALID_PASSWORD = "123456"
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
 
@@ -213,18 +211,6 @@ object TestData {
     ) {
 
         fun asStream(): InputStream = resourceAsStream(filename)
-
-        fun getCredentials(): Credentials {
-            return when (key) {
-                is TestKey.PasswordKey -> KdbxCreds(key.password.toByteArray())
-                is TestKey.FileKey -> KdbxCreds(resourceAsStream(key.filename).readAllBytes())
-                is TestKey.XmlFileKey -> KdbxCreds(byteArrayOf(), resourceAsStream(key.filename))
-            }
-        }
-
-        fun loadDatabase(): SimpleDatabase {
-            return SimpleDatabase.load(getCredentials(), resourceAsStream(filename))
-        }
     }
 
     sealed class TestKey {

@@ -21,6 +21,7 @@ apply plugin: 'jacoco'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 sourceCompatibility = 1.11
@@ -72,4 +73,5 @@ dependencies {
     implementation "org.linguafranca.pwdb:KeePassJava2-simple:2.1.4"
     implementation "org.linguafranca.pwdb:KeePassJava2-kdbx:2.1.4"
     implementation "org.linguafranca.pwdb:database:2.1.4"
+    implementation "com.github.anvell:kotpass:0.4.9"
 }

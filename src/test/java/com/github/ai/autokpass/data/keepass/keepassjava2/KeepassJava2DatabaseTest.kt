@@ -3,6 +3,7 @@ package com.github.ai.autokpass.data.keepass.keepassjava2
 import com.github.ai.autokpass.TestData.DB_WITH_BINARY_KEY
 import com.github.ai.autokpass.TestData.DB_WITH_PASSWORD
 import com.github.ai.autokpass.TestData.DB_WITH_XML_KEY
+import com.github.ai.autokpass.loadKeepassJava2Database
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -16,7 +17,7 @@ class KeepassJava2DatabaseTest {
 
         // act
         val entries = testDatabases.map {
-            KeepassJava2Database(it.loadDatabase()).getAllEntries()
+            KeepassJava2Database(it.loadKeepassJava2Database()).getAllEntries()
         }
 
         // assert
