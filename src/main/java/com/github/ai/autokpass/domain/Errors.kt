@@ -10,6 +10,7 @@ object Errors {
     """.trimIndent()
 
     const val FAILED_TO_DETERMINE_OS_TYPE = "Can't determine OS type"
+    const val FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE = "Failed to compile autotype sequence"
 
     // Argument parsing error
     const val GENERIC_EMPTY_ARGUMENT = "Option %s can't be empty"
