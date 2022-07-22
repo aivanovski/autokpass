@@ -16,8 +16,8 @@ class PrintGreetingsUseCase(
     }
 
     companion object {
-        private const val GREETINGS_TEMPLATE = "Autokpass v%s"
-        private const val PROPERTIES_FILE_NAME = "version.properties"
-        private const val PROPERTY_VERSION = "version"
+        const val GREETINGS_TEMPLATE = "Autokpass v%s"
+        const val PROPERTIES_FILE_NAME = "version.properties"
+        const val PROPERTY_VERSION = "version"
     }
 }
