@@ -42,7 +42,7 @@ class Interactor(
         val key = getKey(args)
         val autotypeExecutorType = autotypeExecutorResult.getDataOrThrow()
 
-        val selectEntryResult = selectEntryUseCase.selectEntry(key, args)
+        val selectEntryResult = selectEntryUseCase.selectEntry(key, args.filePath)
         exitIfFailed(selectEntryResult)
 
         val selectedEntry = selectEntryResult.getDataOrThrow()

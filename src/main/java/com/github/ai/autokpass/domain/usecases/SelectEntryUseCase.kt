@@ -4,7 +4,6 @@ import com.github.ai.autokpass.domain.formatter.EntryFormatter
 import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.KeepassKey
-import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 
 class SelectEntryUseCase(
@@ -13,8 +12,8 @@ class SelectEntryUseCase(
     private val optionSelector: OptionSelector
 ) {
 
-    fun selectEntry(key: KeepassKey, args: ParsedArgs): Result<KeepassEntry?> {
-        val getEntriesResult = getEntriesUseCase.getAllEntries(key, args.filePath)
+    fun selectEntry(key: KeepassKey, dbFilePath: String): Result<KeepassEntry?> {
+        val getEntriesResult = getEntriesUseCase.getAllEntries(key, dbFilePath)
         if (getEntriesResult.isFailed()) {
             return getEntriesResult.getErrorOrThrow()
         }
