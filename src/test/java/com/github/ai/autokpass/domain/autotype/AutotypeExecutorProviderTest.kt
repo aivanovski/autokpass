@@ -26,11 +26,10 @@ class AutotypeExecutorProviderTest {
     @Test(expected = IllegalArgumentException::class)
     fun `getExecutor should throw exception if executor not found`() {
         // arrange
-        val executor = mockk<AutotypeExecutor>()
         val executors = emptyMap<AutotypeExecutorType, AutotypeExecutor>()
 
         // act
-        val result = AutotypeExecutorProvider(executors)
+        AutotypeExecutorProvider(executors)
             .getExecutor(AutotypeExecutorType.XDOTOOL)
     }
 }
