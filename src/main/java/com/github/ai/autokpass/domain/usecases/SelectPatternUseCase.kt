@@ -10,10 +10,10 @@ class SelectPatternUseCase(
     private val optionSelector: OptionSelector
 ) {
 
-    fun selectPattern(): Result<AutotypePattern?> {
-        val options = PATTERNS
+    fun selectPattern(patterns: List<AutotypePattern>): Result<AutotypePattern?> {
+        val options = patterns
             .mapIndexed { index, pattern ->
-                (index + 1).toString() + " " + patternFormatter.format(pattern)
+                "${index + 1} ${patternFormatter.format(pattern)}"
             }
 
         val selectionResult = optionSelector.select(options)
@@ -22,16 +22,6 @@ class SelectPatternUseCase(
         }
 
         val selectionIdx = selectionResult.getDataOrThrow()
-        return Result.Success(PATTERNS[selectionIdx])
-    }
-
-    companion object {
-        private val PATTERNS = listOf(
-            AutotypePattern.DEFAULT_PATTERN,
-            AutotypePattern.USERNAME_WITH_ENTER,
-            AutotypePattern.PASSWORD_WITH_ENTER,
-            AutotypePattern.USERNAME,
-            AutotypePattern.PASSWORD,
-        )
+        return Result.Success(patterns[selectionIdx])
     }
 }

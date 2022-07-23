@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain.usecases
 
+import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
@@ -13,19 +14,20 @@ class ReadPasswordUseCase(
     private val inputReader: InputReader
 ) {
 
-    fun readPassword(filePath: String): Result<String> {
+    fun readPassword(dbFilePath: String): Result<String> {
         for (attemptIdx in 1..MAX_ATTEMPT_COUNT) {
             if (attemptIdx == 1) {
-                printer.println("Enter a password:")
+                printer.println(ENTER_PASSWORD_MESSAGE)
             }
 
             val password = inputReader.read()
-
-            val readDbResult = readDatabaseUseCase.readDatabase(PasswordKey(password), filePath)
+            val readDbResult = readDatabaseUseCase.readDatabase(PasswordKey(password), dbFilePath)
 
             when {
-                readDbResult.isFailed() && readDbResult.getErrorOrThrow().exception is InvalidPasswordException -> {
-                    printer.println("Invalid password, please enter a password again:")
+                readDbResult.isFailed() && readDbResult.getErrorOrThrow().exception is InvalidPasswordException-> {
+                    if (attemptIdx < MAX_ATTEMPT_COUNT) {
+                        printer.println(Errors.INVALID_PASSWORD_MESSAGE)
+                    }
                     continue
                 }
                 readDbResult.isFailed() -> {
@@ -37,10 +39,11 @@ class ReadPasswordUseCase(
             }
         }
 
-        return Result.Error(AutokpassException("Too many attempts"))
+        return Result.Error(AutokpassException(Errors.TOO_MANY_ATTEMPTS))
     }
 
     companion object {
+        const val ENTER_PASSWORD_MESSAGE = "Enter a password:"
         private const val MAX_ATTEMPT_COUNT = 3
     }
 }

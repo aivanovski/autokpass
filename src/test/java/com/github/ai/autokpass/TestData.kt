@@ -7,7 +7,7 @@ import java.util.UUID
 
 object TestData {
 
-    const val INVALID_PASSWORD = "123456"
+    const val INVALID_DB_PASSWORD = "123456"
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
 

@@ -35,5 +35,13 @@ data class AutotypePattern(
                 PatternItemType.PASSWORD
             )
         )
+
+        val ALL = listOf(
+            DEFAULT_PATTERN,
+            USERNAME_WITH_ENTER,
+            PASSWORD_WITH_ENTER,
+            USERNAME,
+            PASSWORD
+        )
     }
 }
