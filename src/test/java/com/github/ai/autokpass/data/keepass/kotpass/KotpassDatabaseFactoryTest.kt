@@ -2,7 +2,7 @@ package com.github.ai.autokpass.data.keepass.kotpass
 
 import com.github.ai.autokpass.TestData
 import com.github.ai.autokpass.TestData.DB_WITH_PASSWORD
-import com.github.ai.autokpass.TestData.INVALID_PASSWORD
+import com.github.ai.autokpass.TestData.INVALID_DB_PASSWORD
 import com.github.ai.autokpass.asFileKey
 import com.github.ai.autokpass.asPasswordKey
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
@@ -86,7 +86,7 @@ class KotpassDatabaseFactoryTest {
         // act
         val result = KotpassDatabaseFactory(fsProvider)
             .open(
-                key = KeepassKey.PasswordKey(INVALID_PASSWORD),
+                key = KeepassKey.PasswordKey(INVALID_DB_PASSWORD),
                 filePath = db.getFilePath()
             )
 
@@ -111,7 +111,7 @@ class KotpassDatabaseFactoryTest {
         // act
         val result = KotpassDatabaseFactory(fsProvider)
             .open(
-                key = KeepassKey.PasswordKey(INVALID_PASSWORD),
+                key = KeepassKey.PasswordKey(INVALID_DB_PASSWORD),
                 filePath = db.getFilePath()
             )
 
