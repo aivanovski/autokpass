@@ -10,6 +10,7 @@ import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.model.AutotypeExecutorType
+import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.KeepassKey.FileKey
 import com.github.ai.autokpass.model.KeepassKey.XmlFileKey
@@ -48,7 +49,7 @@ class Interactor(
         val selectedEntry = selectEntryResult.getDataOrThrow()
             ?: errorInteractor.exit()
 
-        val selectPatternResult = selectPatternUseCase.selectPattern()
+        val selectPatternResult = selectPatternUseCase.selectPattern(AutotypePattern.ALL)
         exitIfFailed(selectPatternResult)
 
         val selectedPattern = selectPatternResult.getDataOrThrow()
