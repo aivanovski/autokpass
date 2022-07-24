@@ -95,7 +95,7 @@ class KotpassDatabaseFactoryTest {
         confirmVerified()
 
         assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.getErrorOrThrow().exception).isInstanceOf(InvalidPasswordException::class.java)
+        assertThat(result.asErrorOrThrow().exception).isInstanceOf(InvalidPasswordException::class.java)
     }
 
     @Test
@@ -120,7 +120,7 @@ class KotpassDatabaseFactoryTest {
         confirmVerified()
 
         assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.getErrorOrThrow().exception).isInstanceOf(IOException::class.java)
+        assertThat(result.asErrorOrThrow().exception).isInstanceOf(IOException::class.java)
     }
 
     @Test
@@ -146,6 +146,6 @@ class KotpassDatabaseFactoryTest {
         confirmVerified()
 
         assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.getErrorOrThrow().exception).isInstanceOf(IOException::class.java)
+        assertThat(result.asErrorOrThrow().exception).isInstanceOf(IOException::class.java)
     }
 }

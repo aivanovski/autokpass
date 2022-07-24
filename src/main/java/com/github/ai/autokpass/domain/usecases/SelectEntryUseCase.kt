@@ -15,7 +15,7 @@ class SelectEntryUseCase(
     fun selectEntry(key: KeepassKey, dbFilePath: String): Result<KeepassEntry?> {
         val getEntriesResult = getEntriesUseCase.getAllEntries(key, dbFilePath)
         if (getEntriesResult.isFailed()) {
-            return getEntriesResult.getErrorOrThrow()
+            return getEntriesResult.asErrorOrThrow()
         }
 
         val entries = getEntriesResult.getDataOrThrow()
@@ -23,7 +23,7 @@ class SelectEntryUseCase(
 
         val selectionResult = optionSelector.select(options)
         if (selectionResult.isFailed()) {
-            return selectionResult.getErrorOrThrow()
+            return selectionResult.asErrorOrThrow()
         }
 
         val selectionIdx = selectionResult.getDataOrThrow()

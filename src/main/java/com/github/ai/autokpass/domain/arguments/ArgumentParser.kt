@@ -20,32 +20,32 @@ class ArgumentParser(
     fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
         val pathResult = parseFilePath(args.filePath)
         if (pathResult.isFailed()) {
-            return pathResult.getErrorOrThrow()
+            return pathResult.asErrorOrThrow()
         }
 
         val keyPathResult = parseKeyPath(args.keyPath)
         if (keyPathResult.isFailed()) {
-            return keyPathResult.getErrorOrThrow()
+            return keyPathResult.asErrorOrThrow()
         }
 
         val delayResult = parseDelay(args.delayInSeconds)
         if (delayResult.isFailed()) {
-            return delayResult.getErrorOrThrow()
+            return delayResult.asErrorOrThrow()
         }
 
         val inputTypeResult = parseInput(args.inputType)
         if (inputTypeResult.isFailed()) {
-            return inputTypeResult.getErrorOrThrow()
+            return inputTypeResult.asErrorOrThrow()
         }
 
         val autotypeResult = parseAutotypeExecutorType(args.autotypeType)
         if (autotypeResult.isFailed()) {
-            return autotypeResult.getErrorOrThrow()
+            return autotypeResult.asErrorOrThrow()
         }
 
         val keyProcessingCommandResult = parseKeyProcessingCommand(args.keyProcessingCommand)
         if (keyProcessingCommandResult.isFailed()) {
-            return keyProcessingCommandResult.getErrorOrThrow()
+            return keyProcessingCommandResult.asErrorOrThrow()
         }
 
         return Result.Success(
@@ -68,7 +68,7 @@ class ArgumentParser(
 
         val isPathValidResult = isPathValid(path)
         if (isPathValidResult.isFailed()) {
-            return isPathValidResult.getErrorOrThrow()
+            return isPathValidResult.asErrorOrThrow()
         }
 
         return Result.Success(path)
@@ -85,7 +85,7 @@ class ArgumentParser(
 
         val isPathValidResult = isPathValid(path)
         if (isPathValidResult.isFailed()) {
-            return isPathValidResult.getErrorOrThrow()
+            return isPathValidResult.asErrorOrThrow()
         }
 
         return Result.Success(path)

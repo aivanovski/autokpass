@@ -61,7 +61,7 @@ class GetOSTypeUseCaseTest {
         // assert
         assertThat(result).isInstanceOf(Result.Error::class.java)
 
-        val exception = result.getErrorOrThrow().exception
+        val exception = result.asErrorOrThrow().exception
         assertThat(exception).isInstanceOf(AutokpassException::class.java)
         assertThat(exception.message).isEqualTo(Errors.FAILED_TO_DETERMINE_OS_TYPE)
 

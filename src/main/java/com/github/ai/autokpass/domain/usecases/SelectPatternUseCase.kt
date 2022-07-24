@@ -18,7 +18,7 @@ class SelectPatternUseCase(
 
         val selectionResult = optionSelector.select(options)
         if (selectionResult.isFailed()) {
-            return selectionResult.getErrorOrThrow()
+            return selectionResult.asErrorOrThrow()
         }
 
         val selectionIdx = selectionResult.getDataOrThrow()

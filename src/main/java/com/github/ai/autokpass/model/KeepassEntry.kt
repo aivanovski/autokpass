@@ -7,11 +7,4 @@ data class KeepassEntry(
     val title: String,
     val username: String,
     val password: String
-) {
-
-    fun isNotEmpty(): Boolean = !isEmpty()
-
-    fun isEmpty(): Boolean {
-        return title.isEmpty() && username.isEmpty() && password.isEmpty()
-    }
-}
+)

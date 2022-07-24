@@ -38,7 +38,7 @@ class DetermineAutotypeExecutorTypeUseCaseTest {
         val result = useCase.getAutotypeExecutorType(null, null)
 
         assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.getErrorOrThrow().exception).isInstanceOf(AutokpassException::class.java)
-        assertThat(result.getErrorOrThrow().exception.message).isEqualTo(FAILED_TO_DETERMINE_AUTOTYPE_EXECUTOR_TYPE)
+        assertThat(result.asErrorOrThrow().exception).isInstanceOf(AutokpassException::class.java)
+        assertThat(result.asErrorOrThrow().exception.message).isEqualTo(FAILED_TO_DETERMINE_AUTOTYPE_EXECUTOR_TYPE)
     }
 }

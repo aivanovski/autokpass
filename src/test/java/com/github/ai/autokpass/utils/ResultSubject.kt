@@ -27,14 +27,14 @@ class ResultSubject private constructor(
     fun hasException(expectedType: Class<*>) {
         isFailed()
 
-        val actualException = actual.getErrorOrThrow().exception
+        val actualException = actual.asErrorOrThrow().exception
         Truth.assertThat(actualException).isInstanceOf(expectedType)
     }
 
     fun hasErrorMessage(expectedMessage: String) {
         isFailed()
 
-        val actualMessage = actual.getErrorOrThrow().exception.message
+        val actualMessage = actual.asErrorOrThrow().exception.message
         Truth.assertThat(actualMessage).isEqualTo(expectedMessage)
     }
 

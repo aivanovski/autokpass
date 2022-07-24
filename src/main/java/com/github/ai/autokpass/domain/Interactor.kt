@@ -58,7 +58,7 @@ class Interactor(
         if ((osType == OSType.LINUX && args.autotypeType == null) || args.autotypeType == AutotypeExecutorType.XDOTOOL) {
             val awaitResult = awaitWindowUseCase.awaitUntilWindowChanged()
             if (awaitResult.isFailed()) {
-                errorInteractor.processAndExit(awaitResult.getErrorOrThrow())
+                errorInteractor.processAndExit(awaitResult.asErrorOrThrow())
             }
         }
 
@@ -92,7 +92,7 @@ class Interactor(
 
     private fun exitIfFailed(result: Result<*>) {
         if (result.isFailed()) {
-            errorInteractor.processAndExit(result.getErrorOrThrow())
+            errorInteractor.processAndExit(result.asErrorOrThrow())
         }
     }
 }
