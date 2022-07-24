@@ -7,7 +7,6 @@ import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase.Companion.PROPER
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.Result
 import com.google.common.truth.Truth.assertThat
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +28,6 @@ class GetOSTypeUseCaseTest {
         assertThat(result.getDataOrThrow()).isEqualTo(OSType.LINUX)
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
-        confirmVerified()
     }
 
     @Test
@@ -46,7 +44,6 @@ class GetOSTypeUseCaseTest {
         assertThat(result.getDataOrThrow()).isEqualTo(OSType.MAC_OS)
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
-        confirmVerified()
     }
 
     @Test
@@ -66,6 +63,5 @@ class GetOSTypeUseCaseTest {
         assertThat(exception.message).isEqualTo(Errors.FAILED_TO_DETERMINE_OS_TYPE)
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
-        confirmVerified()
     }
 }

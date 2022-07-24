@@ -4,7 +4,6 @@ import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase.Companion.G
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase.Companion.PROPERTIES_FILE_NAME
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.utils.resourceAsString
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -25,7 +24,6 @@ class PrintGreetingsUseCaseTest {
 
         // assert
         verify { printer.println(message) }
-        confirmVerified()
     }
 
     private fun readVersionFromProperties(): String {

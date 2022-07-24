@@ -7,7 +7,6 @@ import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.toKeepassKey
 import com.google.common.truth.Truth.assertThat
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
@@ -42,7 +41,6 @@ class SelectEntryUseCaseTest {
             getAllEntriesUseCase.getAllEntries(key, dbFilePath)
             optionSelector.select(formattedEntries)
         }
-        confirmVerified(getAllEntriesUseCase, optionSelector)
 
         assertThat(result.isSucceeded()).isTrue()
         assertThat(result.getDataOrThrow()).isEqualTo(selectedEntry)
@@ -61,7 +59,6 @@ class SelectEntryUseCaseTest {
         verifySequence {
             getAllEntriesUseCase.getAllEntries(key, dbFilePath)
         }
-        confirmVerified(getAllEntriesUseCase, optionSelector)
 
         assertThat(result.isFailed()).isTrue()
         assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
@@ -82,7 +79,6 @@ class SelectEntryUseCaseTest {
             getAllEntriesUseCase.getAllEntries(key, dbFilePath)
             optionSelector.select(formattedEntries)
         }
-        confirmVerified(getAllEntriesUseCase, optionSelector)
 
         assertThat(result.isFailed()).isTrue()
         assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)

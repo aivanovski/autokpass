@@ -7,7 +7,6 @@ import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
 import com.google.common.truth.Truth.assertThat
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -32,7 +31,6 @@ class GetAllEntriesUseCaseTest {
         // assert
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
         verify { db.getAllEntries() }
-        confirmVerified()
 
         assertThat(result).isInstanceOf(Result.Success::class.java)
         assertThat(result.getDataOrThrow()).isEqualTo(ENTRIES)
@@ -53,7 +51,6 @@ class GetAllEntriesUseCaseTest {
 
         // assert
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
-        confirmVerified()
 
         assertThat(result).isInstanceOf(Result.Error::class.java)
         assertThat(result.getExceptionOrThrow()).isEqualTo(exception)
