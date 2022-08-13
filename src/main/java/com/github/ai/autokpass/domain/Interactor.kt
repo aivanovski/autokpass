@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain
 
+import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory.Companion.DEFAULT_DELAY_BETWEEN_ACTIONS
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
@@ -63,10 +64,11 @@ class Interactor(
         }
 
         val autotypeResult = autotypeUseCase.doAutotype(
-            autotypeExecutorType,
-            selectedEntry,
-            selectedPattern,
-            args.delayInSeconds
+            executorType = autotypeExecutorType,
+            entry = selectedEntry,
+            pattern = selectedPattern,
+            delayBetweenActions = args.autotypeDelayInMillis ?: DEFAULT_DELAY_BETWEEN_ACTIONS,
+            startDelayInSeconds = args.delayInSeconds
         )
         exitIfFailed(autotypeResult)
     }

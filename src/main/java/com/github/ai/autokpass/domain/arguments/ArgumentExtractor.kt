@@ -1,6 +1,7 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
+import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE_DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
@@ -38,6 +39,13 @@ class ArgumentExtractor {
             description = DELAY.description
         )
 
+        val autotypeDelayInMillis by parser.option(
+            ArgType.String,
+            shortName = AUTOTYPE_DELAY.shortName,
+            fullName = AUTOTYPE_DELAY.fullName,
+            description = DELAY.description
+        )
+
         val inputReader by parser.option(
             ArgType.String,
             shortName = INPUT.shortName,
@@ -69,13 +77,14 @@ class ArgumentExtractor {
         parser.parse(args)
 
         return RawArgs(
-            filePath ?: EMPTY,
-            keyPath,
-            delayInSeconds,
-            inputReader,
-            autotypeType,
-            keyCommand,
-            isXmlKeyFile ?: false
+            filePath = filePath ?: EMPTY,
+            keyPath = keyPath,
+            delayInSeconds = delayInSeconds,
+            autotypeDelayInMillis = autotypeDelayInMillis,
+            inputType = inputReader,
+            autotypeType = autotypeType,
+            keyProcessingCommand = keyCommand,
+            isXmlKeyFile = isXmlKeyFile ?: false
         )
     }
 }

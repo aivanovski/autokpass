@@ -14,17 +14,17 @@ class OsaScriptAutotypeExecutor(
             when (item) {
                 is AutotypeSequenceItem.Enter -> {
                     processExecutor.executeWithBash(
-                        "echo \"tell application \\\"System Events\\\" to key code 36\" | osascript"
+                        """echo "tell application \"System Events\" to key code 36" | osascript"""
                     )
                 }
                 is AutotypeSequenceItem.Tab -> {
                     processExecutor.executeWithBash(
-                        "echo \"tell application \\\"System Events\\\" to key code 48\" | osascript"
+                        """echo "tell application \"System Events\" to key code 48" | osascript"""
                     )
                 }
                 is AutotypeSequenceItem.Text -> {
                     processExecutor.executeWithBash(
-                        "echo \"tell application \\\"System Events\\\" to keystroke \\\"${item.text}\\\"\" | osascript"
+                        """echo "tell application \"System Events\" to keystroke \"${item.text}\"" | osascript"""
                     )
                 }
                 is AutotypeSequenceItem.Delay -> {

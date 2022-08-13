@@ -8,7 +8,11 @@ import com.github.ai.autokpass.model.KeepassEntry
 
 class AutotypeSequenceFactory {
 
-    fun createAutotypeSequence(entry: KeepassEntry, pattern: AutotypePattern): AutotypeSequence? {
+    fun createAutotypeSequence(
+        entry: KeepassEntry,
+        pattern: AutotypePattern,
+        delayBetweenActionsInMillis: Long
+    ): AutotypeSequence? {
         val items = mutableListOf<AutotypeSequenceItem>()
 
         for (item in filterPatternItems(entry, pattern)) {
@@ -16,7 +20,7 @@ class AutotypeSequenceFactory {
                 PatternItemType.USERNAME -> {
                     if (entry.username.isNotBlank()) {
                         if (items.isNotEmpty()) {
-                            items.add(AutotypeSequenceItem.Delay(DEFAULT_DELAY_BETWEEN_ACTIONS))
+                            items.add(AutotypeSequenceItem.Delay(delayBetweenActionsInMillis))
                         }
                         items.add(AutotypeSequenceItem.Text(entry.username.trim()))
                     }
@@ -24,20 +28,20 @@ class AutotypeSequenceFactory {
                 PatternItemType.PASSWORD -> {
                     if (entry.password.isNotBlank()) {
                         if (items.isNotEmpty()) {
-                            items.add(AutotypeSequenceItem.Delay(DEFAULT_DELAY_BETWEEN_ACTIONS))
+                            items.add(AutotypeSequenceItem.Delay(delayBetweenActionsInMillis))
                         }
                         items.add(AutotypeSequenceItem.Text(entry.password.trim()))
                     }
                 }
                 PatternItemType.ENTER -> {
                     if (items.isNotEmpty()) {
-                        items.add(AutotypeSequenceItem.Delay(DEFAULT_DELAY_BETWEEN_ACTIONS))
+                        items.add(AutotypeSequenceItem.Delay(delayBetweenActionsInMillis))
                         items.add(AutotypeSequenceItem.Enter)
                     }
                 }
                 PatternItemType.TAB -> {
                     if (items.isNotEmpty()) {
-                        items.add(AutotypeSequenceItem.Delay(DEFAULT_DELAY_BETWEEN_ACTIONS))
+                        items.add(AutotypeSequenceItem.Delay(delayBetweenActionsInMillis))
                         items.add(AutotypeSequenceItem.Tab)
                     }
                 }
@@ -51,7 +55,10 @@ class AutotypeSequenceFactory {
         }
     }
 
-    private fun filterPatternItems(entry: KeepassEntry, pattern: AutotypePattern): List<PatternItemType> {
+    private fun filterPatternItems(
+        entry: KeepassEntry,
+        pattern: AutotypePattern
+    ): List<PatternItemType> {
         val filteredItems = mutableListOf<PatternItemType>()
         val items = pattern.items
 

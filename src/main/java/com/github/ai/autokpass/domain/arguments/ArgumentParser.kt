@@ -33,6 +33,11 @@ class ArgumentParser(
             return delayResult.asErrorOrThrow()
         }
 
+        val autotypeDelayResult = parseAutotypeDelay(args.autotypeDelayInMillis)
+        if (autotypeDelayResult.isFailed()) {
+            return autotypeDelayResult.asErrorOrThrow()
+        }
+
         val inputTypeResult = parseInput(args.inputType)
         if (inputTypeResult.isFailed()) {
             return inputTypeResult.asErrorOrThrow()
@@ -50,13 +55,14 @@ class ArgumentParser(
 
         return Result.Success(
             ParsedArgs(
-                pathResult.getDataOrThrow(),
-                keyPathResult.getDataOrThrow(),
-                delayResult.getDataOrThrow(),
-                inputTypeResult.getDataOrThrow(),
-                autotypeResult.getDataOrThrow(),
-                keyProcessingCommandResult.getDataOrThrow(),
-                args.isXmlKeyFile
+                filePath = pathResult.getDataOrThrow(),
+                keyPath = keyPathResult.getDataOrThrow(),
+                delayInSeconds = delayResult.getDataOrThrow(),
+                autotypeDelayInMillis = autotypeDelayResult.getDataOrThrow(),
+                inputReaderType = inputTypeResult.getDataOrThrow(),
+                autotypeType = autotypeResult.getDataOrThrow(),
+                keyProcessingCommand = keyProcessingCommandResult.getDataOrThrow(),
+                isXmlKeyFile = args.isXmlKeyFile
             )
         )
     }
@@ -112,6 +118,21 @@ class ArgumentParser(
             ?: return Result.Error(
                 ParsingException(
                     String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.DELAY.cliName, delayStr)
+                )
+            )
+
+        return Result.Success(delay.toLong())
+    }
+
+    private fun parseAutotypeDelay(delayStr: String?): Result<Long?> {
+        if (delayStr.isNullOrBlank()) {
+            return Result.Success(null)
+        }
+
+        val delay = delayStr.toIntSafely()
+            ?: return Result.Error(
+                ParsingException(
+                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.AUTOTYPE_DELAY.cliName, delayStr)
                 )
             )
 
