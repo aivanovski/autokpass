@@ -22,12 +22,13 @@ class AutotypeUseCase(
         executorType: AutotypeExecutorType,
         entry: KeepassEntry,
         pattern: AutotypePattern,
-        delayInSeconds: Long?
+        delayBetweenActions: Long,
+        startDelayInSeconds: Long?
     ): Result<Unit> {
-        val sequence = sequenceFactory.createAutotypeSequence(entry, pattern)
+        val sequence = sequenceFactory.createAutotypeSequence(entry, pattern, delayBetweenActions)
             ?: return Result.Error(AutokpassException(FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE))
 
-        delayInSeconds?.let {
+        startDelayInSeconds?.let {
             printer.println(String.format(DELAY_MESSAGE, it))
             throttler.sleep(it * 1000)
         }

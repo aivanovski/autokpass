@@ -155,6 +155,64 @@ class ArgumentParserTest {
     }
 
     @Test
+    fun `validateAndParse should return autotype delay if --autotype-delay specified`() {
+        // arrange
+        val args = argsWith(autotypeDelayInMillis = DELAY)
+
+        // act
+        val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return null if --autotype-delay is null`() {
+        // arrange
+        val args = argsWith(autotypeDelayInMillis = null)
+
+        // act
+        val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return null if --autotype-delay is empty`() {
+        // arrange
+        val args = argsWith(autotypeDelayInMillis = EMPTY)
+
+        // act
+        val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
+
+        // assert
+        assertThat(result).isSuccessful()
+        assertThat(result).hasDataEqualTo(args.copy(autotypeDelayInMillis = null).toParsedArgs())
+    }
+
+    @Test
+    fun `validateAndParse should return error if --autotype-delay is invalid`() {
+        // arrange
+        val args = argsWith(autotypeDelayInMillis = INVALID_VALUE)
+
+        // act
+        val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
+
+        // assert
+        assertThat(result).hasException(ParsingException::class.java)
+        assertThat(result).hasErrorMessage(
+            format(
+                GENERIC_FAILED_TO_PARSE_ARGUMENT,
+                Argument.AUTOTYPE_DELAY.cliName,
+                INVALID_VALUE
+            )
+        )
+    }
+
+    @Test
     fun `validateAndParse should return delay if --delay specified`() {
         // arrange
         val args = argsWith(delayInSeconds = DELAY)
@@ -374,6 +432,7 @@ class ArgumentParserTest {
         filePath: String = FILE_PATH,
         keyPath: String? = null,
         delayInSeconds: String? = null,
+        autotypeDelayInMillis: String? = null,
         inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
         keyProcessingCommand: String? = null,
@@ -383,6 +442,7 @@ class ArgumentParserTest {
             filePath = filePath,
             keyPath = keyPath,
             delayInSeconds = delayInSeconds,
+            autotypeDelayInMillis = autotypeDelayInMillis,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
             keyProcessingCommand = keyProcessingCommand,
@@ -395,6 +455,7 @@ class ArgumentParserTest {
             filePath = filePath,
             keyPath = keyPath,
             delayInSeconds = delayInSeconds?.toLong(),
+            autotypeDelayInMillis = autotypeDelayInMillis?.toLong(),
             inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
             keyProcessingCommand = keyProcessingCommand,

@@ -30,6 +30,12 @@ enum class Argument(
         description = "Delay in seconds before autotype will be started"
     ),
 
+    AUTOTYPE_DELAY(
+        fullName = "autotype-delay",
+        shortName = "b",
+        description = "Delay in milliseconds between autotype actions"
+    ),
+
     AUTOTYPE(
         fullName = "autotype",
         shortName = "a",
