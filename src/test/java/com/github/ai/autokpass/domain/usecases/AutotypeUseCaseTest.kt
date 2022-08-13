@@ -12,7 +12,6 @@ import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern.Companion.DEFAULT_PATTERN
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.google.common.truth.Truth.assertThat
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
@@ -55,7 +54,6 @@ class AutotypeUseCaseTest {
             executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL)
             executor.execute(SEQUENCE)
         }
-        confirmVerified()
 
         assertThat(result.isSucceeded()).isTrue()
     }
@@ -82,9 +80,6 @@ class AutotypeUseCaseTest {
             )
 
         // assert
-        every { sequenceFactory.createAutotypeSequence(ENTRY1, DEFAULT_PATTERN, DELAY_BETWEEN_ACTIONS_IN_MILLIS) }
-        confirmVerified()
-
         assertThat(result.isFailed()).isTrue()
         assertThat(result.getExceptionOrThrow()).isInstanceOf(AutokpassException::class.java)
         assertThat(result.getExceptionOrThrow().message).isEqualTo(FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE)
@@ -124,7 +119,6 @@ class AutotypeUseCaseTest {
             executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL)
             executor.execute(SEQUENCE)
         }
-        confirmVerified()
 
         assertThat(result.isSucceeded()).isTrue()
     }

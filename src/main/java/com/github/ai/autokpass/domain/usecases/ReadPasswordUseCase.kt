@@ -24,14 +24,14 @@ class ReadPasswordUseCase(
             val readDbResult = readDatabaseUseCase.readDatabase(PasswordKey(password), dbFilePath)
 
             when {
-                readDbResult.isFailed() && readDbResult.getErrorOrThrow().exception is InvalidPasswordException-> {
+                readDbResult.isFailed() && readDbResult.asErrorOrThrow().exception is InvalidPasswordException-> {
                     if (attemptIdx < MAX_ATTEMPT_COUNT) {
                         printer.println(Errors.INVALID_PASSWORD_MESSAGE)
                     }
                     continue
                 }
                 readDbResult.isFailed() -> {
-                    return readDbResult.getErrorOrThrow()
+                    return readDbResult.asErrorOrThrow()
                 }
                 else -> {
                     return Result.Success(password)

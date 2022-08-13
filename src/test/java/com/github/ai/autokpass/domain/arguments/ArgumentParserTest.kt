@@ -11,7 +11,7 @@ import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
-import com.github.ai.autokpass.utils.ResultSubject.Companion.assertThat
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -29,7 +29,7 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
+        assertThat(result.isSucceeded()).isTrue()
     }
 
     @Test
@@ -42,8 +42,14 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(
+                GENERIC_EMPTY_ARGUMENT,
+                Argument.FILE.cliName
+            )
+        )
     }
 
     @Test
@@ -57,8 +63,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FILE_DOES_NOT_EXIST, FILE_PATH))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_DOES_NOT_EXIST, FILE_PATH))
     }
 
     @Test
@@ -73,8 +80,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FILE_IS_NOT_A_FILE, FILE_PATH))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_IS_NOT_A_FILE, FILE_PATH))
     }
 
     @Test
@@ -87,8 +95,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -101,8 +109,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -115,8 +123,14 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.KEY_FILE.cliName))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(
+                GENERIC_EMPTY_ARGUMENT,
+                Argument.KEY_FILE.cliName
+            )
+        )
     }
 
     @Test
@@ -132,8 +146,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FILE_DOES_NOT_EXIST, KEY_PATH))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_DOES_NOT_EXIST, KEY_PATH))
     }
 
     @Test
@@ -150,8 +165,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_FILE_IS_NOT_A_FILE, KEY_PATH))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_IS_NOT_A_FILE, KEY_PATH))
     }
 
     @Test
@@ -163,8 +179,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -176,8 +192,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -189,8 +205,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.copy(autotypeDelayInMillis = null).toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.copy(autotypeDelayInMillis = null).toParsedArgs())
     }
 
     @Test
@@ -202,8 +218,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.AUTOTYPE_DELAY.cliName,
@@ -222,8 +239,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -236,8 +253,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -250,8 +267,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.copy(delayInSeconds = null).toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.copy(delayInSeconds = null).toParsedArgs())
     }
 
     @Test
@@ -264,8 +281,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.DELAY.cliName,
@@ -284,8 +302,11 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.copy(inputType = InputReaderType.SECRET.cliName).toParsedArgs())
+
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(
+            args.copy(inputType = InputReaderType.SECRET.cliName).toParsedArgs()
+        )
     }
 
     @Test
@@ -298,8 +319,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -312,8 +333,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.INPUT.cliName,
@@ -332,8 +354,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -346,8 +368,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -360,8 +382,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.AUTOTYPE.cliName,
@@ -380,9 +403,14 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isFailed()
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(
+                GENERIC_EMPTY_ARGUMENT,
+                Argument.FILE.cliName
+            )
+        )
     }
 
     @Test
@@ -395,8 +423,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -409,8 +437,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isSuccessful()
-        assertThat(result).hasDataEqualTo(args.toParsedArgs())
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
     }
 
     @Test
@@ -423,9 +451,11 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result).isFailed()
-        assertThat(result).hasException(ParsingException::class.java)
-        assertThat(result).hasErrorMessage(format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName))
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName)
+        )
     }
 
     private fun argsWith(

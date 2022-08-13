@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
 
     val parserResult = parser.validateAndParse(rawArgs)
     if (parserResult.isFailed()) {
-        errorInteractor.processAndExit(parserResult.getErrorOrThrow())
+        errorInteractor.processAndExit(parserResult.asErrorOrThrow())
     }
 
     val parsedArgs = parserResult.getDataOrThrow()

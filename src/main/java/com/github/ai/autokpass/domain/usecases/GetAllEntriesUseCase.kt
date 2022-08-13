@@ -11,7 +11,7 @@ class GetAllEntriesUseCase(
     fun getAllEntries(key: KeepassKey, filePath: String): Result<List<KeepassEntry>> {
         val dbResult = readDbUseCase.readDatabase(key, filePath)
         if (dbResult.isFailed()) {
-            return dbResult.getErrorOrThrow()
+            return dbResult.asErrorOrThrow()
         }
 
         val db = dbResult.getDataOrThrow()
