@@ -1,5 +1,6 @@
 package com.github.ai.autokpass
 
+import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.utils.resourceAsStream
 import java.io.InputStream
@@ -10,6 +11,8 @@ object TestData {
     const val INVALID_DB_PASSWORD = "123456"
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
+    const val DEFAULT_DELAY = 200L
+    const val DEFAULT_INPUT_TEXT = "abc123"
 
     val ENTRY1 = KeepassEntry(
         uid = UUID.fromString("11111111-2222-3333-4444-555555555555"),
@@ -23,6 +26,13 @@ object TestData {
         title = "title2",
         username = "username2",
         password = "password2"
+    )
+
+    val DEFAULT_AUTOTYPE_ITEMS = listOf(
+        AutotypeSequenceItem.Text(DEFAULT_INPUT_TEXT),
+        AutotypeSequenceItem.Tab,
+        AutotypeSequenceItem.Enter,
+        AutotypeSequenceItem.Delay(DEFAULT_DELAY)
     )
 
     val ENTRIES = listOf(ENTRY1, ENTRY2)
