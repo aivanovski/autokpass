@@ -33,6 +33,26 @@ class ArgumentParserTest {
     }
 
     @Test
+    fun `validateAndParse should return error if --file is null`() {
+        // arrange
+        val args = argsWith(filePath = null)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(
+                GENERIC_EMPTY_ARGUMENT,
+                Argument.FILE.cliName
+            )
+        )
+    }
+
+    @Test
     fun `validateAndParse should return error if --file is empty`() {
         // arrange
         val args = argsWith(filePath = EMPTY)
@@ -396,7 +416,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if all empty`() {
         // arrange
-        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, isXmlKeyFile = false)
+        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -459,14 +479,13 @@ class ArgumentParserTest {
     }
 
     private fun argsWith(
-        filePath: String = FILE_PATH,
+        filePath: String? = FILE_PATH,
         keyPath: String? = null,
         delayInSeconds: String? = null,
         autotypeDelayInMillis: String? = null,
         inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
-        keyProcessingCommand: String? = null,
-        isXmlKeyFile: Boolean = false
+        keyProcessingCommand: String? = null
     ): RawArgs {
         return RawArgs(
             filePath = filePath,
@@ -475,21 +494,19 @@ class ArgumentParserTest {
             autotypeDelayInMillis = autotypeDelayInMillis,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
-            keyProcessingCommand = keyProcessingCommand,
-            isXmlKeyFile = isXmlKeyFile
+            keyProcessingCommand = keyProcessingCommand
         )
     }
 
     private fun RawArgs.toParsedArgs(): ParsedArgs =
         ParsedArgs(
-            filePath = filePath,
+            filePath = filePath ?: EMPTY,
             keyPath = keyPath,
             delayInSeconds = delayInSeconds?.toLong(),
             autotypeDelayInMillis = autotypeDelayInMillis?.toLong(),
             inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
-            keyProcessingCommand = keyProcessingCommand,
-            isXmlKeyFile = isXmlKeyFile
+            keyProcessingCommand = keyProcessingCommand
         )
 
     private fun providerForAnyFile(): FileSystemProvider {

@@ -18,12 +18,6 @@ enum class Argument(
         description = "Path to key file"
     ),
 
-    XML_KEY(
-        fullName = "xml-key",
-        shortName = "x",
-        description = "Interpret key file as xml file"
-    ),
-
     DELAY(
         fullName = "delay",
         shortName = "d",
@@ -59,4 +53,5 @@ enum class Argument(
     );
 
     val cliName: String = "--$fullName"
+    val cliShortName: String = "-$shortName"
 }

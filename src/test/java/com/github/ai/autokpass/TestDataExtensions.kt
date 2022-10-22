@@ -26,7 +26,6 @@ fun TestKey.toKotpassCredentials(): io.github.anvell.kotpass.database.Credential
         is TestKey.FileKey -> io.github.anvell.kotpass.database.Credentials.from(
             EncryptedValue.fromBinary(resourceAsBytes(filename))
         )
-        is TestKey.XmlFileKey -> throw UnsupportedOperationException()
     }
 }
 
@@ -41,7 +40,6 @@ fun TestKey.getPasswordOrThrow(): String {
 fun TestKey.getFilePathOrThrow(): String {
     return when (this) {
         is TestKey.FileKey -> getFilePath()
-        is TestKey.XmlFileKey -> getFilePath()
         else -> throw IllegalStateException()
     }
 }
@@ -62,22 +60,11 @@ fun TestKey.asFileKey(): TestKey.FileKey {
     }
 }
 
-fun TestKey.asXmlFileKey(): TestKey.XmlFileKey {
-    return if (this is TestKey.XmlFileKey) {
-        this
-    } else {
-        throw IllegalStateException()
-    }
-}
-
 fun TestKey.FileKey.getFilePath(): String = "/$filename"
-
-fun TestKey.XmlFileKey.getFilePath(): String = "/$filename"
 
 fun TestKey.toKeepassKey(): KeepassKey {
     return when (this) {
         is TestKey.PasswordKey -> KeepassKey.PasswordKey(password)
         is TestKey.FileKey -> KeepassKey.FileKey(File(getFilePathOrThrow()))
-        is TestKey.XmlFileKey -> KeepassKey.XmlFileKey(File(getFilePathOrThrow()))
     }
 }
