@@ -148,7 +148,8 @@ class AutotypeSequenceFactoryTest {
             uid = UID,
             title = "title",
             username = username,
-            password = password
+            password = password,
+            isAutotypeEnabled = true
         )
 
     companion object {

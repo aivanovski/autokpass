@@ -7,13 +7,13 @@ import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
 
 class SelectEntryUseCase(
-    private val getEntriesUseCase: GetAllEntriesUseCase,
+    private val getEntriesUseCase: GetVisibleEntriesUseCase,
     private val entryFormatter: EntryFormatter,
     private val optionSelector: OptionSelector
 ) {
 
     fun selectEntry(key: KeepassKey, dbFilePath: String): Result<KeepassEntry?> {
-        val getEntriesResult = getEntriesUseCase.getAllEntries(key, dbFilePath)
+        val getEntriesResult = getEntriesUseCase.getEntries(key, dbFilePath)
         if (getEntriesResult.isFailed()) {
             return getEntriesResult.asErrorOrThrow()
         }

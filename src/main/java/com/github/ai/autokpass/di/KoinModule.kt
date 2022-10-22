@@ -30,7 +30,7 @@ import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
-import com.github.ai.autokpass.domain.usecases.GetAllEntriesUseCase
+import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import com.github.ai.autokpass.domain.usecases.ProcessKeyUseCase
@@ -97,7 +97,7 @@ object KoinModule {
         // use cases
         single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase(get()) }
-        single { GetAllEntriesUseCase(get()) }
+        single { GetVisibleEntriesUseCase(get()) }
         single { AutotypeUseCase(get(), get(), get(), get()) }
         single { SelectEntryUseCase(get(), get(), get()) }
         single { SelectPatternUseCase(get(), get()) }
