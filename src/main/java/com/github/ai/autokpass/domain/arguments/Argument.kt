@@ -53,4 +53,5 @@ enum class Argument(
     );
 
     val cliName: String = "--$fullName"
+    val cliShortName: String = "-$shortName"
 }
