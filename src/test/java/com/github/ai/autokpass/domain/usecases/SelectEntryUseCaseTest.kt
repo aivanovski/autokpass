@@ -15,7 +15,7 @@ import java.lang.Exception
 
 class SelectEntryUseCaseTest {
 
-    private val getAllEntriesUseCase = mockk<GetAllEntriesUseCase>()
+    private val getEntriesUseCase = mockk<GetVisibleEntriesUseCase>()
     private val entryFormatter = DefaultEntryFormatter()
     private val optionSelector = mockk<OptionSelector>()
 
@@ -30,7 +30,7 @@ class SelectEntryUseCaseTest {
         // arrange
         val selectedEntry = entries[SELECTED_ENTRY_INDEX]
 
-        every { getAllEntriesUseCase.getAllEntries(key, dbFilePath) }.returns(Result.Success(entries))
+        every { getEntriesUseCase.getEntries(key, dbFilePath) }.returns(Result.Success(entries))
         every { optionSelector.select(formattedEntries) }.returns(Result.Success(SELECTED_ENTRY_INDEX))
 
         // act
@@ -38,7 +38,7 @@ class SelectEntryUseCaseTest {
 
         // assert
         verifySequence {
-            getAllEntriesUseCase.getAllEntries(key, dbFilePath)
+            getEntriesUseCase.getEntries(key, dbFilePath)
             optionSelector.select(formattedEntries)
         }
 
@@ -50,14 +50,14 @@ class SelectEntryUseCaseTest {
     fun `selectEntry should return error if GetAllEntriesUseCase return error`() {
         // arrange
         val exception = Exception()
-        every { getAllEntriesUseCase.getAllEntries(key, dbFilePath) }.returns(Result.Error(exception))
+        every { getEntriesUseCase.getEntries(key, dbFilePath) }.returns(Result.Error(exception))
 
         // act
         val result = createUseCase().selectEntry(key, dbFilePath)
 
         // assert
         verifySequence {
-            getAllEntriesUseCase.getAllEntries(key, dbFilePath)
+            getEntriesUseCase.getEntries(key, dbFilePath)
         }
 
         assertThat(result.isFailed()).isTrue()
@@ -68,7 +68,7 @@ class SelectEntryUseCaseTest {
     fun `selectEntry should return error if `() {
         // arrange
         val exception = Exception()
-        every { getAllEntriesUseCase.getAllEntries(key, dbFilePath) }.returns(Result.Success(entries))
+        every { getEntriesUseCase.getEntries(key, dbFilePath) }.returns(Result.Success(entries))
         every { optionSelector.select(formattedEntries) }.returns(Result.Error(exception))
 
         // act
@@ -76,7 +76,7 @@ class SelectEntryUseCaseTest {
 
         // assert
         verifySequence {
-            getAllEntriesUseCase.getAllEntries(key, dbFilePath)
+            getEntriesUseCase.getEntries(key, dbFilePath)
             optionSelector.select(formattedEntries)
         }
 
@@ -86,7 +86,7 @@ class SelectEntryUseCaseTest {
 
     private fun createUseCase(): SelectEntryUseCase {
         return SelectEntryUseCase(
-            getEntriesUseCase = getAllEntriesUseCase,
+            getEntriesUseCase = getEntriesUseCase,
             entryFormatter = entryFormatter,
             optionSelector = optionSelector
         )

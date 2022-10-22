@@ -3,6 +3,7 @@ package com.github.ai.autokpass.domain.usecases
 import com.github.ai.autokpass.TestData.DB_PASSWORD
 import com.github.ai.autokpass.TestData.DB_PATH
 import com.github.ai.autokpass.TestData.ENTRIES
+import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
@@ -12,10 +13,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class GetAllEntriesUseCaseTest {
+class GetVisibleEntriesUseCaseTest {
 
     @Test
-    fun `getAllEntries should return all entries from db`() {
+    fun `getAllEntries should return entries with enabled autotype`() {
         // arrange
         val key = KeepassKey.PasswordKey(DB_PASSWORD)
         val readDbUseCase = mockk<ReadDatabaseUseCase>()
@@ -25,15 +26,15 @@ class GetAllEntriesUseCaseTest {
         every { db.getAllEntries() }.returns(ENTRIES)
 
         // act
-        val result = GetAllEntriesUseCase(readDbUseCase)
-            .getAllEntries(key, DB_PATH)
+        val result = GetVisibleEntriesUseCase(readDbUseCase)
+            .getEntries(key, DB_PATH)
 
         // assert
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
         verify { db.getAllEntries() }
 
         assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isEqualTo(ENTRIES)
+        assertThat(result.getDataOrThrow()).isEqualTo(listOf(ENTRY1))
     }
 
     @Test
@@ -46,8 +47,8 @@ class GetAllEntriesUseCaseTest {
         every { readDbUseCase.readDatabase(key, DB_PATH) }.returns(Result.Error(exception))
 
         // act
-        val result = GetAllEntriesUseCase(readDbUseCase)
-            .getAllEntries(key, DB_PATH)
+        val result = GetVisibleEntriesUseCase(readDbUseCase)
+            .getEntries(key, DB_PATH)
 
         // assert
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
