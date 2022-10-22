@@ -14,7 +14,6 @@ import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.KeepassKey.FileKey
-import com.github.ai.autokpass.model.KeepassKey.XmlFileKey
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
@@ -87,7 +86,6 @@ class Interactor(
 
                 KeepassKey.PasswordKey(processedKeyResult.getDataOrThrow())
             }
-            args.isXmlKeyFile -> XmlFileKey(File(args.keyPath))
             else -> FileKey(File(args.keyPath))
         }
     }

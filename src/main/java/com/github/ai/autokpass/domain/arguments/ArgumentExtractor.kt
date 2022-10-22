@@ -7,7 +7,6 @@ import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.INPUT
 import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
-import com.github.ai.autokpass.domain.arguments.Argument.XML_KEY
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.cli.ArgParser
@@ -53,13 +52,6 @@ class ArgumentExtractor {
             description = INPUT.description
         )
 
-        val isXmlKeyFile by parser.option(
-            ArgType.Boolean,
-            shortName = XML_KEY.shortName,
-            fullName = XML_KEY.fullName,
-            description = XML_KEY.description
-        )
-
         val autotypeType by parser.option(
             ArgType.String,
             shortName = AUTOTYPE.shortName,
@@ -83,8 +75,7 @@ class ArgumentExtractor {
             autotypeDelayInMillis = autotypeDelayInMillis,
             inputType = inputReader,
             autotypeType = autotypeType,
-            keyProcessingCommand = keyCommand,
-            isXmlKeyFile = isXmlKeyFile ?: false
+            keyProcessingCommand = keyCommand
         )
     }
 }

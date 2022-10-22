@@ -37,7 +37,6 @@ class KotpassDatabaseFactory(
             is KeepassKey.FileKey -> Credentials.from(
                 EncryptedValue.fromBinary(fileSystemProvider.openFile(file.path).readAllBytes())
             )
-            is KeepassKey.XmlFileKey -> throw UnsupportedOperationException("XML key file is not supported")
         }
     }
 }

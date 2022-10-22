@@ -396,7 +396,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if all empty`() {
         // arrange
-        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, isXmlKeyFile = false)
+        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -465,8 +465,7 @@ class ArgumentParserTest {
         autotypeDelayInMillis: String? = null,
         inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
-        keyProcessingCommand: String? = null,
-        isXmlKeyFile: Boolean = false
+        keyProcessingCommand: String? = null
     ): RawArgs {
         return RawArgs(
             filePath = filePath,
@@ -475,8 +474,7 @@ class ArgumentParserTest {
             autotypeDelayInMillis = autotypeDelayInMillis,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
-            keyProcessingCommand = keyProcessingCommand,
-            isXmlKeyFile = isXmlKeyFile
+            keyProcessingCommand = keyProcessingCommand
         )
     }
 
@@ -488,8 +486,7 @@ class ArgumentParserTest {
             autotypeDelayInMillis = autotypeDelayInMillis?.toLong(),
             inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
-            keyProcessingCommand = keyProcessingCommand,
-            isXmlKeyFile = isXmlKeyFile
+            keyProcessingCommand = keyProcessingCommand
         )
 
     private fun providerForAnyFile(): FileSystemProvider {

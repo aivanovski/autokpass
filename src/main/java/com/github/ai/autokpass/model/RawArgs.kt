@@ -7,6 +7,5 @@ data class RawArgs(
     val autotypeDelayInMillis: String?,
     val inputType: String?,
     val autotypeType: String?,
-    val keyProcessingCommand: String?,
-    val isXmlKeyFile: Boolean
+    val keyProcessingCommand: String?
 )

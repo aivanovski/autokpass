@@ -61,8 +61,7 @@ class ArgumentParser(
                 autotypeDelayInMillis = autotypeDelayResult.getDataOrThrow(),
                 inputReaderType = inputTypeResult.getDataOrThrow(),
                 autotypeType = autotypeResult.getDataOrThrow(),
-                keyProcessingCommand = keyProcessingCommandResult.getDataOrThrow(),
-                isXmlKeyFile = args.isXmlKeyFile
+                keyProcessingCommand = keyProcessingCommandResult.getDataOrThrow()
             )
         )
     }

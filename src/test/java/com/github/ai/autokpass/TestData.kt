@@ -131,8 +131,5 @@ object TestData {
         data class FileKey(val filename: String) : TestKey() {
             fun asStream(): InputStream = resourceAsStream(filename)
         }
-        data class XmlFileKey(val filename: String) : TestKey() {
-            fun asStream(): InputStream = resourceAsStream(filename)
-        }
     }
 }
