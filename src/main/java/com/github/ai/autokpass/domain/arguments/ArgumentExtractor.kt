@@ -8,7 +8,6 @@ import com.github.ai.autokpass.domain.arguments.Argument.INPUT
 import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.model.RawArgs
-import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 
@@ -69,7 +68,7 @@ class ArgumentExtractor {
         parser.parse(args)
 
         return RawArgs(
-            filePath = filePath ?: EMPTY,
+            filePath = filePath,
             keyPath = keyPath,
             delayInSeconds = delayInSeconds,
             autotypeDelayInMillis = autotypeDelayInMillis,

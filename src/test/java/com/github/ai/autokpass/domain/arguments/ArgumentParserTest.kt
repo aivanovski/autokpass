@@ -33,6 +33,26 @@ class ArgumentParserTest {
     }
 
     @Test
+    fun `validateAndParse should return error if --file is null`() {
+        // arrange
+        val args = argsWith(filePath = null)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider).validateAndParse(args)
+
+        // assert
+        assertThat(result.isFailed()).isTrue()
+        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
+        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+            format(
+                GENERIC_EMPTY_ARGUMENT,
+                Argument.FILE.cliName
+            )
+        )
+    }
+
+    @Test
     fun `validateAndParse should return error if --file is empty`() {
         // arrange
         val args = argsWith(filePath = EMPTY)
@@ -459,7 +479,7 @@ class ArgumentParserTest {
     }
 
     private fun argsWith(
-        filePath: String = FILE_PATH,
+        filePath: String? = FILE_PATH,
         keyPath: String? = null,
         delayInSeconds: String? = null,
         autotypeDelayInMillis: String? = null,
@@ -480,7 +500,7 @@ class ArgumentParserTest {
 
     private fun RawArgs.toParsedArgs(): ParsedArgs =
         ParsedArgs(
-            filePath = filePath,
+            filePath = filePath ?: EMPTY,
             keyPath = keyPath,
             delayInSeconds = delayInSeconds?.toLong(),
             autotypeDelayInMillis = autotypeDelayInMillis?.toLong(),

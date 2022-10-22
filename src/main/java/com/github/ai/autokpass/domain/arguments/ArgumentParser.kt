@@ -66,8 +66,8 @@ class ArgumentParser(
         )
     }
 
-    private fun parseFilePath(path: String): Result<String> {
-        if (path.isBlank()) {
+    private fun parseFilePath(path: String?): Result<String> {
+        if (path.isNullOrBlank()) {
             return Result.Error(ParsingException(String.format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName)))
         }
 
