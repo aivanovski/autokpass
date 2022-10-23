@@ -25,6 +25,7 @@ import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
+import com.github.ai.autokpass.domain.usecases.GetKeyUseCase
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
@@ -71,7 +72,9 @@ object KoinModule {
         single { ProcessKeyUseCase(get(), get()) }
         single { KeepassDatabaseFactoryProvider(get()) }
         single { ReadPasswordUseCase(get(), get(), get()) }
+        single { GetKeyUseCase(get(), get()) }
 
-        single { Interactor(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+        // interactor
+        single { Interactor(get(), get(), get(), get(), get(), get(), get(), get()) }
     }
 }

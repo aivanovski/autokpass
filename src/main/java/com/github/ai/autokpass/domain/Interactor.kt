@@ -4,21 +4,17 @@ import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory.Companion
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
 import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
+import com.github.ai.autokpass.domain.usecases.GetKeyUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
-import com.github.ai.autokpass.domain.usecases.ProcessKeyUseCase
-import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern
-import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
-import java.io.File
 
 class Interactor(
-    private val readPasswordUseCase: ReadPasswordUseCase,
-    private val processKeyUseCase: ProcessKeyUseCase,
+    private val getKeyUseCase: GetKeyUseCase,
     private val selectEntryUseCase: SelectEntryUseCase,
     private val selectPatternUseCase: SelectPatternUseCase,
     private val awaitWindowUseCase: AwaitWindowChangeUseCase,
@@ -40,7 +36,17 @@ class Interactor(
             return
         }
 
-        val key = getKey(args) ?: return
+        val getKeyResult = getKeyUseCase.getKey(
+            inputReaderType = args.inputReaderType,
+            dbFilePath = args.filePath,
+            keyPath = args.keyPath,
+            keyProcessingCommand = args.keyProcessingCommand
+        )
+        if (errorInteractor.processFailed(getKeyResult)) {
+            return
+        }
+
+        val key = getKeyResult.getDataOrThrow()
         val autotypeExecutorType = autotypeExecutorResult.getDataOrThrow()
 
         val selectEntryResult = selectEntryUseCase.selectEntry(key, args.filePath)
@@ -72,27 +78,5 @@ class Interactor(
             startDelayInSeconds = args.delayInSeconds
         )
         errorInteractor.processFailed(autotypeResult)
-    }
-
-    private fun getKey(args: ParsedArgs): KeepassKey? {
-        return when {
-            args.keyPath == null -> {
-                val passwordResult = readPasswordUseCase.readPassword(args.inputReaderType, args.filePath)
-                if (errorInteractor.processFailed(passwordResult)) {
-                    return null
-                }
-
-                KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
-            }
-            args.keyProcessingCommand != null -> {
-                val processedKeyResult = processKeyUseCase.processKeyWithCommand(args.keyProcessingCommand, args.keyPath)
-                if (errorInteractor.processFailed(processedKeyResult)) {
-                    return null
-                }
-
-                KeepassKey.PasswordKey(processedKeyResult.getDataOrThrow())
-            }
-            else -> KeepassKey.FileKey(File(args.keyPath))
-        }
     }
 }

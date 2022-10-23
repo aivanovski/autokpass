@@ -11,6 +11,7 @@ object TestData {
     const val INVALID_DB_PASSWORD = "123456"
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
+    const val KEY_PATH = "/path/key"
     const val DEFAULT_DELAY = 200L
     const val DEFAULT_INPUT_TEXT = "abc123"
 
