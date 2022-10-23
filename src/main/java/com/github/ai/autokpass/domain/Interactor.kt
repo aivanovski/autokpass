@@ -75,7 +75,7 @@ class Interactor(
     private fun getKey(args: ParsedArgs): KeepassKey {
         return when {
             args.keyPath == null -> {
-                val passwordResult = readPasswordUseCase.readPassword(args.filePath)
+                val passwordResult = readPasswordUseCase.readPassword(args.inputReaderType, args.filePath)
                 exitIfFailed(passwordResult)
 
                 KeepassKey.PasswordKey(passwordResult.getDataOrThrow())

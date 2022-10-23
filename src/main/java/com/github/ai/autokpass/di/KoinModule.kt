@@ -17,9 +17,6 @@ import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
-import com.github.ai.autokpass.presentation.input.InputReader
-import com.github.ai.autokpass.presentation.input.SecretInputReader
-import com.github.ai.autokpass.presentation.input.StandardInputReader
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
 import com.github.ai.autokpass.presentation.selector.Fzf4jOptionSelector
@@ -37,9 +34,8 @@ import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
-import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
-import org.koin.core.qualifier.named
+import com.github.ai.autokpass.presentation.input.InputReaderFactory
 import org.koin.dsl.module
 
 object KoinModule {
@@ -48,6 +44,7 @@ object KoinModule {
         single<Printer> { StandardOutputPrinter() }
         single<FileSystemProvider> { DefaultFileSystemProvider() }
         single { AutotypeSequenceFactory() }
+        single { InputReaderFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
         single { ArgumentExtractor() }
@@ -61,24 +58,6 @@ object KoinModule {
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single { AutotypeExecutorFactory(get(), get()) }
 
-        single<InputReader>(named(InputReaderType.STANDARD.name)) { StandardInputReader() }
-        single<InputReader>(named(InputReaderType.SECRET.name)) { SecretInputReader() }
-
-        single(named(InputReaderType.STANDARD.name)) {
-            ReadPasswordUseCase(
-                get(),
-                get(),
-                get(qualifier = named(InputReaderType.STANDARD.name))
-            )
-        }
-        single(named(InputReaderType.SECRET.name)) {
-            ReadPasswordUseCase(
-                get(),
-                get(),
-                get(qualifier = named(InputReaderType.SECRET.name))
-            )
-        }
-
         // use cases
         single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase(get()) }
@@ -91,10 +70,11 @@ object KoinModule {
         single { DetermineAutotypeExecutorTypeUseCase() }
         single { ProcessKeyUseCase(get(), get()) }
         single { KeepassDatabaseFactoryProvider(get()) }
+        single { ReadPasswordUseCase(get(), get(), get()) }
 
-        factory { (args: ParsedArgs) ->
+        factory { (args: ParsedArgs) -> // TODO: refactor to single {}
             Interactor(
-                get(qualifier = named(args.inputReaderType.name)),
+                get(),
                 get(),
                 get(),
                 get(),
