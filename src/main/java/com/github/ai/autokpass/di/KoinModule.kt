@@ -10,14 +10,11 @@ import com.github.ai.autokpass.presentation.process.JprocProcessExecutor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.SystemPropertyProvider
-import com.github.ai.autokpass.domain.autotype.AutotypeExecutorProvider
+import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.autotype.AutotypePatternParser
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
-import com.github.ai.autokpass.domain.autotype.CliclickAutotypeExecutor
-import com.github.ai.autokpass.domain.autotype.OsaScriptAutotypeExecutor
 import com.github.ai.autokpass.domain.autotype.ThreadThrottler
-import com.github.ai.autokpass.domain.autotype.XdotoolAutotypeExecutor
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
 import com.github.ai.autokpass.presentation.input.InputReader
@@ -40,15 +37,12 @@ import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
-import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 object KoinModule {
-
-    private const val AUTOTYPE_EXECUTORS_MAP = "autotype-executors-map"
 
     val appModule = module {
         single<Printer> { StandardOutputPrinter() }
@@ -65,16 +59,7 @@ object KoinModule {
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<OptionSelector> { Fzf4jOptionSelector() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
-
-        single(named(AUTOTYPE_EXECUTORS_MAP)) {
-            mapOf(
-                AutotypeExecutorType.XDOTOOL to XdotoolAutotypeExecutor(get(), get()),
-                AutotypeExecutorType.CLICLICK to CliclickAutotypeExecutor(get(), get()),
-                AutotypeExecutorType.OSA_SCRIPT to OsaScriptAutotypeExecutor(get(), get())
-            )
-        }
-
-        single { AutotypeExecutorProvider(get(named(AUTOTYPE_EXECUTORS_MAP))) }
+        single { AutotypeExecutorFactory(get(), get()) }
 
         single<InputReader>(named(InputReaderType.STANDARD.name)) { StandardInputReader() }
         single<InputReader>(named(InputReaderType.SECRET.name)) { SecretInputReader() }
