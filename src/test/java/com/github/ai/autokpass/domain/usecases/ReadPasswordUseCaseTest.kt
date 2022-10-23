@@ -8,9 +8,11 @@ import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase.Companion.ENTER_PASSWORD_MESSAGE
+import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.input.InputReader
+import com.github.ai.autokpass.presentation.input.InputReaderFactory
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -23,6 +25,7 @@ class ReadPasswordUseCaseTest {
 
     private val readDatabaseUseCase = mockk<ReadDatabaseUseCase>()
     private val printer = mockk<Printer>()
+    private val inputReaderFactory = mockk<InputReaderFactory>()
     private val inputReader = mockk<InputReader>()
 
     @Test
@@ -31,15 +34,17 @@ class ReadPasswordUseCaseTest {
         val db = mockk<KeepassDatabase>()
         val key = PasswordKey(DB_PASSWORD)
         every { printer.println(ENTER_PASSWORD_MESSAGE) }.returns(Unit)
+        every { inputReaderFactory.getInputReader(InputReaderType.STANDARD) }.returns(inputReader)
         every { inputReader.read() }.returns(DB_PASSWORD)
         every { readDatabaseUseCase.readDatabase(key, DB_PATH) }.returns(Result.Success(db))
 
         // act
-        val result = createUseCase().readPassword(DB_PATH)
+        val result = createUseCase().readPassword(InputReaderType.STANDARD, DB_PATH)
 
         // assert
         verifySequence {
             printer.println(ENTER_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
@@ -54,15 +59,17 @@ class ReadPasswordUseCaseTest {
         val exception = Exception()
         val key = PasswordKey(DB_PASSWORD)
         every { printer.println(ENTER_PASSWORD_MESSAGE) }.returns(Unit)
+        every { inputReaderFactory.getInputReader(InputReaderType.STANDARD) }.returns(inputReader)
         every { inputReader.read() }.returns(DB_PASSWORD)
         every { readDatabaseUseCase.readDatabase(key, DB_PATH) }.returns(Result.Error(exception))
 
         // act
-        val result = createUseCase().readPassword(DB_PATH)
+        val result = createUseCase().readPassword(InputReaderType.STANDARD, DB_PATH)
 
         // assert
         verifySequence {
             printer.println(ENTER_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
@@ -78,21 +85,25 @@ class ReadPasswordUseCaseTest {
         val key = PasswordKey(DB_PASSWORD)
         every { printer.println(ENTER_PASSWORD_MESSAGE) }.returns(Unit)
         every { printer.println(Errors.INVALID_PASSWORD_MESSAGE) }.returns(Unit)
+        every { inputReaderFactory.getInputReader(InputReaderType.STANDARD) }.returns(inputReader)
         every { inputReader.read() }.returns(DB_PASSWORD)
         every { readDatabaseUseCase.readDatabase(key, DB_PATH) }.returns(Result.Error(exception))
 
         // act
-        val result = createUseCase().readPassword(DB_PATH)
+        val result = createUseCase().readPassword(InputReaderType.STANDARD, DB_PATH)
 
         // assert
         verifySequence {
             printer.println(ENTER_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
             printer.println(Errors.INVALID_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
             printer.println(Errors.INVALID_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
@@ -111,19 +122,22 @@ class ReadPasswordUseCaseTest {
         val key = PasswordKey(DB_PASSWORD)
         every { printer.println(ENTER_PASSWORD_MESSAGE) }.returns(Unit)
         every { printer.println(Errors.INVALID_PASSWORD_MESSAGE) }.returns(Unit)
+        every { inputReaderFactory.getInputReader(InputReaderType.STANDARD) }.returns(inputReader)
         every { inputReader.read() }.returns(INVALID_DB_PASSWORD).andThen(DB_PASSWORD)
         every { readDatabaseUseCase.readDatabase(key, DB_PATH) }.returns(Result.Success(db))
         every { readDatabaseUseCase.readDatabase(invalidKey, DB_PATH) }.returns(Result.Error(exception))
 
         // act
-        val result = createUseCase().readPassword(DB_PATH)
+        val result = createUseCase().readPassword(InputReaderType.STANDARD, DB_PATH)
 
         // assert
         verifySequence {
             printer.println(ENTER_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(invalidKey, DB_PATH)
             printer.println(Errors.INVALID_PASSWORD_MESSAGE)
+            inputReaderFactory.getInputReader(InputReaderType.STANDARD)
             inputReader.read()
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
@@ -136,7 +150,7 @@ class ReadPasswordUseCaseTest {
         return ReadPasswordUseCase(
             readDatabaseUseCase = readDatabaseUseCase,
             printer = printer,
-            inputReader = inputReader
+            inputReaderFactory = inputReaderFactory
         )
     }
 }

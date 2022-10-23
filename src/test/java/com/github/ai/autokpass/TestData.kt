@@ -11,8 +11,10 @@ object TestData {
     const val INVALID_DB_PASSWORD = "123456"
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
+    const val KEY_PATH = "/path/key"
     const val DEFAULT_DELAY = 200L
     const val DEFAULT_INPUT_TEXT = "abc123"
+    const val COMMAND = "gpg --passphrase abc123 --pinentry-mode loopback"
 
     val ENTRY1 = KeepassEntry(
         uid = UUID.fromString("11111111-2222-3333-4444-555555555555"),

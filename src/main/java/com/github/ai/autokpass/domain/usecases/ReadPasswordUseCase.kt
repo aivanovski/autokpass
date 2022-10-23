@@ -3,24 +3,28 @@ package com.github.ai.autokpass.domain.usecases
 import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
+import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
-import com.github.ai.autokpass.presentation.input.InputReader
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.input.InputReaderFactory
 
 class ReadPasswordUseCase(
     private val readDatabaseUseCase: ReadDatabaseUseCase,
     private val printer: Printer,
-    private val inputReader: InputReader
+    private val inputReaderFactory: InputReaderFactory
 ) {
 
-    fun readPassword(dbFilePath: String): Result<String> {
+    fun readPassword(
+        inputReaderType: InputReaderType,
+        dbFilePath: String
+    ): Result<String> {
         for (attemptIdx in 1..MAX_ATTEMPT_COUNT) {
             if (attemptIdx == 1) {
                 printer.println(ENTER_PASSWORD_MESSAGE)
             }
 
-            val password = inputReader.read()
+            val password = inputReaderFactory.getInputReader(inputReaderType).read()
             val readDbResult = readDatabaseUseCase.readDatabase(PasswordKey(password), dbFilePath)
 
             when {

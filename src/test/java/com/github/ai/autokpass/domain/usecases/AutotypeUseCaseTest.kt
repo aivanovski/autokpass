@@ -3,7 +3,7 @@ package com.github.ai.autokpass.domain.usecases
 import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.domain.Errors.FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutor
-import com.github.ai.autokpass.domain.autotype.AutotypeExecutorProvider
+import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.exception.AutokpassException
@@ -23,7 +23,7 @@ class AutotypeUseCaseTest {
     private val printer = mockk<Printer>()
     private val throttler = mockk<ThreadThrottler>()
     private val executor = mockk<AutotypeExecutor>()
-    private val executorProvider = mockk<AutotypeExecutorProvider>()
+    private val autotypeExecutorFactory = mockk<AutotypeExecutorFactory>()
 
     @Test
     fun `doAutotype should create sequence and pass to executor`() {
@@ -36,7 +36,7 @@ class AutotypeUseCaseTest {
             )
         }.returns(SEQUENCE)
         every { executor.execute(SEQUENCE) }.returns(Unit)
-        every { executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)
+        every { autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)
 
         // act
         val result = createUseCase()
@@ -51,7 +51,7 @@ class AutotypeUseCaseTest {
         // assert
         verifySequence {
             sequenceFactory.createAutotypeSequence(ENTRY1, DEFAULT_PATTERN, DELAY_BETWEEN_ACTIONS_IN_MILLIS)
-            executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL)
+            autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL)
             executor.execute(SEQUENCE)
         }
 
@@ -99,7 +99,7 @@ class AutotypeUseCaseTest {
         every { executor.execute(SEQUENCE) }.returns(Unit)
         every { printer.println(message) }.returns(Unit)
         every { throttler.sleep(START_DELAY_IN_MILLIS) }.returns(Unit)
-        every { executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)
+        every { autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)
 
         // act
         val result = createUseCase()
@@ -116,7 +116,7 @@ class AutotypeUseCaseTest {
             sequenceFactory.createAutotypeSequence(ENTRY1, DEFAULT_PATTERN, DELAY_BETWEEN_ACTIONS_IN_MILLIS)
             printer.println(message)
             throttler.sleep(START_DELAY_IN_MILLIS)
-            executorProvider.getExecutor(AutotypeExecutorType.XDOTOOL)
+            autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL)
             executor.execute(SEQUENCE)
         }
 
@@ -125,7 +125,7 @@ class AutotypeUseCaseTest {
 
     private fun createUseCase(): AutotypeUseCase {
         return AutotypeUseCase(
-            executorProvider = executorProvider,
+            autotypeExecutorFactory = autotypeExecutorFactory,
             sequenceFactory = sequenceFactory,
             throttler = throttler,
             printer = printer

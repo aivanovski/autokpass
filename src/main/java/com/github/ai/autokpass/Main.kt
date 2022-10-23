@@ -6,8 +6,8 @@ import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.Interactor
 import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
+import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
 import org.koin.core.context.startKoin
-import org.koin.core.parameter.parametersOf
 
 fun main(args: Array<String>) {
     startKoin {
@@ -17,17 +17,19 @@ fun main(args: Array<String>) {
     val parser: ArgumentParser = get()
     val extractor: ArgumentExtractor = get()
     val errorInteractor: ErrorInteractor = get()
+    val printGreetingsUseCase: PrintGreetingsUseCase = get()
+    val interactor: Interactor = get()
+
+    printGreetingsUseCase.printGreetings()
 
     val rawArgs = extractor.extractArguments(args)
 
     val parserResult = parser.validateAndParse(rawArgs)
-    if (parserResult.isFailed()) {
-        errorInteractor.processAndExit(parserResult.asErrorOrThrow())
+    if (errorInteractor.processFailed(parserResult)) {
+        return
     }
 
     val parsedArgs = parserResult.getDataOrThrow()
-
-    val interactor: Interactor = get(params = parametersOf(parsedArgs))
 
     interactor.run(parsedArgs)
 }
