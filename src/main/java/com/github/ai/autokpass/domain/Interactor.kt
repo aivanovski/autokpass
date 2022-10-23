@@ -8,9 +8,7 @@ import com.github.ai.autokpass.domain.usecases.GetKeyUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
-import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern
-import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
 
 class Interactor(
@@ -31,8 +29,8 @@ class Interactor(
         }
 
         val osType = getOsTypeResult.getDataOrNull()
-        val autotypeExecutorResult = determineAutotypeUseCase.getAutotypeExecutorType(osType, args.autotypeType)
-        if (errorInteractor.processFailed(autotypeExecutorResult)) {
+        val autotypeTypeResult = determineAutotypeUseCase.getAutotypeExecutorType(osType, args.autotypeType)
+        if (errorInteractor.processFailed(autotypeTypeResult)) {
             return
         }
 
@@ -47,7 +45,7 @@ class Interactor(
         }
 
         val key = getKeyResult.getDataOrThrow()
-        val autotypeExecutorType = autotypeExecutorResult.getDataOrThrow()
+        val defaultAutotypeType = autotypeTypeResult.getDataOrThrow()
 
         val selectEntryResult = selectEntryUseCase.selectEntry(key, args.filePath)
         if (errorInteractor.processFailed(selectEntryResult)) {
@@ -63,7 +61,7 @@ class Interactor(
 
         val selectedPattern = selectPatternResult.getDataOrThrow() ?: return
 
-        if ((osType == OSType.LINUX && args.autotypeType == null) || args.autotypeType == AutotypeExecutorType.XDOTOOL) {
+        if (awaitWindowUseCase.isAbleToAwaitWindowChanged(osType, args.autotypeType ?: defaultAutotypeType)) {
             val awaitResult = awaitWindowUseCase.awaitUntilWindowChanged()
             if (errorInteractor.processFailed(awaitResult)) {
                 return
@@ -71,7 +69,7 @@ class Interactor(
         }
 
         val autotypeResult = autotypeUseCase.doAutotype(
-            executorType = autotypeExecutorType,
+            executorType = defaultAutotypeType,
             entry = selectedEntry,
             pattern = selectedPattern,
             delayBetweenActions = args.autotypeDelayInMillis ?: DEFAULT_DELAY_BETWEEN_ACTIONS,

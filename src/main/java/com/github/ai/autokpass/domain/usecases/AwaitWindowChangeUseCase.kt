@@ -3,6 +3,8 @@ package com.github.ai.autokpass.domain.usecases
 import com.github.ai.autokpass.domain.autotype.ThreadThrottler
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
+import com.github.ai.autokpass.model.AutotypeExecutorType
+import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.printer.Printer
 import java.util.concurrent.TimeUnit
@@ -13,6 +15,13 @@ class AwaitWindowChangeUseCase(
     private val throttler: ThreadThrottler,
     private val printer: Printer
 ) {
+
+    fun isAbleToAwaitWindowChanged(
+        osType: OSType?,
+        autotypeType: AutotypeExecutorType?
+    ): Boolean {
+        return (osType == OSType.LINUX && autotypeType == null) || autotypeType == AutotypeExecutorType.XDOTOOL
+    }
 
     fun awaitUntilWindowChanged(): Result<Unit> {
         printer.println("Please select window to start autotype")
