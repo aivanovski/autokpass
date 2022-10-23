@@ -9,6 +9,7 @@ import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.github.ai.autokpass.presentation.process.JprocProcessExecutor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
 import com.github.ai.autokpass.domain.ErrorInteractor
+import com.github.ai.autokpass.domain.ErrorInteractorImpl
 import com.github.ai.autokpass.domain.SystemPropertyProvider
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
@@ -34,7 +35,6 @@ import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
 import com.github.ai.autokpass.domain.usecases.SelectPatternUseCase
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
-import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.input.InputReaderFactory
 import org.koin.dsl.module
 
@@ -52,7 +52,7 @@ object KoinModule {
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
-        single { ErrorInteractor(get()) }
+        single<ErrorInteractor> { ErrorInteractorImpl(get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<OptionSelector> { Fzf4jOptionSelector() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
@@ -72,19 +72,6 @@ object KoinModule {
         single { KeepassDatabaseFactoryProvider(get()) }
         single { ReadPasswordUseCase(get(), get(), get()) }
 
-        factory { (args: ParsedArgs) -> // TODO: refactor to single {}
-            Interactor(
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get()
-            )
-        }
+        single { Interactor(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     }
 }
