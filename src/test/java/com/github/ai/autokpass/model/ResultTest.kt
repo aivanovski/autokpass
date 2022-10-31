@@ -9,32 +9,27 @@ class ResultTest {
 
     @Test
     fun `isSucceeded should return true if instance is Success`() {
-        assertThat(Result.Success(VALUE).isSucceeded())
-            .isTrue()
+        assertThat(Result.Success(VALUE).isSucceeded()).isTrue()
     }
 
     @Test
     fun `isSucceeded should return false if instance is Error`() {
-        assertThat(Result.Error(EXCEPTION).isSucceeded())
-            .isFalse()
+        assertThat(Result.Error(EXCEPTION).isSucceeded()).isFalse()
     }
 
     @Test
     fun `isFailed should return true if instance is Error`() {
-        assertThat(Result.Error(EXCEPTION).isFailed())
-            .isTrue()
+        assertThat(Result.Error(EXCEPTION).isFailed()).isTrue()
     }
 
     @Test
     fun `isFailed should return false if instance is Success`() {
-        assertThat(Result.Success(VALUE).isFailed())
-            .isFalse()
+        assertThat(Result.Success(VALUE).isFailed()).isFalse()
     }
 
     @Test
     fun `getDataOrThrow should return value if instance is Success`() {
-        assertThat(Result.Success(VALUE).getDataOrThrow())
-            .isEqualTo(VALUE)
+        assertThat(Result.Success(VALUE).getDataOrThrow()).isEqualTo(VALUE)
     }
 
     @Test
