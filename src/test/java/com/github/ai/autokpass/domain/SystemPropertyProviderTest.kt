@@ -26,7 +26,7 @@ class SystemPropertyProviderTest {
         val result = SystemPropertyProvider().getSystemProperty(NON_EXIST_PROPERTY_NAME)
 
         // assert
-        assertThat(result).isEmpty()
+        assertThat(result.length).isEqualTo(0)
     }
 
     companion object {
