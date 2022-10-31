@@ -1,7 +1,8 @@
 package com.github.ai.autokpass.model
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
 import java.lang.ClassCastException
 
 class ResultTest {
@@ -36,9 +37,11 @@ class ResultTest {
             .isEqualTo(VALUE)
     }
 
-    @Test(expected = ClassCastException::class)
+    @Test
     fun `getDataOrThrow should throw exception if instance is Error`() {
-        Result.Error(EXCEPTION).getDataOrThrow()
+        assertThrows(ClassCastException::class.java) {
+            Result.Error(EXCEPTION).getDataOrThrow()
+        }
     }
 
     @Test
@@ -57,9 +60,11 @@ class ResultTest {
         assertThat(Result.Error(EXCEPTION).asErrorOrThrow()).isEqualTo(Result.Error(EXCEPTION))
     }
 
-    @Test(expected = ClassCastException::class)
+    @Test
     fun `asErrorOrThrow should throw exception if instance is Success`() {
-        Result.Success(VALUE).asErrorOrThrow()
+        assertThrows(ClassCastException::class.java) {
+            Result.Success(VALUE).asErrorOrThrow()
+        }
     }
 
     @Test
@@ -67,9 +72,11 @@ class ResultTest {
         assertThat(Result.Error(EXCEPTION).getExceptionOrThrow()).isSameInstanceAs(EXCEPTION)
     }
 
-    @Test(expected = ClassCastException::class)
+    @Test
     fun `getExceptionOrThrow should throw if instance is Success`() {
-        Result.Success(VALUE).getExceptionOrThrow()
+        assertThrows(ClassCastException::class.java) {
+            Result.Success(VALUE).getExceptionOrThrow()
+        }
     }
 
     companion object {

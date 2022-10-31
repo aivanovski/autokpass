@@ -5,7 +5,7 @@ import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 
 class ProcessKeyUseCaseTest {

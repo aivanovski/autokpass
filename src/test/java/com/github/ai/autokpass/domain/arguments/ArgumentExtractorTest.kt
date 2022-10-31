@@ -2,7 +2,7 @@ package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.model.RawArgs
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ArgumentExtractorTest {
 

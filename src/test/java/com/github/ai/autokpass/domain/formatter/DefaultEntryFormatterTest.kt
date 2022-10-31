@@ -4,7 +4,7 @@ import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.extensions.maskSymbolsWith
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DefaultEntryFormatterTest {
 

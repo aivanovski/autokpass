@@ -6,7 +6,7 @@ import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.Result
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DetermineAutotypeExecutorTypeUseCaseTest {
 

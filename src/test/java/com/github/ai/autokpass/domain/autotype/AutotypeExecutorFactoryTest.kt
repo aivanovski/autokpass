@@ -4,7 +4,7 @@ import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AutotypeExecutorFactoryTest {
 

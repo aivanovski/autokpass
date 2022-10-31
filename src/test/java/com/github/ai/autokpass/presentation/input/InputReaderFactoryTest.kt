@@ -2,7 +2,7 @@ package com.github.ai.autokpass.presentation.input
 
 import com.github.ai.autokpass.model.InputReaderType
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class InputReaderFactoryTest {
 

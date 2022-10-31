@@ -5,7 +5,7 @@ import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.UUID
 
 class AutotypeSequenceFactoryTest {

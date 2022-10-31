@@ -6,7 +6,7 @@ import com.github.ai.autokpass.model.AutotypePattern.Companion.PASSWORD_WITH_ENT
 import com.github.ai.autokpass.model.AutotypePattern.Companion.USERNAME
 import com.github.ai.autokpass.model.AutotypePattern.Companion.USERNAME_WITH_ENTER
 import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AutotypePatternFormatterTest {
 

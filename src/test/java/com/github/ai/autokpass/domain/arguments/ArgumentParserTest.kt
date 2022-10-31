@@ -14,7 +14,7 @@ import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.lang.String.format
 
 class ArgumentParserTest {

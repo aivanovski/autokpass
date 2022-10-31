@@ -14,7 +14,7 @@ import com.github.ai.autokpass.utils.mockFSProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.confirmVerified
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.IOException
 
 class KotpassDatabaseFactoryTest {
