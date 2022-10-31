@@ -2,7 +2,7 @@ package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -24,8 +24,8 @@ class ProcessKeyUseCaseTest {
             .processKeyWithCommand(COMMAND, PATH)
 
         // assert
-        Truth.assertThat(result.isSucceeded()).isTrue()
-        Truth.assertThat(result.getDataOrThrow()).isEqualTo(DECRYPTED_KEY_CONTENT)
+        assertThat(result.isSucceeded()).isTrue()
+        assertThat(result.getDataOrThrow()).isEqualTo(DECRYPTED_KEY_CONTENT)
     }
 
     companion object {

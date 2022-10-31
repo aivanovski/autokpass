@@ -12,17 +12,17 @@ class KotpassDatabaseTest {
     fun `getAllEntries should parse database correctly`() {
         // arrange
         val testDatabases = listOf(DB_WITH_PASSWORD, DB_WITH_BINARY_KEY)
-        val expectedEntries = testDatabases
+        val expected = testDatabases
             .map { db -> db.entries.sortedBy { it.uid } }
 
         // act
-        val entries = testDatabases.map { db ->
+        val result = testDatabases.map { db ->
             KotpassDatabase(db.loadKotpassDatabase())
                 .getAllEntries()
                 .sortedBy { it.uid }
         }
 
         // assert
-        assertThat(entries).isEqualTo(expectedEntries)
+        assertThat(result).isEqualTo(expected)
     }
 }
