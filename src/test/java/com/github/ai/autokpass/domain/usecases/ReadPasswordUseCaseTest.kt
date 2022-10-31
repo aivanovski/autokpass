@@ -14,7 +14,10 @@ import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.input.InputReader
 import com.github.ai.autokpass.presentation.input.InputReaderFactory
 import com.github.ai.autokpass.presentation.printer.Printer
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beInstanceOf
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
@@ -49,8 +52,8 @@ class ReadPasswordUseCaseTest {
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
 
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(DB_PASSWORD)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe DB_PASSWORD
     }
 
     @Test
@@ -74,8 +77,8 @@ class ReadPasswordUseCaseTest {
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
 
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     @Test
@@ -108,9 +111,9 @@ class ReadPasswordUseCaseTest {
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
 
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(AutokpassException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(Errors.TOO_MANY_ATTEMPTS)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<AutokpassException>()
+        result.getExceptionOrThrow().message shouldBe Errors.TOO_MANY_ATTEMPTS
     }
 
     @Test
@@ -142,8 +145,8 @@ class ReadPasswordUseCaseTest {
             readDatabaseUseCase.readDatabase(key, DB_PATH)
         }
 
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(DB_PASSWORD)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe DB_PASSWORD
     }
 
     private fun createUseCase(): ReadPasswordUseCase {

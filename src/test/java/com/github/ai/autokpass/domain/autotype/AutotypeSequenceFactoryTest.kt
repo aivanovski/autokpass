@@ -4,7 +4,8 @@ import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.util.StringUtils.EMPTY
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.nulls.shouldBeNull
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
@@ -32,8 +33,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNotNull()
-        assertThat(sequence?.items).isEqualTo(sequenceItems)
+        sequence?.items shouldBe sequenceItems
     }
 
     @Test
@@ -54,8 +54,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNotNull()
-        assertThat(sequence?.items).isEqualTo(sequenceItems)
+        sequence?.items shouldBe sequenceItems
     }
 
     @Test
@@ -76,8 +75,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNotNull()
-        assertThat(sequence?.items).isEqualTo(sequenceItems)
+        sequence?.items shouldBe sequenceItems
     }
 
     @Test
@@ -98,8 +96,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNotNull()
-        assertThat(sequence?.items).isEqualTo(sequenceItems)
+        sequence?.items shouldBe sequenceItems
     }
 
     @Test
@@ -120,8 +117,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNotNull()
-        assertThat(sequence?.items).isEqualTo(sequenceItems)
+        sequence?.items shouldBe sequenceItems
     }
 
     @Test
@@ -137,7 +133,7 @@ class AutotypeSequenceFactoryTest {
         )
 
         // assert
-        assertThat(sequence).isNull()
+        sequence.shouldBeNull()
     }
 
     private fun createEntry(

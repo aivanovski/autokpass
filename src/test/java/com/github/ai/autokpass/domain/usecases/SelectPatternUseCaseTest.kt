@@ -4,7 +4,9 @@ import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.selector.OptionSelector
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,8 +35,8 @@ class SelectPatternUseCaseTest {
         // assert
         verify { optionSelector.select(formattedPatterns) }
 
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(patterns[SELECTED_PATTERN_IDX])
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe patterns[SELECTED_PATTERN_IDX]
     }
 
     @Test
@@ -49,8 +51,8 @@ class SelectPatternUseCaseTest {
         // assert
         verify { optionSelector.select(formattedPatterns) }
 
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     private fun createUseCase(): SelectPatternUseCase {

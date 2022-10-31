@@ -1,7 +1,7 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.model.RawArgs
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class ArgumentExtractorTest {
@@ -15,7 +15,7 @@ class ArgumentExtractorTest {
         val result = ArgumentExtractor().extractArguments(emptyArray())
 
         // assert
-        assertThat(result).isEqualTo(expected)
+        result shouldBe expected
     }
 
     @Test
@@ -44,7 +44,7 @@ class ArgumentExtractorTest {
         val result = ArgumentExtractor().extractArguments(args)
 
         // assert
-        assertThat(result).isEqualTo(expected)
+        result shouldBe expected
     }
 
     @Test
@@ -73,7 +73,7 @@ class ArgumentExtractorTest {
         val result = ArgumentExtractor().extractArguments(args)
 
         // assert
-        assertThat(result).isEqualTo(expected)
+        result shouldBe expected
     }
 
     private fun argsWith(

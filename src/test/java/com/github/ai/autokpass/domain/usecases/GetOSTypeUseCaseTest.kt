@@ -5,8 +5,9 @@ import com.github.ai.autokpass.domain.SystemPropertyProvider
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase.Companion.PROPERTY_OS_NAME
 import com.github.ai.autokpass.model.OSType
-import com.github.ai.autokpass.model.Result
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -24,8 +25,8 @@ class GetOSTypeUseCaseTest {
         val result = GetOSTypeUseCase(propertyProvider).getOSType()
 
         // assert
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isEqualTo(OSType.LINUX)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe OSType.LINUX
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
     }
@@ -40,8 +41,8 @@ class GetOSTypeUseCaseTest {
         val result = GetOSTypeUseCase(propertyProvider).getOSType()
 
         // assert
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isEqualTo(OSType.MAC_OS)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe OSType.MAC_OS
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
     }
@@ -56,11 +57,11 @@ class GetOSTypeUseCaseTest {
         val result = GetOSTypeUseCase(propertyProvider).getOSType()
 
         // assert
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-
-        val exception = result.asErrorOrThrow().exception
-        assertThat(exception).isInstanceOf(AutokpassException::class.java)
-        assertThat(exception.message).isEqualTo(Errors.FAILED_TO_DETERMINE_OS_TYPE)
+        with(result) {
+            isFailed() shouldBe true
+            getExceptionOrThrow() should beInstanceOf<AutokpassException>()
+            getExceptionOrThrow().message shouldBe Errors.FAILED_TO_DETERMINE_OS_TYPE
+        }
 
         verify { propertyProvider.getSystemProperty(PROPERTY_OS_NAME) }
     }

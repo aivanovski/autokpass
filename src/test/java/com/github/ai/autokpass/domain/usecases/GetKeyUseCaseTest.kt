@@ -7,7 +7,9 @@ import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.KeepassKey.FileKey
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
 import com.github.ai.autokpass.model.Result
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
@@ -36,7 +38,7 @@ class GetKeyUseCaseTest {
 
         // assert
         verifySequence { readPasswordUseCase.readPassword(InputReaderType.STANDARD, DB_PATH) }
-        assertThat(result).isEqualTo(Result.Success(PasswordKey(DB_PASSWORD)))
+        result shouldBe Result.Success(PasswordKey(DB_PASSWORD))
     }
 
     @Test
@@ -57,8 +59,8 @@ class GetKeyUseCaseTest {
 
         // assert
         verifySequence { readPasswordUseCase.readPassword(InputReaderType.STANDARD, DB_PATH) }
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     @Test
@@ -76,7 +78,7 @@ class GetKeyUseCaseTest {
             )
 
         // assert
-        assertThat(result).isEqualTo(expected)
+        result shouldBe expected
     }
 
     @Test
@@ -96,7 +98,7 @@ class GetKeyUseCaseTest {
 
         // assert
         verifySequence { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-        assertThat(result).isEqualTo(Result.Success(PasswordKey(DB_PASSWORD)))
+        result shouldBe Result.Success(PasswordKey(DB_PASSWORD))
     }
 
     @Test
@@ -117,8 +119,8 @@ class GetKeyUseCaseTest {
 
         // assert
         verifySequence { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     companion object {

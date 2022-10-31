@@ -3,7 +3,7 @@ package com.github.ai.autokpass.data.keepass.kotpass
 import com.github.ai.autokpass.TestData.DB_WITH_BINARY_KEY
 import com.github.ai.autokpass.TestData.DB_WITH_PASSWORD
 import com.github.ai.autokpass.loadKotpassDatabase
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class KotpassDatabaseTest {
@@ -23,6 +23,6 @@ class KotpassDatabaseTest {
         }
 
         // assert
-        assertThat(result).isEqualTo(expected)
+        result shouldBe expected
     }
 }

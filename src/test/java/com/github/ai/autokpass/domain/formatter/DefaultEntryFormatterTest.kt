@@ -3,7 +3,7 @@ package com.github.ai.autokpass.domain.formatter
 import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.extensions.maskSymbolsWith
 import com.github.ai.autokpass.util.StringUtils.EMPTY
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class DefaultEntryFormatterTest {
@@ -17,7 +17,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo("${entry.title}: ${entry.username} - ${entry.password.maskSymbolsWith('*')}")
+        result shouldBe "${entry.title}: ${entry.username} - ${entry.password.maskSymbolsWith('*')}"
     }
 
     @Test
@@ -29,7 +29,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo("${entry.title}: ${entry.username}")
+        result shouldBe "${entry.title}: ${entry.username}"
     }
 
     @Test
@@ -41,7 +41,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo("${entry.title}: ${entry.password.maskSymbolsWith('*')}")
+        result shouldBe "${entry.title}: ${entry.password.maskSymbolsWith('*')}"
     }
 
     @Test
@@ -53,7 +53,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo("${entry.username} - ${entry.password.maskSymbolsWith('*')}")
+        result shouldBe "${entry.username} - ${entry.password.maskSymbolsWith('*')}"
     }
 
     @Test
@@ -65,7 +65,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo(entry.title)
+        result shouldBe entry.title
     }
 
     @Test
@@ -77,7 +77,7 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo(entry.username)
+        result shouldBe entry.username
     }
 
     @Test
@@ -89,6 +89,6 @@ class DefaultEntryFormatterTest {
         val result = DefaultEntryFormatter().format(entry)
 
         // assert
-        assertThat(result).isEqualTo(entry.password.maskSymbolsWith('*'))
+        result shouldBe entry.password.maskSymbolsWith('*')
     }
 }

@@ -8,7 +8,7 @@ import com.github.ai.autokpass.data.keepass.KeepassDatabaseFactoryProvider
 import com.github.ai.autokpass.model.KeepassImplementation
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
 import com.github.ai.autokpass.model.Result
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -35,7 +35,7 @@ class ReadDatabaseUseCaseTest {
         verify { factoryProvider.getFactory(KeepassImplementation.KOTPASS) }
         verify { factory.open(key, DB_PATH) }
 
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isEqualTo(db)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe db
     }
 }

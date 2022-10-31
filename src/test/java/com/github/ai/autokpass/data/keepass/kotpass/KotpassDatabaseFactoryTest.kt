@@ -8,10 +8,13 @@ import com.github.ai.autokpass.asPasswordKey
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.getFilePath
 import com.github.ai.autokpass.model.KeepassKey
-import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.toKeepassKey
 import com.github.ai.autokpass.utils.mockFSProvider
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNot
+import io.kotest.matchers.types.beInstanceOf
+import io.kotest.matchers.nulls.beNull
 import io.mockk.confirmVerified
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -41,8 +44,8 @@ class KotpassDatabaseFactoryTest {
         verify { fsProvider.openFile(db.getFilePath()) }
         confirmVerified()
 
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isNotNull()
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldNot beNull()
     }
 
     @Test
@@ -69,8 +72,8 @@ class KotpassDatabaseFactoryTest {
         verify { fsProvider.openFile(db.getFilePath()) }
         confirmVerified()
 
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isNotNull()
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldNot beNull()
     }
 
     @Test
@@ -94,8 +97,8 @@ class KotpassDatabaseFactoryTest {
         verify { fsProvider.openFile(db.getFilePath()) }
         confirmVerified()
 
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.asErrorOrThrow().exception).isInstanceOf(InvalidPasswordException::class.java)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<InvalidPasswordException>()
     }
 
     @Test
@@ -119,8 +122,8 @@ class KotpassDatabaseFactoryTest {
         verify { fsProvider.openFile(db.getFilePath()) }
         confirmVerified()
 
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.asErrorOrThrow().exception).isInstanceOf(IOException::class.java)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<IOException>()
     }
 
     @Test
@@ -145,7 +148,7 @@ class KotpassDatabaseFactoryTest {
         verify { fsProvider.openFile(key.getFilePath()) }
         confirmVerified()
 
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.asErrorOrThrow().exception).isInstanceOf(IOException::class.java)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<IOException>()
     }
 }

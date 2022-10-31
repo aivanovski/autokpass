@@ -11,7 +11,9 @@ import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -29,7 +31,7 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
+        result.isSucceeded() shouldBe true
     }
 
     @Test
@@ -42,9 +44,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_EMPTY_ARGUMENT,
                 Argument.FILE.cliName
@@ -62,9 +64,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_EMPTY_ARGUMENT,
                 Argument.FILE.cliName
@@ -83,9 +85,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_DOES_NOT_EXIST, FILE_PATH))
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(format(GENERIC_FILE_DOES_NOT_EXIST, FILE_PATH))
     }
 
     @Test
@@ -100,9 +102,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_IS_NOT_A_FILE, FILE_PATH))
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(format(GENERIC_FILE_IS_NOT_A_FILE, FILE_PATH))
     }
 
     @Test
@@ -115,8 +117,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -129,8 +131,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -143,9 +145,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_EMPTY_ARGUMENT,
                 Argument.KEY_FILE.cliName
@@ -166,9 +168,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_DOES_NOT_EXIST, KEY_PATH))
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(format(GENERIC_FILE_DOES_NOT_EXIST, KEY_PATH))
     }
 
     @Test
@@ -185,9 +187,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(format(GENERIC_FILE_IS_NOT_A_FILE, KEY_PATH))
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(format(GENERIC_FILE_IS_NOT_A_FILE, KEY_PATH))
     }
 
     @Test
@@ -199,8 +201,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -212,8 +214,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -225,8 +227,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.copy(autotypeDelayInMillis = null).toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe(args.copy(autotypeDelayInMillis = null).toParsedArgs())
     }
 
     @Test
@@ -238,9 +240,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(providerForAnyFile()).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.AUTOTYPE_DELAY.cliName,
@@ -259,8 +261,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -273,8 +275,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -287,8 +289,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.copy(delayInSeconds = null).toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe(args.copy(delayInSeconds = null).toParsedArgs())
     }
 
     @Test
@@ -301,9 +303,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.DELAY.cliName,
@@ -323,8 +325,8 @@ class ArgumentParserTest {
 
         // assert
 
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe(
             args.copy(inputType = InputReaderType.SECRET.cliName).toParsedArgs()
         )
     }
@@ -339,8 +341,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -353,9 +355,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.INPUT.cliName,
@@ -374,8 +376,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -388,8 +390,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -402,9 +404,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_FAILED_TO_PARSE_ARGUMENT,
                 Argument.AUTOTYPE.cliName,
@@ -423,9 +425,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(
                 GENERIC_EMPTY_ARGUMENT,
                 Argument.FILE.cliName
@@ -443,8 +445,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -457,8 +459,8 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(args.toParsedArgs())
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe args.toParsedArgs()
     }
 
     @Test
@@ -471,9 +473,9 @@ class ArgumentParserTest {
         val result = ArgumentParser(fsProvider).validateAndParse(args)
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(ParsingException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe(
             format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName)
         )
     }

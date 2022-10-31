@@ -2,10 +2,12 @@ package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.domain.Errors.FAILED_TO_DETERMINE_AUTOTYPE_EXECUTOR_TYPE
 import com.github.ai.autokpass.domain.exception.AutokpassException
-import com.github.ai.autokpass.model.AutotypeExecutorType
+import com.github.ai.autokpass.model.AutotypeExecutorType.CLICLICK
+import com.github.ai.autokpass.model.AutotypeExecutorType.XDOTOOL
 import com.github.ai.autokpass.model.OSType
-import com.github.ai.autokpass.model.Result
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beInstanceOf
 import org.junit.jupiter.api.Test
 
 class DetermineAutotypeExecutorTypeUseCaseTest {
@@ -14,31 +16,33 @@ class DetermineAutotypeExecutorTypeUseCaseTest {
 
     @Test
     fun `getAutotypeExecutorType should return type for linux`() {
-        assertThat(useCase.getAutotypeExecutorType(OSType.LINUX, null).getDataOrNull())
-            .isEqualTo(AutotypeExecutorType.XDOTOOL)
+        useCase.getAutotypeExecutorType(OSType.LINUX, null).getDataOrNull()
+            .shouldBe(XDOTOOL)
     }
 
     @Test
     fun `getAutotypeExecutorType should return type for mac os`() {
-        assertThat(useCase.getAutotypeExecutorType(OSType.MAC_OS, null).getDataOrNull())
-            .isEqualTo(AutotypeExecutorType.CLICLICK)
+        useCase.getAutotypeExecutorType(OSType.MAC_OS, null).getDataOrNull()
+            .shouldBe(CLICLICK)
     }
 
     @Test
     fun `getAutotypeExecutorType should from arguments`() {
-        assertThat(useCase.getAutotypeExecutorType(null, AutotypeExecutorType.XDOTOOL).getDataOrNull())
-            .isEqualTo(AutotypeExecutorType.XDOTOOL)
+        useCase.getAutotypeExecutorType(null, XDOTOOL).getDataOrNull()
+            .shouldBe(XDOTOOL)
 
-        assertThat(useCase.getAutotypeExecutorType(null, AutotypeExecutorType.CLICLICK).getDataOrNull())
-            .isEqualTo(AutotypeExecutorType.CLICLICK)
+        useCase.getAutotypeExecutorType(null, CLICLICK).getDataOrNull()
+            .shouldBe(CLICLICK)
     }
 
     @Test
     fun `getAutotypeExecutorType should return error`() {
         val result = useCase.getAutotypeExecutorType(null, null)
 
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.asErrorOrThrow().exception).isInstanceOf(AutokpassException::class.java)
-        assertThat(result.asErrorOrThrow().exception.message).isEqualTo(FAILED_TO_DETERMINE_AUTOTYPE_EXECUTOR_TYPE)
+        with(result) {
+            isFailed() shouldBe true
+            getExceptionOrThrow() should beInstanceOf<AutokpassException>()
+            getExceptionOrThrow().message shouldBe FAILED_TO_DETERMINE_AUTOTYPE_EXECUTOR_TYPE
+        }
     }
 }
