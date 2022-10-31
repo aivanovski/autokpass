@@ -80,6 +80,7 @@ dependencies {
     // testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.3")
     testImplementation("io.mockk:mockk:1.12.3")
 
     implementation("io.insert-koin:koin-core:3.1.5")
