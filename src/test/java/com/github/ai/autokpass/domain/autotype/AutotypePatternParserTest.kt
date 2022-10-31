@@ -1,8 +1,8 @@
 package com.github.ai.autokpass.domain.autotype
 
 import com.github.ai.autokpass.model.AutotypePattern
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
 
 class AutotypePatternParserTest {
 
@@ -26,7 +26,7 @@ class AutotypePatternParserTest {
         val results = input.map { parser.parse(it) }
 
         // assert
-        assertThat(results).isEqualTo(patterns)
+        results shouldBe patterns
     }
 
     @Test
@@ -45,6 +45,6 @@ class AutotypePatternParserTest {
             .all { it == null }
 
         // assert
-        assertThat(result).isTrue()
+        result shouldBe true
     }
 }

@@ -7,11 +7,13 @@ import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class GetVisibleEntriesUseCaseTest {
 
@@ -33,8 +35,8 @@ class GetVisibleEntriesUseCaseTest {
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
         verify { db.getAllEntries() }
 
-        assertThat(result).isInstanceOf(Result.Success::class.java)
-        assertThat(result.getDataOrThrow()).isEqualTo(listOf(ENTRY1))
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe listOf(ENTRY1)
     }
 
     @Test
@@ -53,7 +55,7 @@ class GetVisibleEntriesUseCaseTest {
         // assert
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
 
-        assertThat(result).isInstanceOf(Result.Error::class.java)
-        assertThat(result.getExceptionOrThrow()).isEqualTo(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 }

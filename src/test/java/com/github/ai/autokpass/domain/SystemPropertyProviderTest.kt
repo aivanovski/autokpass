@@ -1,7 +1,9 @@
 package com.github.ai.autokpass.domain
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.nulls.beNull
+import org.junit.jupiter.api.Test
 
 class SystemPropertyProviderTest {
 
@@ -14,19 +16,19 @@ class SystemPropertyProviderTest {
         val result = SystemPropertyProvider().getSystemProperty(CUSTOM_PROPERTY_NAME)
 
         // assert
-        assertThat(result).isEqualTo(CUSTOM_PROPERTY_VALUE)
+        result shouldBe CUSTOM_PROPERTY_VALUE
     }
 
     @Test
     fun `getSystemProperty should return empty value`() {
         // arrange
-        assertThat(System.getProperty(NON_EXIST_PROPERTY_NAME)).isNull()
+        System.getProperty(NON_EXIST_PROPERTY_NAME).should(beNull())
 
         // act
         val result = SystemPropertyProvider().getSystemProperty(NON_EXIST_PROPERTY_NAME)
 
         // assert
-        assertThat(result).isEmpty()
+        result.length shouldBe 0
     }
 
     companion object {

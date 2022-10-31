@@ -24,7 +24,7 @@ import com.github.ai.autokpass.model.Result
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.File
 
 class InteractorTest {

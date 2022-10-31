@@ -11,11 +11,13 @@ import com.github.ai.autokpass.domain.usecases.AutotypeUseCase.Companion.DELAY_M
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern.Companion.DEFAULT_PATTERN
 import com.github.ai.autokpass.presentation.printer.Printer
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AutotypeUseCaseTest {
 
@@ -55,7 +57,7 @@ class AutotypeUseCaseTest {
             executor.execute(SEQUENCE)
         }
 
-        assertThat(result.isSucceeded()).isTrue()
+        result.isSucceeded() shouldBe true
     }
 
     @Test
@@ -80,9 +82,9 @@ class AutotypeUseCaseTest {
             )
 
         // assert
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isInstanceOf(AutokpassException::class.java)
-        assertThat(result.getExceptionOrThrow().message).isEqualTo(FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<AutokpassException>()
+        result.getExceptionOrThrow().message shouldBe FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE
     }
 
     @Test
@@ -120,7 +122,7 @@ class AutotypeUseCaseTest {
             executor.execute(SEQUENCE)
         }
 
-        assertThat(result.isSucceeded()).isTrue()
+        result.isSucceeded() shouldBe true
     }
 
     private fun createUseCase(): AutotypeUseCase {

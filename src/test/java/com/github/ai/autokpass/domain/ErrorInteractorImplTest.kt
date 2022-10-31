@@ -3,11 +3,16 @@ package com.github.ai.autokpass.domain
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.printer.Printer
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNot
+import io.kotest.matchers.types.beInstanceOf
+import io.kotest.matchers.nulls.beNull
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ErrorInteractorImplTest {
 
@@ -96,7 +101,7 @@ class ErrorInteractorImplTest {
             .processFailed(Result.Success(null))
 
         // assert
-        assertThat(result).isFalse()
+        result shouldBe false
     }
 
     @Test
@@ -115,7 +120,7 @@ class ErrorInteractorImplTest {
             exception.message
             printer.println(MESSAGE)
         }
-        assertThat(result).isTrue()
+        result shouldBe true
     }
 
     companion object {

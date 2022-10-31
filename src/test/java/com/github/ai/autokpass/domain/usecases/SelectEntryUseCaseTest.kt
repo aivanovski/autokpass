@@ -6,11 +6,13 @@ import com.github.ai.autokpass.getFilePath
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.selector.OptionSelector
 import com.github.ai.autokpass.toKeepassKey
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.lang.Exception
 
 class SelectEntryUseCaseTest {
@@ -42,8 +44,8 @@ class SelectEntryUseCaseTest {
             optionSelector.select(formattedEntries)
         }
 
-        assertThat(result.isSucceeded()).isTrue()
-        assertThat(result.getDataOrThrow()).isEqualTo(selectedEntry)
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe selectedEntry
     }
 
     @Test
@@ -60,8 +62,8 @@ class SelectEntryUseCaseTest {
             getEntriesUseCase.getEntries(key, dbFilePath)
         }
 
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     @Test
@@ -80,8 +82,8 @@ class SelectEntryUseCaseTest {
             optionSelector.select(formattedEntries)
         }
 
-        assertThat(result.isFailed()).isTrue()
-        assertThat(result.getExceptionOrThrow()).isSameInstanceAs(exception)
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
     }
 
     private fun createUseCase(): SelectEntryUseCase {
