@@ -29,7 +29,6 @@ import com.github.ai.autokpass.domain.usecases.GetKeyUseCase
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
-import com.github.ai.autokpass.domain.usecases.ProcessKeyUseCase
 import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.domain.usecases.ReadPasswordUseCase
 import com.github.ai.autokpass.domain.usecases.SelectEntryUseCase
@@ -69,10 +68,9 @@ object KoinModule {
         single { AwaitWindowChangeUseCase(get(), get(), get()) }
         single { GetOSTypeUseCase(get()) }
         single { DetermineAutotypeExecutorTypeUseCase() }
-        single { ProcessKeyUseCase(get(), get()) }
-        single { KeepassDatabaseFactoryProvider(get()) }
+        single { KeepassDatabaseFactoryProvider(get(), get()) }
         single { ReadPasswordUseCase(get(), get(), get()) }
-        single { GetKeyUseCase(get(), get()) }
+        single { GetKeyUseCase(get()) }
 
         // interactor
         single { Interactor(get(), get(), get(), get(), get(), get(), get(), get()) }

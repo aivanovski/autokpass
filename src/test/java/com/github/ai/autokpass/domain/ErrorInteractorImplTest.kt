@@ -3,12 +3,7 @@ package com.github.ai.autokpass.domain
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.printer.Printer
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNot
-import io.kotest.matchers.types.beInstanceOf
-import io.kotest.matchers.nulls.beNull
-import io.kotest.matchers.types.beTheSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence

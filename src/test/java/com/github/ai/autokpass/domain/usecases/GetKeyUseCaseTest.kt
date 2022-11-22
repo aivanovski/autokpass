@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.domain.usecases
 
+import com.github.ai.autokpass.TestData.COMMAND
 import com.github.ai.autokpass.TestData.DB_PASSWORD
 import com.github.ai.autokpass.TestData.DB_PATH
 import com.github.ai.autokpass.TestData.KEY_PATH
@@ -19,7 +20,6 @@ import java.io.File
 class GetKeyUseCaseTest {
 
     private val readPasswordUseCase = mockk<ReadPasswordUseCase>()
-    private val processKeyUseCase = mockk<ProcessKeyUseCase>()
 
     @Test
     fun `getKey should return password`() {
@@ -28,7 +28,7 @@ class GetKeyUseCaseTest {
             .returns(Result.Success(DB_PASSWORD))
 
         // act
-        val result = GetKeyUseCase(readPasswordUseCase, processKeyUseCase)
+        val result = GetKeyUseCase(readPasswordUseCase)
             .getKey(
                 inputReaderType = InputReaderType.STANDARD,
                 dbFilePath = DB_PATH,
@@ -49,7 +49,7 @@ class GetKeyUseCaseTest {
             .returns(Result.Error(exception))
 
         // act
-        val result = GetKeyUseCase(readPasswordUseCase, processKeyUseCase)
+        val result = GetKeyUseCase(readPasswordUseCase)
             .getKey(
                 inputReaderType = InputReaderType.STANDARD,
                 dbFilePath = DB_PATH,
@@ -66,64 +66,23 @@ class GetKeyUseCaseTest {
     @Test
     fun `getKey should return key file`() {
         // arrange
-        val expected = Result.Success(FileKey(File(KEY_PATH)))
+        val expected = Result.Success(
+            FileKey(
+                file = File(KEY_PATH),
+                processingCommand = COMMAND
+            )
+        )
 
         // act
-        val result = GetKeyUseCase(readPasswordUseCase, processKeyUseCase)
+        val result = GetKeyUseCase(readPasswordUseCase)
             .getKey(
                 inputReaderType = InputReaderType.STANDARD,
                 dbFilePath = DB_PATH,
                 keyPath = KEY_PATH,
-                keyProcessingCommand = null
+                keyProcessingCommand = COMMAND
             )
 
         // assert
         result shouldBe expected
-    }
-
-    @Test
-    fun `getKey should process key file`() {
-        // arrange
-        every { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-            .returns(Result.Success(DB_PASSWORD))
-
-        // act
-        val result = GetKeyUseCase(readPasswordUseCase, processKeyUseCase)
-            .getKey(
-                inputReaderType = InputReaderType.STANDARD,
-                dbFilePath = DB_PATH,
-                keyPath = KEY_PATH,
-                keyProcessingCommand = COMMAND
-            )
-
-        // assert
-        verifySequence { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-        result shouldBe Result.Success(PasswordKey(DB_PASSWORD))
-    }
-
-    @Test
-    fun `getKey should return error if unable to process key file`() {
-        // arrange
-        val exception = Exception()
-        every { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-            .returns(Result.Error(exception))
-
-        // act
-        val result = GetKeyUseCase(readPasswordUseCase, processKeyUseCase)
-            .getKey(
-                inputReaderType = InputReaderType.STANDARD,
-                dbFilePath = DB_PATH,
-                keyPath = KEY_PATH,
-                keyProcessingCommand = COMMAND
-            )
-
-        // assert
-        verifySequence { processKeyUseCase.processKeyWithCommand(COMMAND, KEY_PATH) }
-        result.isFailed() shouldBe true
-        result.getExceptionOrThrow() should beTheSameInstanceAs(exception)
-    }
-
-    companion object {
-        private const val COMMAND = "gpg --decrypt"
     }
 }

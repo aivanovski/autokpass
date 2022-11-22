@@ -5,10 +5,7 @@ import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
 import java.io.File
 
-class GetKeyUseCase(
-    private val readPasswordUseCase: ReadPasswordUseCase,
-    private val processKeyUseCase: ProcessKeyUseCase
-) {
+class GetKeyUseCase(private val readPasswordUseCase: ReadPasswordUseCase) {
 
     fun getKey(
         inputReaderType: InputReaderType,
@@ -26,19 +23,13 @@ class GetKeyUseCase(
                 val key = KeepassKey.PasswordKey(passwordResult.getDataOrThrow())
                 return Result.Success(key)
             }
-            keyProcessingCommand != null -> {
-                // TODO: add check that key is correct
-                val processedKeyResult = processKeyUseCase.processKeyWithCommand(keyProcessingCommand, keyPath)
-                if (processedKeyResult.isFailed()) {
-                    return processedKeyResult.asErrorOrThrow()
-                }
 
-                val key = KeepassKey.PasswordKey(processedKeyResult.getDataOrThrow())
-                return Result.Success(key)
-            }
             else -> {
                 // TODO: add check that key is correct
-                val key = KeepassKey.FileKey(File(keyPath))
+                val key = KeepassKey.FileKey(
+                    file = File(keyPath),
+                    processingCommand = keyProcessingCommand
+                )
                 return Result.Success(key)
             }
         }
