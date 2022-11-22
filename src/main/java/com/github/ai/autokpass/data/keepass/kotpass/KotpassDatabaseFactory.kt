@@ -6,6 +6,7 @@ import com.github.ai.autokpass.data.keepass.KeepassDatabaseFactory
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import io.github.anvell.kotpass.cryptography.EncryptedValue
 import io.github.anvell.kotpass.database.Credentials
 import io.github.anvell.kotpass.database.KeePassDatabase
@@ -13,7 +14,8 @@ import io.github.anvell.kotpass.database.decode
 import io.github.anvell.kotpass.errors.CryptoError
 
 class KotpassDatabaseFactory(
-    private val fileSystemProvider: FileSystemProvider
+    private val fileSystemProvider: FileSystemProvider,
+    private val processExecutor: ProcessExecutor,
 ) : KeepassDatabaseFactory {
 
     override fun open(key: KeepassKey, filePath: String): Result<KeepassDatabase> {
@@ -34,9 +36,16 @@ class KotpassDatabaseFactory(
     private fun KeepassKey.toCredentials(): Credentials {
         return when (this) {
             is KeepassKey.PasswordKey -> Credentials.from(EncryptedValue.fromString(password))
-            is KeepassKey.FileKey -> Credentials.from(
-                EncryptedValue.fromBinary(fileSystemProvider.openFile(file.path).readAllBytes())
-            )
+            is KeepassKey.FileKey -> {
+                val keyBytes = fileSystemProvider.openFile(file.path).readAllBytes()
+
+                if (processingCommand == null) {
+                    Credentials.from(EncryptedValue.fromBinary(keyBytes))
+                } else {
+                    val key = processExecutor.execute(keyBytes, processingCommand)
+                    Credentials.from(EncryptedValue.fromString(key))
+                }
+            }
         }
     }
 }

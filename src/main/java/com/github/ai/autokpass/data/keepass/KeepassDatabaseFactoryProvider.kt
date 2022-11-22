@@ -3,14 +3,16 @@ package com.github.ai.autokpass.data.keepass
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.data.keepass.kotpass.KotpassDatabaseFactory
 import com.github.ai.autokpass.model.KeepassImplementation
+import com.github.ai.autokpass.presentation.process.ProcessExecutor
 
 class KeepassDatabaseFactoryProvider(
-    private val fileSystemProvider: FileSystemProvider
+    private val fileSystemProvider: FileSystemProvider,
+    private val processExecutor: ProcessExecutor
 ) {
 
     fun getFactory(type: KeepassImplementation): KeepassDatabaseFactory {
         return when (type) {
-            KeepassImplementation.KOTPASS -> KotpassDatabaseFactory(fileSystemProvider)
+            KeepassImplementation.KOTPASS -> KotpassDatabaseFactory(fileSystemProvider, processExecutor)
         }
     }
 }

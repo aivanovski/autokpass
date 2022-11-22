@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test
 class KeepassDatabaseFactoryProviderTest {
 
     @Test
-    fun `getFactory should return factor`() {
-        val factory = KeepassDatabaseFactoryProvider(mockk())
+    fun `getFactory should return Kotpass factory`() {
+        val factory = KeepassDatabaseFactoryProvider(mockk(), mockk())
             .getFactory(KeepassImplementation.KOTPASS)
 
         factory should beInstanceOf<KotpassDatabaseFactory>()
