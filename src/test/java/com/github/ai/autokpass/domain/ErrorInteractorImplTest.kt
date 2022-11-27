@@ -3,9 +3,13 @@ package com.github.ai.autokpass.domain
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.printer.Printer
+import com.github.ai.autokpass.util.StringUtils
+import com.github.ai.autokpass.util.StringUtils.EMPTY
+import io.kotest.matchers.file.beExecutable
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
 
@@ -116,6 +120,50 @@ class ErrorInteractorImplTest {
             printer.println(MESSAGE)
         }
         result shouldBe true
+    }
+
+    @Test
+    fun `processAndGetMessage should process error and return message`() {
+        // arrange
+        val exception = mockk<AutokpassException>()
+        every { exception.message }.returns(MESSAGE)
+        every { printer.println(MESSAGE) }.returns(Unit)
+
+        // act
+        val result = ErrorInteractorImpl(printer)
+            .processAndGetMessage(Result.Error(exception))
+
+        // assert
+        verifySequence {
+            exception.message
+            printer.println(MESSAGE)
+            exception.message
+            exception.message
+        }
+        result shouldBe MESSAGE
+    }
+
+    @Test
+    fun `processAndGetMessage should process error and convert Exception to String`() {
+        // arrange
+        val exception = mockk<AutokpassException>()
+        every { exception.message }.returns(null)
+        every { exception.toString() }.returns(EXCEPTION_STRING)
+        every { printer.println(EXCEPTION_STRING) }.returns(Unit)
+
+        // act
+        val result = ErrorInteractorImpl(printer)
+            .processAndGetMessage(Result.Error(exception))
+
+        // assert
+        verifySequence {
+            exception.message
+            exception.toString()
+            printer.println(EXCEPTION_STRING)
+            exception.message
+            exception.toString()
+        }
+        result shouldBe EXCEPTION_STRING
     }
 
     companion object {

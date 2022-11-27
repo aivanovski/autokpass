@@ -5,4 +5,5 @@ import com.github.ai.autokpass.model.Result
 interface ErrorInteractor {
     fun processFailed(result: Result<*>): Boolean
     fun process(error: Result.Error)
+    fun processAndGetMessage(error: Result.Error): String
 }

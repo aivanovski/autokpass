@@ -16,4 +16,12 @@ sealed class Result<out T : Any?> {
     fun isFailed(): Boolean = (this is Error)
 
     fun isSucceeded(): Boolean = (this is Success)
+
+    fun <T> mapWith(newData: T): Result<T> {
+        return if (isSucceeded()) {
+            Success(newData)
+        } else {
+            asErrorOrThrow()
+        }
+    }
 }
