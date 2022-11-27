@@ -77,6 +77,16 @@ class ResultTest {
         }
     }
 
+    @Test
+    fun `mapWith should create new Result with new object`() {
+        Result.Success(Unit).mapWith(VALUE) shouldBe Result.Success(VALUE)
+    }
+
+    @Test
+    fun `mapWith should return error`() {
+        Result.Error(EXCEPTION).mapWith(VALUE) shouldBe Result.Error(EXCEPTION)
+    }
+
     companion object {
         private const val VALUE = 123
         private val EXCEPTION = Exception()

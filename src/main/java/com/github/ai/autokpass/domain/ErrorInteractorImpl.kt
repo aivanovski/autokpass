@@ -3,6 +3,7 @@ package com.github.ai.autokpass.domain
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 
 class ErrorInteractorImpl(
     private val printer: Printer
@@ -23,5 +24,15 @@ class ErrorInteractorImpl(
         }
 
         printer.println(error.exception.message ?: error.exception.toString())
+    }
+
+    override fun processAndGetMessage(error: Result.Error): String {
+        process(error)
+
+        return if (!error.exception.message.isNullOrEmpty()) {
+            error.exception.message ?: EMPTY
+        } else {
+            error.exception.toString()
+        }
     }
 }

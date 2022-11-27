@@ -1,6 +1,7 @@
 package com.github.ai.autokpass.domain
 
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 
 class ErrorInteractorTestImpl : ErrorInteractor {
 
@@ -9,5 +10,9 @@ class ErrorInteractorTestImpl : ErrorInteractor {
     }
 
     override fun process(error: Result.Error) {
+    }
+
+    override fun processAndGetMessage(error: Result.Error): String {
+        return error.exception.message ?: EMPTY
     }
 }
