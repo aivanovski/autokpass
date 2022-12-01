@@ -5,15 +5,16 @@ import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.model.SearchItem
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.Integer.max
 
 class SelectEntryViewModel(
     private val interactor: SelectEntryInteractor,
@@ -169,7 +170,13 @@ class SelectEntryViewModel(
         val entries = filteredEntries ?: return
 
         if (selectedIndex < entries.size) {
-            throw NotImplementedError("Navigate to pattern selection")
+            router.navigateTo(
+                Screen.SelectPattern(
+                    args = SelectPatternArgs(
+                        entries[selectedIndex].entry
+                    )
+                )
+            )
         }
     }
 
@@ -179,7 +186,7 @@ class SelectEntryViewModel(
     ): Int {
         return when {
             selectedIndex < 0 -> 0
-            selectedIndex >= entries.size -> max(0, entries.size - 1)
+            selectedIndex >= entries.size -> 0.coerceAtLeast(entries.size - 1)
             else -> selectedIndex
         }
     }

@@ -13,7 +13,7 @@ class Fzf4jFuzzyMatcher : FuzzyMatcher {
                 MatcherResult(
                     entry = entries[result.itemIndex],
                     title = titles[result.itemIndex],
-                    highlights = result.positions.toList()
+                    highlights = result.positions?.toList() ?: emptyList()
                 )
             }
     }
