@@ -7,6 +7,7 @@ import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import java.io.File
 
 class MainInteractor(
@@ -31,7 +32,7 @@ class MainInteractor(
                     file = File(args.keyPath),
                     processingCommand = args.keyProcessingCommand
                 )
-                Screen.SelectEntry(key)
+                Screen.SelectEntry(SelectEntryArgs(key))
             }
         }
     }

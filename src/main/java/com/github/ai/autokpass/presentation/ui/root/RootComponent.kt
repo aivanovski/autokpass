@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryComponent
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockScreenComponent
 
 class RootComponent(
@@ -26,7 +27,7 @@ class RootComponent(
     private fun createChildComponent(screen: Screen): ComponentContext {
         return when (screen) {
             is Screen.Unlock -> UnlockScreenComponent(this)
-            is Screen.SelectEntry -> throw NotImplementedError() // TODO: implement
+            is Screen.SelectEntry -> SelectEntryComponent(this, screen.args)
         }
     }
 }
