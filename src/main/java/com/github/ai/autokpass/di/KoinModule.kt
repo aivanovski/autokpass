@@ -20,6 +20,8 @@ import com.github.ai.autokpass.domain.coroutine.DefaultDispatchers
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.domain.formatter.DefaultEntryFormatter
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
+import com.github.ai.autokpass.domain.fuzzy_search.FuzzyMatcher
+import com.github.ai.autokpass.domain.fuzzy_search.Fzf4jFuzzyMatcher
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
@@ -33,6 +35,9 @@ import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryInteractor
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
@@ -55,6 +60,7 @@ object KoinModule {
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single { AutotypeExecutorFactory(get(), get()) }
         single<Dispatchers> { DefaultDispatchers() }
+        single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
 
         // use cases
         single { PrintGreetingsUseCase(get()) }
@@ -69,8 +75,12 @@ object KoinModule {
         // interactor
         single { MainInteractor(get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
+        single { SelectEntryInteractor(get(), get(), get(), get()) }
 
         // View Models
-        factory { (router: Router, args: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, args) }
+        factory { (router: Router, appArgs: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, appArgs) }
+        factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedArgs) ->
+            SelectEntryViewModel(get(), get(), get(), router, args, appArgs)
+        }
     }
 }

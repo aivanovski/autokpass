@@ -7,6 +7,7 @@ import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,6 +62,10 @@ class UnlockViewModel(
     }
 
     private fun navigateToMain(key: PasswordKey) {
-        router.navigateTo(Screen.SelectEntry(key))
+        router.navigateTo(
+            Screen.SelectEntry(
+                args = SelectEntryArgs(key)
+            )
+        )
     }
 }

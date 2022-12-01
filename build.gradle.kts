@@ -110,4 +110,5 @@ dependencies {
     // Other
     implementation("org.buildobjects:jproc:2.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+    implementation("com.github.aivanovski:fzf4j:0.2.1")
 }

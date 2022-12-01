@@ -12,6 +12,7 @@ import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.beTheSameInstanceAs
@@ -100,7 +101,7 @@ class MainInteractorTest {
         val result = interactor.determineStartScreen(args)
 
         // assert
-        result shouldBe Screen.SelectEntry(key)
+        result shouldBe Screen.SelectEntry(SelectEntryArgs(key))
     }
 
     private fun rawArgs(): RawArgs =
