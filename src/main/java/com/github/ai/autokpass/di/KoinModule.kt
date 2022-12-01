@@ -38,6 +38,9 @@ import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryInteractor
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryViewModel
+import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternArgs
+import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternInteractor
+import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
@@ -76,11 +79,15 @@ object KoinModule {
         single { MainInteractor(get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
+        single { SelectPatternInteractor(get(), get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, appArgs) }
         factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedArgs) ->
             SelectEntryViewModel(get(), get(), get(), router, args, appArgs)
+        }
+        factory { (router: Router, args: SelectPatternArgs, appArgs: ParsedArgs) ->
+            SelectPatternViewModel(get(), get(), router, args, appArgs)
         }
     }
 }
