@@ -17,7 +17,7 @@ data class AutokpassColors(
 )
 
 val AppColors = AutokpassColors(
-    background = Color(0xff_121212),
+    background = Color(0xff_060606),
     selectedItemBackground = Color(0xff_3a3a3a),
     primaryTextColor = Color(0xff_e1e3df),
     secondaryTextColor = Color(0xff_c0c9c1),

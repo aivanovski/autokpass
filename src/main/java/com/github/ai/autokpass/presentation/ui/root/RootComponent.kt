@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeComponent
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryComponent
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternComponent
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockScreenComponent
@@ -30,6 +31,7 @@ class RootComponent(
             is Screen.Unlock -> UnlockScreenComponent(this)
             is Screen.SelectEntry -> SelectEntryComponent(this, screen.args)
             is Screen.SelectPattern -> SelectPatternComponent(this, screen.args)
+            is Screen.Autotype -> AutotypeComponent(this, screen.args)
         }
     }
 }

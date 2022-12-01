@@ -35,6 +35,10 @@ import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.root.RootViewModel
+import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
+import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeInteractor
+import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeViewModel
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryInteractor
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryViewModel
@@ -72,7 +76,7 @@ object KoinModule {
         single { AutotypeUseCase(get(), get(), get(), get()) }
         single { AwaitWindowChangeUseCase(get(), get(), get()) }
         single { GetOSTypeUseCase(get()) }
-        single { DetermineAutotypeExecutorTypeUseCase() }
+        single { DetermineAutotypeExecutorTypeUseCase(get()) }
         single { KeepassDatabaseFactoryProvider(get(), get()) }
 
         // interactor
@@ -80,6 +84,7 @@ object KoinModule {
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get()) }
+        single { AutotypeInteractor(get(), get(), get(), get(), get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, appArgs) }
@@ -88,6 +93,9 @@ object KoinModule {
         }
         factory { (router: Router, args: SelectPatternArgs, appArgs: ParsedArgs) ->
             SelectPatternViewModel(get(), get(), router, args, appArgs)
+        }
+        factory { (rootViewModel: RootViewModel, router: Router, args: AutotypeArgs, appArgs: ParsedArgs) ->
+            AutotypeViewModel(get(), get(), get(), rootViewModel, router, args, appArgs)
         }
     }
 }

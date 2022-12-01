@@ -4,8 +4,10 @@ import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.extensions.ensureInRange
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.model.SearchItem
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,12 +45,20 @@ class SelectPatternViewModel(
 
     fun navigateToAutotypeScreen() {
         val items = filteredItems ?: return
-
-        if (selectedIndex !in items.indices) {
+        val pattern = if (selectedIndex in items.indices) {
+            items[selectedIndex].pattern
+        } else {
             return
         }
 
-        throw NotImplementedError("Navigate to Autotype screen")
+        router.navigateTo(
+            Screen.Autotype(
+                args = AutotypeArgs(
+                    entry = args.entry,
+                    pattern = pattern
+                )
+            )
+        )
     }
 
     fun onQueryInputChanged(newQuery: String) {

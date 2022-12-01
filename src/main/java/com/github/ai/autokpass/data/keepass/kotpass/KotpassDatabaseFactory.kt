@@ -42,7 +42,7 @@ class KotpassDatabaseFactory(
                 if (processingCommand == null) {
                     Credentials.from(EncryptedValue.fromBinary(keyBytes))
                 } else {
-                    val key = processExecutor.execute(keyBytes, processingCommand)
+                    val key = processExecutor.execute(keyBytes, processingCommand).trim()
                     Credentials.from(EncryptedValue.fromString(key))
                 }
             }
