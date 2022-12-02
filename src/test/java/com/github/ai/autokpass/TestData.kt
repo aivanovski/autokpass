@@ -115,7 +115,13 @@ object TestData {
         entries = TEST_DB_ENTRIES
     )
 
-    val DB_WITH_BINARY_KEY = TestDatabase(
+    val DB_WITH_FILE_KEY = TestDatabase(
+        filename = "db-with-file-key.kdbx",
+        key = TestKey.FileKey("file-key"),
+        entries = TEST_DB_ENTRIES
+    )
+
+    val DB_WITH_BIN_KEY = TestDatabase(
         filename = "db-with-bin-key.kdbx",
         key = TestKey.FileKey("bin-key"),
         entries = TEST_DB_ENTRIES
