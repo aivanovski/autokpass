@@ -1,5 +1,6 @@
 package com.github.ai.autokpass
 
+import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.utils.resourceAsStream
@@ -15,6 +16,7 @@ object TestData {
     const val DEFAULT_DELAY = 200L
     const val DEFAULT_INPUT_TEXT = "abc123"
     const val COMMAND = "gpg --passphrase abc123 --pinentry-mode loopback"
+    val EXCEPTION = AutokpassException("Test exception")
 
     val ENTRY1 = KeepassEntry(
         uid = UUID.fromString("11111111-2222-3333-4444-555555555555"),
@@ -113,7 +115,13 @@ object TestData {
         entries = TEST_DB_ENTRIES
     )
 
-    val DB_WITH_BINARY_KEY = TestDatabase(
+    val DB_WITH_FILE_KEY = TestDatabase(
+        filename = "db-with-file-key.kdbx",
+        key = TestKey.FileKey("file-key"),
+        entries = TEST_DB_ENTRIES
+    )
+
+    val DB_WITH_BIN_KEY = TestDatabase(
         filename = "db-with-bin-key.kdbx",
         key = TestKey.FileKey("bin-key"),
         entries = TEST_DB_ENTRIES

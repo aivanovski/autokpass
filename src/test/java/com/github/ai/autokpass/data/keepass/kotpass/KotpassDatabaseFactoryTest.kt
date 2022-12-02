@@ -6,18 +6,19 @@ import com.github.ai.autokpass.TestData.DB_WITH_PASSWORD
 import com.github.ai.autokpass.TestData.INVALID_DB_PASSWORD
 import com.github.ai.autokpass.asFileKey
 import com.github.ai.autokpass.asPasswordKey
+import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.getFilePath
+import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.KeepassKey
+import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.github.ai.autokpass.toKeepassKey
 import com.github.ai.autokpass.utils.mockFSProvider
 import com.github.ai.autokpass.utils.resourceAsString
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNot
 import io.kotest.matchers.types.beInstanceOf
-import io.kotest.matchers.nulls.beNull
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -55,13 +56,13 @@ class KotpassDatabaseFactoryTest {
         confirmVerified()
 
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldNot beNull()
+        result.getEntries().sortByUid() shouldBe db.entries.sortByUid()
     }
 
     @Test
-    fun `open should load database with binary key`() {
+    fun `open should load database with file key`() {
         // arrange
-        val db = TestData.DB_WITH_BINARY_KEY
+        val db = TestData.DB_WITH_FILE_KEY
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             data = listOf(
@@ -78,18 +79,50 @@ class KotpassDatabaseFactoryTest {
             )
 
         // assert
-        verify { fsProvider.openFile(key.getFilePath()) }
-        verify { fsProvider.openFile(db.getFilePath()) }
+        verifySequence {
+            fsProvider.openFile(key.getFilePath())
+            fsProvider.openFile(db.getFilePath())
+        }
         confirmVerified()
 
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldNot beNull()
+        result.getEntries().sortByUid() shouldBe db.entries.sortByUid()
+    }
+
+    @Test
+    fun `open should load database with binary key`() {
+        // arrange
+        val db = TestData.DB_WITH_BIN_KEY
+        val key = db.key.asFileKey()
+        val fsProvider = mockFSProvider(
+            data = listOf(
+                db.getFilePath() to db.asStream(),
+                key.getFilePath() to key.asStream()
+            )
+        )
+
+        // act
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+            .open(
+                key = key.toKeepassKey(),
+                filePath = db.getFilePath()
+            )
+
+        // assert
+        verifySequence {
+            fsProvider.openFile(key.getFilePath())
+            fsProvider.openFile(db.getFilePath())
+        }
+        confirmVerified()
+
+        result.isSucceeded() shouldBe true
+        result.getEntries().sortByUid() shouldBe db.entries.sortByUid()
     }
 
     @Test
     fun `open should process the key and load database`() {
         // arrange
-        val db = TestData.DB_WITH_BINARY_KEY
+        val db = TestData.DB_WITH_FILE_KEY
         val key = db.key.asFileKey()
         val keyBytes = key.asStream().readAllBytes()
         val keyContent = resourceAsString(key.filename)
@@ -118,7 +151,7 @@ class KotpassDatabaseFactoryTest {
             fsProvider.openFile(db.getFilePath())
         }
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldNot beNull()
+        result.getEntries().sortByUid() shouldBe db.entries.sortByUid()
     }
 
     @Test
@@ -174,7 +207,7 @@ class KotpassDatabaseFactoryTest {
     @Test
     fun `open should return IOException if key file not found`() {
         // arrange
-        val db = TestData.DB_WITH_BINARY_KEY
+        val db = TestData.DB_WITH_FILE_KEY
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             errors = listOf(
@@ -195,5 +228,13 @@ class KotpassDatabaseFactoryTest {
 
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<IOException>()
+    }
+
+    private fun List<KeepassEntry>.sortByUid(): List<KeepassEntry> {
+        return sortedBy { it.uid }
+    }
+
+    private fun Result<KeepassDatabase>.getEntries(): List<KeepassEntry> {
+        return getDataOrThrow().getAllEntries()
     }
 }

@@ -3,15 +3,13 @@ import java.io.BufferedWriter
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.util.Properties
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    id("org.jetbrains.kotlin.jvm").version("1.5.31")
-    id("org.jetbrains.kotlin.plugin.spring").version("1.5.31")
-    id("org.springframework.boot").version("2.2.0.RELEASE")
+    id("org.jetbrains.kotlin.jvm").version("1.7.20")
+    id("org.jetbrains.compose") version "1.2.1"
     jacoco
 }
-
-apply(plugin = "io.spring.dependency-management")
 
 val appVersion = "0.7.0"
 
@@ -19,8 +17,10 @@ group = "com.github.ai.autokpass"
 version = appVersion
 
 repositories {
+    google()
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 tasks.test {
@@ -50,10 +50,6 @@ tasks.jacocoTestReport {
     dependsOn(allprojects.map { it.tasks.named<Test>("test") })
 }
 
-tasks.bootJar {
-    archiveFileName.set("autokpass.jar")
-}
-
 tasks.classes {
     dependsOn("createPropertyFileWithVersion")
 }
@@ -76,15 +72,43 @@ tasks.register("createPropertyFileWithVersion") {
     }
 }
 
+compose.desktop {
+    application {
+        mainClass = "com.github.ai.autokpass.MainKt"
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "autokpass-compose"
+            packageVersion = "1.0.0"
+        }
+    }
+}
+
 dependencies {
+    // Test
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.3")
     testImplementation("io.mockk:mockk:1.12.3")
 
+    // Kotlin
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+
+    // Compose
+    implementation(compose.desktop.currentOs)
+    implementation(compose.materialIconsExtended)
+
+    // Navigation
+    implementation("com.arkivanov.decompose:decompose:0.8.0")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:0.8.0")
+
+    // DI
     implementation("io.insert-koin:koin-core:3.1.5")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31")
-    implementation("org.buildobjects:jproc:2.8.0")
-    implementation("de.gesundkrank.fzf4j:fzf4j:0.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+
+    // Keepass
     implementation("com.github.anvell:kotpass:0.4.9")
+
+    // Other
+    implementation("org.buildobjects:jproc:2.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+    implementation("com.github.aivanovski:fzf4j:0.2.1")
 }
