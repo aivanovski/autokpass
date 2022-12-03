@@ -33,7 +33,7 @@ val AppTextStyles = AutokpassTextStyles(
         color = AppColors.primaryTextColor
     ),
     error = TextStyle(
-        fontSize = 22.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         color = AppColors.error
     )

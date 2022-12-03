@@ -26,6 +26,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.github.ai.autokpass.presentation.ui.core.CenteredBox
 import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.TextFieldIcons
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
@@ -37,7 +38,7 @@ fun UnlockScreen(viewModel: UnlockViewModel) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (isLoading.value) {
-            ProgressBar()
+            CenteredBox { ProgressBar() }
         } else {
             ScreenContent(viewModel)
         }

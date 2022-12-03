@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.github.ai.autokpass.presentation.ui.core.CenteredBox
 import com.github.ai.autokpass.presentation.ui.core.EmptyStateView
 import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
 import com.github.ai.autokpass.presentation.ui.core.ProgressBar
@@ -19,9 +20,18 @@ fun SelectEntryScreen(viewModel: SelectEntryViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
         with(state) {
             when (this) {
-                is ScreenState.Loading -> ProgressBar()
-                is ScreenState.Error -> ErrorStateView(message)
-                is ScreenState.Empty -> EmptyStateView(message)
+                is ScreenState.Loading -> {
+                    CenteredBox { ProgressBar() }
+                }
+
+                is ScreenState.Error -> {
+                    CenteredBox { ErrorStateView(message) }
+                }
+
+                is ScreenState.Empty -> {
+                    CenteredBox { EmptyStateView(message) }
+                }
+
                 is ScreenState.Data -> {
                     SelectorView(
                         title = "Select entry",

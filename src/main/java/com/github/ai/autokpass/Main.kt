@@ -10,8 +10,8 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleC
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.di.KoinModule
-import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.MainInteractor
+import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import com.github.ai.autokpass.presentation.ui.root.RootScreen
 import org.koin.core.context.startKoin
@@ -23,18 +23,14 @@ fun main(args: Array<String>) {
     }
 
     val interactor: MainInteractor = get()
-    val errorInteractor: ErrorInteractor = get()
 
     val initResult = interactor.initApp(args)
-    if (errorInteractor.processFailed(initResult)) {
-        return
-    }
 
-    val arguments = initResult.getDataOrThrow()
+    val arguments = initResult.getDataOrNull() ?: ParsedArgs.EMPTY
     val lifecycle = LifecycleRegistry()
     val rootComponent = RootComponent(
         componentContext = DefaultComponentContext(lifecycle),
-        startScreen = interactor.determineStartScreen(arguments),
+        startScreen = interactor.determineStartScreen(initResult),
         appArguments = arguments,
     )
 
@@ -49,7 +45,7 @@ fun main(args: Array<String>) {
             },
             title = "Autokpass",
             state = windowState,
-            alwaysOnTop = true,
+            alwaysOnTop = false,
             undecorated = false,
             resizable = true,
         ) {

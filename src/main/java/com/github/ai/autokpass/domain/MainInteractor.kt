@@ -8,10 +8,12 @@ import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
+import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
 import java.io.File
 
 class MainInteractor(
     private val argumentExtractor: ArgumentExtractor,
+    private val errorInteractor: ErrorInteractor,
     private val argumentParser: ArgumentParser,
     private val printGreetingsUseCase: PrintGreetingsUseCase,
 ) {
@@ -24,9 +26,19 @@ class MainInteractor(
         return argumentParser.validateAndParse(rawArgs)
     }
 
-    fun determineStartScreen(args: ParsedArgs): Screen {
+    fun determineStartScreen(argsResult: Result<ParsedArgs>): Screen {
+        val args = argsResult.getDataOrNull()
+
         return when {
-            args.keyPath == null -> Screen.Unlock
+            argsResult.isFailed() -> {
+                val errorMessage = errorInteractor.processAndGetMessage(argsResult.asErrorOrThrow())
+                Screen.Termination(TerminationArgs(errorMessage))
+            }
+
+            args?.keyPath == null -> {
+                Screen.Unlock
+            }
+
             else -> {
                 val key = KeepassKey.FileKey(
                     file = File(args.keyPath),
