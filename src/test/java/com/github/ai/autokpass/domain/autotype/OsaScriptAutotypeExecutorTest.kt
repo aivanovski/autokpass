@@ -4,8 +4,9 @@ import com.github.ai.autokpass.TestData.DEFAULT_AUTOTYPE_ITEMS
 import com.github.ai.autokpass.TestData.DEFAULT_DELAY
 import com.github.ai.autokpass.TestData.DEFAULT_INPUT_TEXT
 import com.github.ai.autokpass.model.AutotypeSequence
+import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
-import com.github.ai.autokpass.util.StringUtils
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -21,7 +22,7 @@ class OsaScriptAutotypeExecutorTest {
         val throttler = mockk<ThreadThrottler>()
         val sequence = AutotypeSequence(DEFAULT_AUTOTYPE_ITEMS)
 
-        every { processExecutor.executeWithBash(any()) }.returns(StringUtils.EMPTY)
+        every { processExecutor.executeWithBash(any()) }.returns(Result.Success(EMPTY))
         every { throttler.sleep(any()) }.returns(Unit)
 
         // act
