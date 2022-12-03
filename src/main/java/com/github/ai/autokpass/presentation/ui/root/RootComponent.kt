@@ -9,6 +9,7 @@ import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeComponent
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryComponent
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternComponent
+import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationComponent
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockScreenComponent
 
 class RootComponent(
@@ -32,6 +33,7 @@ class RootComponent(
             is Screen.SelectEntry -> SelectEntryComponent(this, screen.args)
             is Screen.SelectPattern -> SelectPatternComponent(this, screen.args)
             is Screen.Autotype -> AutotypeComponent(this, screen.args)
+            is Screen.Termination -> TerminationComponent(this, screen.args)
         }
     }
 }

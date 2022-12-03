@@ -45,6 +45,8 @@ import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryV
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternInteractor
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternViewModel
+import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
+import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
@@ -80,7 +82,7 @@ object KoinModule {
         single { KeepassDatabaseFactoryProvider(get(), get()) }
 
         // interactor
-        single { MainInteractor(get(), get(), get()) }
+        single { MainInteractor(get(), get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get()) }
@@ -96,6 +98,9 @@ object KoinModule {
         }
         factory { (rootViewModel: RootViewModel, router: Router, args: AutotypeArgs, appArgs: ParsedArgs) ->
             AutotypeViewModel(get(), get(), get(), rootViewModel, router, args, appArgs)
+        }
+        factory { (rootViewModel: RootViewModel, router: Router, args: TerminationArgs) ->
+            TerminationViewModel(get(), rootViewModel, router, args)
         }
     }
 }

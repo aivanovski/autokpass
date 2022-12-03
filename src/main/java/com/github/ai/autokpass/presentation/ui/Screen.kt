@@ -5,6 +5,7 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternArgs
+import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
 
 sealed class Screen : Parcelable {
 
@@ -24,5 +25,10 @@ sealed class Screen : Parcelable {
     @Parcelize
     data class Autotype(
         val args: AutotypeArgs
+    ) : Screen()
+
+    @Parcelize
+    data class Termination(
+        val args: TerminationArgs
     ) : Screen()
 }

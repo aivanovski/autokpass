@@ -1,11 +1,6 @@
 package com.github.ai.autokpass.presentation.ui.screens.autotype
 
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.WindowPlacement
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.WindowState
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory.Companion.DEFAULT_DELAY_BETWEEN_ACTIONS
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
@@ -35,12 +30,7 @@ class AutotypeViewModel(
     override fun start() {
         super.start()
 
-        rootViewModel.windowState.value = WindowState(
-            placement = WindowPlacement.Floating,
-            isMinimized = false,
-            position = WindowPosition(Alignment.BottomCenter),
-            size = DpSize(1000.dp, 140.dp)
-        )
+        rootViewModel.updateWindowSize(height = 140.dp)
 
         viewModelScope.launch {
             val isAbleToAwaitResult = interactor.isAbleToAwaitWindowChanged(appArgs.autotypeType)
