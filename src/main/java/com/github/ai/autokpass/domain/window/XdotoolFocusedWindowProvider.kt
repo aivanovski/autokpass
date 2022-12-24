@@ -7,7 +7,16 @@ class XdotoolFocusedWindowProvider(
 ) : FocusedWindowProvider {
 
     override fun getFocusedWindow(): String? {
-        val windowName = processExecutor.execute("xdotool getactivewindow getwindowname")
-        return windowName.ifBlank { null }
+        val getWindowNameResult = processExecutor.execute("xdotool getactivewindow getwindowname")
+
+        val windowName = if (getWindowNameResult.isSucceeded() &&
+            getWindowNameResult.getDataOrThrow().isNotEmpty()
+        ) {
+            getWindowNameResult.getDataOrThrow()
+        } else {
+            null
+        }
+
+        return windowName
     }
 }

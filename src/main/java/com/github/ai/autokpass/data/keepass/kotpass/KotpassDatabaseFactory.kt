@@ -20,7 +20,12 @@ class KotpassDatabaseFactory(
 
     override fun open(key: KeepassKey, filePath: String): Result<KeepassDatabase> {
         return try {
-            val credentials = key.toCredentials()
+            val getCredentialsResult = getCredentials(key)
+            if (getCredentialsResult.isFailed()) {
+                return getCredentialsResult.asErrorOrThrow()
+            }
+
+            val credentials = getCredentialsResult.getDataOrThrow()
             val content = fileSystemProvider.openFile(filePath)
             val db = KeePassDatabase.decode(content, credentials)
             Result.Success(KotpassDatabase(db))
@@ -33,17 +38,31 @@ class KotpassDatabaseFactory(
         }
     }
 
-    private fun KeepassKey.toCredentials(): Credentials {
-        return when (this) {
-            is KeepassKey.PasswordKey -> Credentials.from(EncryptedValue.fromString(password))
-            is KeepassKey.FileKey -> {
-                val keyBytes = fileSystemProvider.openFile(file.path).readAllBytes()
+    private fun getCredentials(key: KeepassKey): Result<Credentials> {
+        return when (key) {
+            is KeepassKey.PasswordKey -> {
+                Result.Success(
+                    Credentials.from(EncryptedValue.fromString(key.password))
+                )
+            }
 
-                if (processingCommand == null) {
-                    Credentials.from(EncryptedValue.fromBinary(keyBytes))
+            is KeepassKey.FileKey -> {
+                val keyBytes = fileSystemProvider.openFile(key.file.path).readAllBytes()
+
+                if (key.processingCommand == null) {
+                    Result.Success(
+                        Credentials.from(EncryptedValue.fromBinary(keyBytes))
+                    )
                 } else {
-                    val key = processExecutor.execute(keyBytes, processingCommand).trim()
-                    Credentials.from(EncryptedValue.fromBinary(key.toByteArray()))
+                    val processedKeyResult = processExecutor.execute(keyBytes, key.processingCommand)
+                    if (processedKeyResult.isFailed()) {
+                        return processedKeyResult.asErrorOrThrow()
+                    }
+
+                    val processedKey = processedKeyResult.getDataOrThrow().trim()
+                    Result.Success(
+                        Credentials.from(EncryptedValue.fromBinary(processedKey.toByteArray()))
+                    )
                 }
             }
         }

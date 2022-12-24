@@ -132,7 +132,7 @@ class KotpassDatabaseFactoryTest {
                 key.getFilePath() to ByteArrayInputStream(keyBytes)
             )
         )
-        every { processExecutor.execute(keyBytes, COMMAND) }.returns(keyContent)
+        every { processExecutor.execute(keyBytes, COMMAND) }.returns(Result.Success(keyContent))
 
         // act
         val result = KotpassDatabaseFactory(fsProvider, processExecutor)
