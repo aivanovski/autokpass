@@ -1,8 +1,10 @@
 package com.github.ai.autokpass.data.file
 
+import com.github.ai.autokpass.model.Result
 import java.io.File
 import java.io.FileInputStream
-import java.io.InputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 
 class DefaultFileSystemProvider : FileSystemProvider {
 
@@ -10,7 +12,16 @@ class DefaultFileSystemProvider : FileSystemProvider {
 
     override fun isFile(path: String): Boolean = File(path).isFile
 
-    override fun openFile(path: String): InputStream {
-        return FileInputStream(File(path))
+    override fun readFile(path: String): Result<ByteArray> {
+        return if (exists(path)) {
+            try {
+                val bytes = FileInputStream(File(path)).readAllBytes()
+                Result.Success(bytes)
+            } catch (exception: IOException) {
+                Result.Error(exception)
+            }
+        } else {
+            Result.Error(FileNotFoundException(path))
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.github.ai.autokpass
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
+import com.github.ai.autokpass.utils.resourceAsBytes
 import com.github.ai.autokpass.utils.resourceAsStream
 import java.io.InputStream
 import java.util.UUID
@@ -133,13 +134,13 @@ object TestData {
         val entries: List<KeepassEntry>
     ) {
 
-        fun asStream(): InputStream = resourceAsStream(filename)
+        fun asBytes(): ByteArray = resourceAsBytes(filename)
     }
 
     sealed class TestKey {
         data class PasswordKey(val password: String) : TestKey()
         data class FileKey(val filename: String) : TestKey() {
-            fun asStream(): InputStream = resourceAsStream(filename)
+            fun asBytes(): ByteArray = resourceAsBytes(filename)
         }
     }
 }

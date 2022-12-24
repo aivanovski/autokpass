@@ -1,10 +1,9 @@
 package com.github.ai.autokpass.data.file
 
-import java.io.InputStream
+import com.github.ai.autokpass.model.Result
 
 interface FileSystemProvider {
     fun exists(path: String): Boolean
     fun isFile(path: String): Boolean
-    // TODO: should return result
-    fun openFile(path: String): InputStream
+    fun readFile(path: String): Result<ByteArray>
 }
