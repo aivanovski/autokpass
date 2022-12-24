@@ -10,6 +10,7 @@ import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.usecases.AutotypeUseCase.Companion.DELAY_MESSAGE
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern.Companion.DEFAULT_PATTERN
+import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.printer.Printer
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -37,7 +38,7 @@ class AutotypeUseCaseTest {
                 DELAY_BETWEEN_ACTIONS_IN_MILLIS
             )
         }.returns(SEQUENCE)
-        every { executor.execute(SEQUENCE) }.returns(Unit)
+        every { executor.execute(SEQUENCE) }.returns(Result.Success(Unit))
         every { autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)
 
         // act
@@ -98,7 +99,7 @@ class AutotypeUseCaseTest {
                 DELAY_BETWEEN_ACTIONS_IN_MILLIS
             )
         }.returns(SEQUENCE)
-        every { executor.execute(SEQUENCE) }.returns(Unit)
+        every { executor.execute(SEQUENCE) }.returns(Result.Success(Unit))
         every { printer.println(message) }.returns(Unit)
         every { throttler.sleep(START_DELAY_IN_MILLIS) }.returns(Unit)
         every { autotypeExecutorFactory.getExecutor(AutotypeExecutorType.XDOTOOL) }.returns(executor)

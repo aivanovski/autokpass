@@ -11,6 +11,7 @@ import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.Result
 
+// TODO: remove
 class AutotypeUseCase(
     private val autotypeExecutorFactory: AutotypeExecutorFactory,
     private val sequenceFactory: AutotypeSequenceFactory,

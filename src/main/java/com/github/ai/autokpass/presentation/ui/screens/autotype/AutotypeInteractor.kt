@@ -113,7 +113,11 @@ class AutotypeInteractor(
             emit(Result.Success(AutotypeState.Autotyping))
 
             val executorType = getExecutorTypeResult.getDataOrThrow()
-            autotypeExecutorFactory.getExecutor(executorType).execute(sequence)
+            val autotypeResult = autotypeExecutorFactory.getExecutor(executorType).execute(sequence)
+            if (autotypeResult.isFailed()) {
+                emit(autotypeResult.asErrorOrThrow())
+                return@flow
+            }
 
             emit(Result.Success(AutotypeState.Finished))
         }

@@ -1,8 +1,8 @@
 package com.github.ai.autokpass.domain.autotype
 
 import com.github.ai.autokpass.model.AutotypeSequence
+import com.github.ai.autokpass.model.Result
 
 interface AutotypeExecutor {
-    // TODO: should return result
-    fun execute(sequence: AutotypeSequence)
+    fun execute(sequence: AutotypeSequence): Result<Unit>
 }
