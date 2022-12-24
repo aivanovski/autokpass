@@ -24,8 +24,6 @@ import com.github.ai.autokpass.domain.fuzzy_search.FuzzyMatcher
 import com.github.ai.autokpass.domain.fuzzy_search.Fzf4jFuzzyMatcher
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
-import com.github.ai.autokpass.domain.usecases.AutotypeUseCase
-import com.github.ai.autokpass.domain.usecases.AwaitWindowChangeUseCase
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
@@ -75,8 +73,6 @@ object KoinModule {
         single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase(get()) }
         single { GetVisibleEntriesUseCase(get()) }
-        single { AutotypeUseCase(get(), get(), get(), get()) }
-        single { AwaitWindowChangeUseCase(get(), get(), get()) }
         single { GetOSTypeUseCase(get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
         single { KeepassDatabaseFactoryProvider(get(), get()) }
