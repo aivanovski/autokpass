@@ -25,7 +25,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 
@@ -40,7 +39,7 @@ class KotpassDatabaseFactoryTest {
         val key = db.key.asPasswordKey()
         val fsProvider = mockFSProvider(
             data = listOf(
-                db.getFilePath() to db.asStream()
+                db.getFilePath() to db.asBytes()
             )
         )
 
@@ -52,7 +51,7 @@ class KotpassDatabaseFactoryTest {
             )
 
         // assert
-        verify { fsProvider.openFile(db.getFilePath()) }
+        verify { fsProvider.readFile(db.getFilePath()) }
         confirmVerified()
 
         result.isSucceeded() shouldBe true
@@ -66,8 +65,8 @@ class KotpassDatabaseFactoryTest {
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             data = listOf(
-                db.getFilePath() to db.asStream(),
-                key.getFilePath() to key.asStream()
+                db.getFilePath() to db.asBytes(),
+                key.getFilePath() to key.asBytes()
             )
         )
 
@@ -80,8 +79,8 @@ class KotpassDatabaseFactoryTest {
 
         // assert
         verifySequence {
-            fsProvider.openFile(key.getFilePath())
-            fsProvider.openFile(db.getFilePath())
+            fsProvider.readFile(key.getFilePath())
+            fsProvider.readFile(db.getFilePath())
         }
         confirmVerified()
 
@@ -96,8 +95,8 @@ class KotpassDatabaseFactoryTest {
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
             data = listOf(
-                db.getFilePath() to db.asStream(),
-                key.getFilePath() to key.asStream()
+                db.getFilePath() to db.asBytes(),
+                key.getFilePath() to key.asBytes()
             )
         )
 
@@ -110,8 +109,8 @@ class KotpassDatabaseFactoryTest {
 
         // assert
         verifySequence {
-            fsProvider.openFile(key.getFilePath())
-            fsProvider.openFile(db.getFilePath())
+            fsProvider.readFile(key.getFilePath())
+            fsProvider.readFile(db.getFilePath())
         }
         confirmVerified()
 
@@ -124,12 +123,12 @@ class KotpassDatabaseFactoryTest {
         // arrange
         val db = TestData.DB_WITH_FILE_KEY
         val key = db.key.asFileKey()
-        val keyBytes = key.asStream().readAllBytes()
+        val keyBytes = key.asBytes()
         val keyContent = resourceAsString(key.filename)
         val fsProvider = mockFSProvider(
             data = listOf(
-                db.getFilePath() to db.asStream(),
-                key.getFilePath() to ByteArrayInputStream(keyBytes)
+                db.getFilePath() to db.asBytes(),
+                key.getFilePath() to keyBytes
             )
         )
         every { processExecutor.execute(keyBytes, COMMAND) }.returns(Result.Success(keyContent))
@@ -146,9 +145,9 @@ class KotpassDatabaseFactoryTest {
 
         // assert
         verifySequence {
-            fsProvider.openFile(key.getFilePath())
+            fsProvider.readFile(key.getFilePath())
             processExecutor.execute(keyBytes, COMMAND)
-            fsProvider.openFile(db.getFilePath())
+            fsProvider.readFile(db.getFilePath())
         }
         result.isSucceeded() shouldBe true
         result.getEntries().sortByUid() shouldBe db.entries.sortByUid()
@@ -160,7 +159,7 @@ class KotpassDatabaseFactoryTest {
         val db = DB_WITH_PASSWORD
         val fsProvider = mockFSProvider(
             data = listOf(
-                db.getFilePath() to db.asStream()
+                db.getFilePath() to db.asBytes()
             )
         )
 
@@ -172,7 +171,7 @@ class KotpassDatabaseFactoryTest {
             )
 
         // assert
-        verify { fsProvider.openFile(db.getFilePath()) }
+        verify { fsProvider.readFile(db.getFilePath()) }
         confirmVerified()
 
         result.isFailed() shouldBe true
@@ -197,7 +196,7 @@ class KotpassDatabaseFactoryTest {
             )
 
         // assert
-        verify { fsProvider.openFile(db.getFilePath()) }
+        verify { fsProvider.readFile(db.getFilePath()) }
         confirmVerified()
 
         result.isFailed() shouldBe true
@@ -223,7 +222,7 @@ class KotpassDatabaseFactoryTest {
             )
 
         // assert
-        verify { fsProvider.openFile(key.getFilePath()) }
+        verify { fsProvider.readFile(key.getFilePath()) }
         confirmVerified()
 
         result.isFailed() shouldBe true

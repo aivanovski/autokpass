@@ -12,6 +12,7 @@ import io.github.anvell.kotpass.database.Credentials
 import io.github.anvell.kotpass.database.KeePassDatabase
 import io.github.anvell.kotpass.database.decode
 import io.github.anvell.kotpass.errors.CryptoError
+import java.io.ByteArrayInputStream
 
 class KotpassDatabaseFactory(
     private val fileSystemProvider: FileSystemProvider,
@@ -26,8 +27,13 @@ class KotpassDatabaseFactory(
             }
 
             val credentials = getCredentialsResult.getDataOrThrow()
-            val content = fileSystemProvider.openFile(filePath)
-            val db = KeePassDatabase.decode(content, credentials)
+            val readFileResult = fileSystemProvider.readFile(filePath)
+            if (readFileResult.isFailed()) {
+                return readFileResult.asErrorOrThrow()
+            }
+
+            val stream = ByteArrayInputStream(readFileResult.getDataOrThrow())
+            val db = KeePassDatabase.decode(stream, credentials)
             Result.Success(KotpassDatabase(db))
         } catch (e: Exception) {
             if (e is CryptoError.InvalidKey) {
@@ -47,8 +53,12 @@ class KotpassDatabaseFactory(
             }
 
             is KeepassKey.FileKey -> {
-                val keyBytes = fileSystemProvider.openFile(key.file.path).readAllBytes()
+                val readKeyResult = fileSystemProvider.readFile(key.file.path)
+                if (readKeyResult.isFailed()) {
+                    return readKeyResult.asErrorOrThrow()
+                }
 
+                val keyBytes = readKeyResult.getDataOrThrow()
                 if (key.processingCommand == null) {
                     Result.Success(
                         Credentials.from(EncryptedValue.fromBinary(keyBytes))

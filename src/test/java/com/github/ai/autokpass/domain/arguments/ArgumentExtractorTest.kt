@@ -1,6 +1,7 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.Result
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -12,10 +13,10 @@ class ArgumentExtractorTest {
         val expected = argsWith()
 
         // act
-        val result = ArgumentExtractor().extractArguments(emptyArray())
+        val result = CommandLineArgumentExtractor(emptyArray()).extractArguments()
 
         // assert
-        result shouldBe expected
+        result shouldBe Result.Success(expected)
     }
 
     @Test
@@ -41,10 +42,10 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = ArgumentExtractor().extractArguments(args)
+        val result = CommandLineArgumentExtractor(args).extractArguments()
 
         // assert
-        result shouldBe expected
+        result shouldBe Result.Success(expected)
     }
 
     @Test
@@ -70,10 +71,10 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = ArgumentExtractor().extractArguments(args)
+        val result = CommandLineArgumentExtractor(args).extractArguments()
 
         // assert
-        result shouldBe expected
+        result shouldBe Result.Success(expected)
     }
 
     private fun argsWith(
