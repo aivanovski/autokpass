@@ -1,8 +1,9 @@
 package com.github.ai.autokpass.domain
 
-import com.github.ai.autokpass.domain.arguments.ArgumentExtractor
 import com.github.ai.autokpass.domain.arguments.ArgumentParser
+import com.github.ai.autokpass.domain.arguments.CommandLineArgumentExtractor
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
+import com.github.ai.autokpass.domain.usecases.ReadConfigFileUseCase
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
@@ -11,19 +12,34 @@ import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryA
 import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
 import java.io.File
 
-class MainInteractor(
-    private val argumentExtractor: ArgumentExtractor,
+class StartInteractor(
     private val errorInteractor: ErrorInteractor,
     private val argumentParser: ArgumentParser,
     private val printGreetingsUseCase: PrintGreetingsUseCase,
+    private val readConfigUseCase: ReadConfigFileUseCase
 ) {
 
-    fun initApp(args: Array<String>): Result<ParsedArgs> {
+    fun readArguments(commandLineArguments: Array<String>): Result<ParsedArgs> {
         printGreetingsUseCase.printGreetings()
 
-        val rawArgs = argumentExtractor.extractArguments(args)
+        val argsResult = CommandLineArgumentExtractor(commandLineArguments).extractArguments()
+        if (argsResult.isFailed()) {
+            return argsResult.asErrorOrThrow()
+        }
 
-        return argumentParser.validateAndParse(rawArgs)
+        val fileArgsResult = readConfigUseCase.readConfigArgs()
+        if (fileArgsResult.isFailed()) {
+            return fileArgsResult.asErrorOrThrow()
+        }
+
+        val args = argsResult.getDataOrThrow()
+        val fileArgs = fileArgsResult.getDataOrThrow()
+        val mergedArgs = when {
+            fileArgs != null && args.isEmpty() -> fileArgs
+            else -> args
+        }
+
+        return argumentParser.validateAndParse(mergedArgs)
     }
 
     fun determineStartScreen(argsResult: Result<ParsedArgs>): Screen {

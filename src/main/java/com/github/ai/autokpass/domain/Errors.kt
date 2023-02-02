@@ -19,4 +19,5 @@ object Errors {
     const val GENERIC_FILE_DOES_NOT_EXIST = "Specified file doesn't exist: %s"
     const val GENERIC_FILE_IS_NOT_A_FILE = "Specified file is not a file: %s"
     const val GENERIC_FAILED_TO_PARSE_ARGUMENT = "Failed to parse %s value: %s"
+    const val GENERIC_FAILED_TO_GET_VALUE_FOR_VARIABLE = "Failed to get value for environment variable: %s"
 }

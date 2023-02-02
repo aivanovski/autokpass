@@ -10,7 +10,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleC
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.di.KoinModule
-import com.github.ai.autokpass.domain.MainInteractor
+import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import com.github.ai.autokpass.presentation.ui.root.RootScreen
@@ -22,15 +22,15 @@ fun main(args: Array<String>) {
         modules(KoinModule.appModule)
     }
 
-    val interactor: MainInteractor = get()
+    val interactor: StartInteractor = get()
 
-    val initResult = interactor.initApp(args)
+    val argsResult = interactor.readArguments(args)
 
-    val arguments = initResult.getDataOrNull() ?: ParsedArgs.EMPTY
+    val arguments = argsResult.getDataOrNull() ?: ParsedArgs.EMPTY
     val lifecycle = LifecycleRegistry()
     val rootComponent = RootComponent(
         componentContext = DefaultComponentContext(lifecycle),
-        startScreen = interactor.determineStartScreen(initResult),
+        startScreen = interactor.determineStartScreen(argsResult),
         appArguments = arguments,
     )
 

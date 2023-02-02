@@ -8,4 +8,15 @@ data class RawArgs(
     val inputType: String?,
     val autotypeType: String?,
     val keyProcessingCommand: String?
-)
+) {
+
+    fun isEmpty(): Boolean {
+        return filePath.isNullOrEmpty() &&
+            keyPath.isNullOrEmpty() &&
+            delayInSeconds.isNullOrEmpty() &&
+            autotypeDelayInMillis.isNullOrEmpty() &&
+            inputType.isNullOrEmpty() &&
+            autotypeType.isNullOrEmpty() &&
+            keyProcessingCommand.isNullOrEmpty()
+    }
+}
