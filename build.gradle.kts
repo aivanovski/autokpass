@@ -11,7 +11,7 @@ plugins {
     jacoco
 }
 
-val appVersion = "0.7.0"
+val appVersion = "1.0.0"
 
 group = "com.github.ai.autokpass"
 version = appVersion
@@ -79,7 +79,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             modules("java.instrument", "jdk.unsupported", "java.naming")
             packageName = "autokpass-compose"
-            packageVersion = "1.0.0"
+            packageVersion = appVersion
         }
     }
 }
