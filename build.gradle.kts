@@ -77,6 +77,7 @@ compose.desktop {
         mainClass = "com.github.ai.autokpass.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            modules("java.instrument", "jdk.unsupported", "java.naming")
             packageName = "autokpass-compose"
             packageVersion = "1.0.0"
         }
@@ -103,6 +104,10 @@ dependencies {
 
     // DI
     implementation("io.insert-koin:koin-core:3.1.5")
+
+    // Logging
+    implementation("ch.qos.logback:logback-core:1.3.5")
+    implementation("ch.qos.logback:logback-classic:1.3.5")
 
     // Keepass
     implementation("com.github.anvell:kotpass:0.4.9")

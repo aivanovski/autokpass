@@ -13,6 +13,7 @@ object Errors {
     const val FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE = "Failed to compile autotype sequence"
     const val TOO_MANY_ATTEMPTS = "Too many attempts"
     const val INVALID_PASSWORD_MESSAGE = "Invalid password, please enter a password again:"
+    const val ERROR_HAS_BEEN_OCCURRED = "Error has been occurred"
 
     // Argument parsing error
     const val GENERIC_EMPTY_ARGUMENT = "Option %s can't be empty"

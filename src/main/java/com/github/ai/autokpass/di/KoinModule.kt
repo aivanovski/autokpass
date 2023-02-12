@@ -48,6 +48,8 @@ import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationVi
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 object KoinModule {
 
@@ -61,7 +63,7 @@ object KoinModule {
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
-        single<ErrorInteractor> { ErrorInteractorImpl(get()) }
+        single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single { AutotypeExecutorFactory(get(), get()) }
@@ -98,5 +100,9 @@ object KoinModule {
         factory { (rootViewModel: RootViewModel, router: Router, args: TerminationArgs) ->
             TerminationViewModel(get(), rootViewModel, router, args)
         }
+    }
+
+    private inline fun <reified T> logger(): Logger {
+        return LoggerFactory.getLogger(T::class.java)
     }
 }

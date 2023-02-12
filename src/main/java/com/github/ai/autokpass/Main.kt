@@ -45,7 +45,7 @@ fun main(args: Array<String>) {
             },
             title = "Autokpass",
             state = windowState,
-            alwaysOnTop = false,
+            alwaysOnTop = true,
             undecorated = false,
             resizable = true,
         ) {
