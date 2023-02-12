@@ -1,12 +1,11 @@
 package com.github.ai.autokpass.domain
 
-import com.github.ai.autokpass.domain.exception.AutokpassException
-import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.util.StringUtils.EMPTY
+import org.slf4j.Logger
 
 class ErrorInteractorImpl(
-    private val printer: Printer
+    private val logger: Logger
 ) : ErrorInteractor {
 
     override fun processFailed(result: Result<*>): Boolean {
@@ -19,11 +18,13 @@ class ErrorInteractorImpl(
     }
 
     override fun process(error: Result.Error) {
-        if (error.exception !is AutokpassException) {
-            error.exception.printStackTrace()
+        val message = if (!error.exception.message.isNullOrEmpty()) {
+            Errors.ERROR_HAS_BEEN_OCCURRED + ": " + error.exception.message
+        } else {
+            Errors.ERROR_HAS_BEEN_OCCURRED
         }
 
-        printer.println(error.exception.message ?: error.exception.toString())
+        logger.error(message, error.exception)
     }
 
     override fun processAndGetMessage(error: Result.Error): String {
