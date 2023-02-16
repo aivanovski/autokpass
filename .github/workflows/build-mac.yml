@@ -19,12 +19,17 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+      
+      - name: Set environment variables
+        run: |
+          VERSION=$(cat src/main/resources/version.properties | grep "^version=" | cut -d= -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build debug jar
+      - name: Build package
         run: ./gradlew packageDmg
 
       - name: Store dmg file
         uses: actions/upload-artifact@v2
         with:
-          name: autokpass-compose-1.0.0.dmg
-          path: ./build/compose/binaries/main/dmg/autokpass-compose-1.0.0.dmg
+          name: autokpass-compose-${{env.VERSION}}.dmg
+          path: ./build/compose/binaries/main/dmg/autokpass-compose-${{env.VERSION}}.dmg
