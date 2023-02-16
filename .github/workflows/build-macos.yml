@@ -1,4 +1,4 @@
-name: Build MAC
+name: Build macOS
 
 on:
   push:
@@ -25,11 +25,20 @@ jobs:
           VERSION=$(cat src/main/resources/version.properties | grep "^version=" | cut -d= -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build package
+      - name: Build dmg file
         run: ./gradlew packageDmg
+
+      - name: Build debug jar
+        run: ./gradlew packageUberJarForCurrentOS
 
       - name: Store dmg file
         uses: actions/upload-artifact@v2
         with:
           name: autokpass-compose-${{env.VERSION}}.dmg
           path: ./build/compose/binaries/main/dmg/autokpass-compose-${{env.VERSION}}.dmg
+
+      - name: Store jar file
+        uses: actions/upload-artifact@v2
+        with:
+          name: autokpass-compose-macos-x64-${{env.VERSION}}.jar
+          path: ./build/compose/jars/autokpass-compose-macos-x64-${{env.VERSION}}.jar

@@ -1,4 +1,4 @@
-name: Build
+name: Build Linux
 
 on:
   push:
@@ -20,11 +20,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Set environment variables
+        run: |
+          VERSION=$(cat src/main/resources/version.properties | grep "^version=" | cut -d= -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Build debug jar
         run: ./gradlew packageUberJarForCurrentOS
 
       - name: Store jar file
         uses: actions/upload-artifact@v2
         with:
-          name: autokpass-compose-linux-x64-1.0.0.jar
-          path: ./build/compose/jars/autokpass-compose-linux-x64-1.0.0.jar
+          name: autokpass-compose-linux-x64-${{env.VERSION}}.jar
+          path: ./build/compose/jars/autokpass-compose-linux-x64-${{env.VERSION}}.jar
