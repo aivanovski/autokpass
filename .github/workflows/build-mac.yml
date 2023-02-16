@@ -1,0 +1,30 @@
+name: Build MAC
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build debug jar
+        run: ./gradlew packageDmg
+
+      - name: Store dmg file
+        uses: actions/upload-artifact@v2
+        with:
+          name: autokpass-compose-1.0.0.dmg
+          path: ./build/compose/binaries/main/dmg/autokpass-compose-1.0.0.dmg
