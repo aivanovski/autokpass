@@ -20,7 +20,7 @@ For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jorda
 
 #### macOS (Application installation)
 Option to download singed application is not available now, but should be available in near future.
-Apple doesn't allow to run unsigned application but it allows to run unsigned application that was created on the same machine. That means in order to install Autokpass as application, it should be packaged on the destination machine. For that please check out `Building from sources` section below.
+Apple doesn't allow to run unsigned application but it allows to run unsigned application that was created on the same machine. That means in order to install Autokpass as application, it should be packaged on the destination machine. For that please check out `Build application` section below.
 
 ## How to run
 Open a Terminal and execute downloaded `autokpass.jar` with `java`.
@@ -53,7 +53,9 @@ autotype=... # programm responsible for keyboard emulation; available options: `
 process-key-command=... # Shell command that can be executed on file specified in `--key-file` and uses it to unlock database
 ```
 
-## Building `autokpass.jar` file from sources
+## Building from sources
+
+#### Build `autokpass.jar` file (Linux or macOS)
 ```
 git clone https://github.com/aivanovski/autokpass.git
 cd autokpass
@@ -64,7 +66,7 @@ Then to build the project run:
 ```
 After build is finished `autokpass-[platform]-[version].jar` can be found at `autokpass/build/compose/jars`
 
-## Building application (only for macOS)
+#### Build application (for macOS only)
 ```
 git clone https://github.com/aivanovski/autokpass.git
 cd autokpass
