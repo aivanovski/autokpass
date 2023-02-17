@@ -11,12 +11,16 @@ For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jorda
 #### Linux
 - Install Java version >= 11
 - Install [xdotool](https://github.com/jordansissel/xdotool)
-- Download `autokpass.jar` from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
+- Download `autokpass.jar` for Linux from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
 
-#### macOS
+#### macOS (Jar file installation)
 - Install Java version >= 11
 - Install [cliclick](https://github.com/BlueM/cliclick)
-- Download `autokpass.jar` from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
+- Download `autokpass.jar` for macOS file from [Release page](https://github.com/aivanovski/autokpass/releases). Alternatively you can build from sources
+
+#### macOS (Application installation)
+Option to download singed application is not available now, but should be available in near future.
+Apple doesn't allow to run unsigned application but it allows to run unsigned application that was created on the same machine. That means in order to install Autokpass as application, it should be packaged on the destination machine. For that please check out `Building from sources` section below.
 
 ## How to run
 Open a Terminal and execute downloaded `autokpass.jar` with `java`.
@@ -32,24 +36,47 @@ $ java -jar autokpass.jar [OPTIONS]
 #### Options
 - `-f, --file`: path to KeePass database file
 - `-d, --delay`: delay in seconds before autotype will be started
+- `-b, --autotype-delay`: delay in milliseconds between adjacent autotype actions
 - `-k, --key-file`: path to key file
-- `-a, --autotype`: programm responsible for keyboard emulation; available options: `xdotool`, `cliclick`, `osascript`; default options: `xdotool` for Linux, `cliclick` for macOS;
-- `-c, --process-key-command`: executes shell command on file specified in `--key-file` and uses it to unlock database
+- `-a, --autotype`: programm responsible for keyboard emulation; available options: `xdotool`, `osascript`, `cliclick`; default options: `xdotool` for Linux, `osascript` for macOS;
+- `-c, --process-key-command`: Shell command that can be executed on file specified in `--key-file` and uses it to unlock database
 - `-h, --help`: print usage info
 
-## Building from sources
+#### Configuration file
+All options can be specified in a configuration file located at `$HOME/.config/autokpass/autokpass.cfg`
+```
+file=... # path to KeePass database file
+delay=... # delay in seconds before autotype will be started
+autotype-delay=... # delay in milliseconds between adjacent autotype actions
+key-file=... # path to key file
+autotype=... # programm responsible for keyboard emulation; available options: `xdotool`, `osascript`, `cliclick`; default options: `xdotool` for Linux, `osascript` for macOS
+process-key-command=... # Shell command that can be executed on file specified in `--key-file` and uses it to unlock database
+```
+
+## Building `autokpass.jar` file from sources
 ```
 git clone https://github.com/aivanovski/autokpass.git
 cd autokpass
 ```
 Then to build the project run:
 ```
-./gradlew bootJar
+./gradlew packageReleaseUberJarForCurrentOS
 ```
-After build is finished `autokpass.jar` can be found at `autokpass/build/libs`
+After build is finished `autokpass-[platform]-[version].jar` can be found at `autokpass/build/compose/jars`
+
+## Building application (only for macOS)
+```
+git clone https://github.com/aivanovski/autokpass.git
+cd autokpass
+```
+Then to build the project run:
+```
+./gradlew packageDmg
+```
+After build is finished `autokpass-[version].dmg` can be found at `autokpass/build/compose/binaries/main/dmg/`
 
 ## Usage examples
-#### Unlock database with password
+#### Unlock database with password entry form
 ```
 $ java -jar autokpass.jar \
   --file PATH_TO_KEEPASS_FILE
@@ -72,10 +99,15 @@ $ java -jar autokpass.jar \
   --key-file PATH_TO_KEY_FILE
 ```
 
-#### Run Autokpass in its own window
-Command to start Autokpass can be specified as an argument to almost any modern terminal emulator (such as Terminator, Alacritty or other)
+#### Run autokpass with configuration file
+Create config file at `$HOME/.config/autokpass/autokpass.cfg`
 ```
-$ YOUR_TERMINAL_EMULATOR --command 'java -jar autokpass.jar --file PATH_TO_KEEPASS_FILE --delay 1'
+file=PATH_TO_KEEPASS_FILE
+key-file=PATH_TO_KEY_FILE
+```
+Run Autokpass without arguments
+```
+$ java -jar autokpass.jar
 ```
 
 #### Integration with I3WM
