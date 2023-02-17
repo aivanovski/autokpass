@@ -1,7 +1,7 @@
 ![https://github.com/aivanovski/autokpass/workflows/Build/badge.svg](https://github.com/aivanovski/autokpass/workflows/Build/badge.svg) ![https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg](https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg) ![Coverage](.github/badges/jacoco.svg)
 
 # Autokpass
-Autokpass is a small utility that providers functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
+Autokpass is a small GUI utility that provides functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
 For simulating keyboard typing Autokpass uses [xdotool](https://github.com/jordansissel/xdotool) on Linux and [cliclick](https://github.com/BlueM/cliclick) or AppleScript via [osascript](https://ss64.com/osx/osascript.html) on macOS. Access to KeePass database is provided by [Kotpass](https://github.com/Anvell/kotpass).
 
 ## Demo
@@ -103,7 +103,6 @@ $ java -jar autokpass.jar \
 Create config file at `$HOME/.config/autokpass/autokpass.cfg`
 ```
 file=PATH_TO_KEEPASS_FILE
-key-file=PATH_TO_KEY_FILE
 ```
 Run Autokpass without arguments
 ```
