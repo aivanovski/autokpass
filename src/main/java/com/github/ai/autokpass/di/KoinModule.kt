@@ -98,7 +98,7 @@ object KoinModule {
             SelectPatternViewModel(get(), get(), router, args, appArgs)
         }
         factory { (rootViewModel: RootViewModel, router: Router, args: AutotypeArgs, appArgs: ParsedArgs) ->
-            AutotypeViewModel(get(), get(), get(), rootViewModel, router, args, appArgs)
+            AutotypeViewModel(get(), get(), get(), get(), rootViewModel, router, args, appArgs)
         }
         factory { (rootViewModel: RootViewModel, router: Router, args: TerminationArgs) ->
             TerminationViewModel(get(), rootViewModel, router, args)

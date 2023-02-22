@@ -28,6 +28,15 @@ class StringResourcesImpl : StringResources {
     override val selectEntry: String
         get() = resources.getString("selectEntry")
 
+    override val autotyping: String
+        get() = resources.getString("autotyping")
+
+    override val autotypeSelectWindowMessage: String
+        get() = resources.getString("autotypeSelectWindowMessage")
+
+    override val autotypeCountDownMessage: String
+        get() = resources.getString("autotypeCountDownMessage")
+
     override val errorFailedToDetermineOsType: String
         get() = resources.getString("errorFailedToDetermineOsType")
 

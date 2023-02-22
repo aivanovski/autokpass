@@ -8,6 +8,9 @@ interface StringResources {
     val exit: String
     val selectPattern: String
     val selectEntry: String
+    val autotyping: String
+    val autotypeSelectWindowMessage: String
+    val autotypeCountDownMessage: String
 
     // Errors
     val errorFailedToDetermineOsType: String
