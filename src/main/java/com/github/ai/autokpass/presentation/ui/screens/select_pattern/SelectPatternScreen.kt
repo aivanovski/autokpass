@@ -6,19 +6,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.presentation.ui.core.SelectorView
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternViewModel.ScreenState
 
 @Composable
 fun SelectPatternScreen(viewModel: SelectPatternViewModel) {
     val state by viewModel.state.collectAsState()
+    val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {
         with(state) {
             when (this) {
                 is ScreenState.Data -> {
                     SelectorView(
-                        title = "Select pattern",
+                        title = strings.selectPattern,
                         query = query,
                         entries = items,
                         highlights = highlights,

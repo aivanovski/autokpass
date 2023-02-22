@@ -26,9 +26,11 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.presentation.ui.core.CenteredBox
 import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.TextFieldIcons
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 
@@ -53,6 +55,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
     val isError = (error != null)
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
     val focusRequester = remember { FocusRequester() }
+    val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -73,7 +76,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                 onValueChange = { text -> viewModel.onPasswordInputChanged(text) },
                 label = {
                     Text(
-                        text = "Password"
+                        text = strings.password
                     )
                 },
                 trailingIcon = {
@@ -117,7 +120,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                 }
             ) {
                 Text(
-                    text = "Unlock",
+                    text = strings.unlock,
                     style = AppTextStyles.button
                 )
             }

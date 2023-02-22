@@ -10,14 +10,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.presentation.ui.core.CenteredColumn
 import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
 import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationViewModel.ScreenState
 
 @Composable
 fun TerminationScreen(viewModel: TerminationViewModel) {
     val state by viewModel.state.collectAsState()
+    val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {
         with(state) {
@@ -33,7 +36,7 @@ fun TerminationScreen(viewModel: TerminationViewModel) {
                             onClick = { viewModel.onExitButtonClicked() }
                         ) {
                             Text(
-                                text = "Exit",
+                                text = strings.exit,
                                 style = AppTextStyles.button
                             )
                         }

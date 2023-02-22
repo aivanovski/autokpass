@@ -33,6 +33,8 @@ import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.presentation.ui.root.RootViewModel
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeInteractor
@@ -54,6 +56,7 @@ import org.slf4j.LoggerFactory
 object KoinModule {
 
     val appModule = module {
+        single<StringResources> { StringResourcesImpl() }
         single<Printer> { StandardOutputPrinter() }
         single<FileSystemProvider> { DefaultFileSystemProvider() }
         single { AutotypeSequenceFactory() }
