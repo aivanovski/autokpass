@@ -2,7 +2,6 @@ package com.github.ai.autokpass.domain
 
 object Errors {
 
-    const val FAILED_TO_DETERMINE_OS_TYPE = "Can't determine OS type"
     const val FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE = "Failed to compile autotype sequence"
     const val ERROR_HAS_BEEN_OCCURRED = "Error has been occurred"
 

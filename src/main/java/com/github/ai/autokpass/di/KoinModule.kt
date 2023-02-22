@@ -77,7 +77,7 @@ object KoinModule {
         single { PrintGreetingsUseCase(get()) }
         single { ReadDatabaseUseCase(get()) }
         single { GetVisibleEntriesUseCase(get()) }
-        single { GetOSTypeUseCase(get()) }
+        single { GetOSTypeUseCase(get(), get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
         single { KeepassDatabaseFactoryProvider(get(), get()) }
         single { ReadConfigFileUseCase(get(), get()) }
