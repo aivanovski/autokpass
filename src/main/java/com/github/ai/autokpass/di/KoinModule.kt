@@ -87,7 +87,7 @@ object KoinModule {
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get()) }
-        single { AutotypeInteractor(get(), get(), get(), get(), get(), get()) }
+        single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, appArgs) }

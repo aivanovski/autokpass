@@ -37,6 +37,15 @@ class StringResourcesImpl : StringResources {
     override val errorHasBeenOccurred: String
         get() = resources.getString("errorHasBeenOccurred")
 
+    override val errorFailedToGetWindowName: String
+        get() = resources.getString("errorFailedToGetWindowName")
+
+    override val errorFailedToGetWindowFocus: String
+        get() = resources.getString("errorFailedToGetWindowFocus")
+
+    override val errorWindowFocusAwaitTimeout: String
+        get() = resources.getString("errorWindowFocusAwaitTimeout")
+
     override val errorOptionCanNotBeEmpty: String
         get() = resources.getString("errorOptionCanNotBeEmpty")
 

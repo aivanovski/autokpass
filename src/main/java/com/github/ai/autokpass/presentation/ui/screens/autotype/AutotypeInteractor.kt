@@ -15,6 +15,7 @@ import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +31,8 @@ class AutotypeInteractor(
     private val autotypeExecutorFactory: AutotypeExecutorFactory,
     private val sequenceFactory: AutotypeSequenceFactory,
     private val getOSTypeUseCase: GetOSTypeUseCase,
-    private val determineExecutorTypeUseCase: DetermineAutotypeExecutorTypeUseCase
+    private val determineExecutorTypeUseCase: DetermineAutotypeExecutorTypeUseCase,
+    private val strings: StringResources
 ) {
 
     fun isAbleToAwaitWindowChanged(
@@ -52,7 +54,9 @@ class AutotypeInteractor(
     suspend fun awaitWindowFocusChanged(): Result<Unit> =
         withContext(dispatchers.IO) {
             val appWindow = focusedWindowProvider.getFocusedWindow()
-                ?: return@withContext Result.Error(AutokpassException("Failed to get window name"))
+                ?: return@withContext Result.Error(
+                    AutokpassException(strings.errorFailedToGetWindowName)
+                )
 
             val startTime = System.currentTimeMillis()
 
@@ -61,7 +65,9 @@ class AutotypeInteractor(
             while (true) {
                 val currentWindow = focusedWindowProvider.getFocusedWindow()
                 if (currentWindow == null) {
-                    result = Result.Error(AutokpassException("Failed to get window focus"))
+                    result = Result.Error(
+                        AutokpassException(strings.errorFailedToGetWindowFocus)
+                    )
                     break
                 }
 
@@ -71,7 +77,7 @@ class AutotypeInteractor(
                 }
 
                 if (startTime >= System.currentTimeMillis() + AWAIT_TIMEOUT) {
-                    result = Result.Error(AutokpassException("Await timeout"))
+                    result = Result.Error(AutokpassException(strings.errorWindowFocusAwaitTimeout))
                     break
                 }
 

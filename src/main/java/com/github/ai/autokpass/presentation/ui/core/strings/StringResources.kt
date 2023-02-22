@@ -13,6 +13,9 @@ interface StringResources {
     val errorFailedToDetermineOsType: String
     val errorFailedToCompileAutotypeSequence: String
     val errorHasBeenOccurred: String
+    val errorFailedToGetWindowName: String
+    val errorFailedToGetWindowFocus: String
+    val errorWindowFocusAwaitTimeout: String
 
     // Errors with formatted values
     val errorOptionCanNotBeEmpty: String
