@@ -11,6 +11,7 @@ import com.github.ai.autokpass.domain.ErrorInteractorImpl
 import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.domain.SystemPropertyProvider
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
+import com.github.ai.autokpass.domain.autotype.AutotypePatternFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.autotype.AutotypePatternParser
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
@@ -72,6 +73,7 @@ object KoinModule {
         single { AutotypeExecutorFactory(get(), get()) }
         single<Dispatchers> { DefaultDispatchers() }
         single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
+        single { AutotypePatternFactory() }
 
         // use cases
         single { PrintGreetingsUseCase(get(), get()) }
@@ -86,7 +88,7 @@ object KoinModule {
         single { StartInteractor(get(), get(), get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
-        single { SelectPatternInteractor(get(), get(), get()) }
+        single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
