@@ -1,3 +1,7 @@
 package com.github.ai.autokpass.domain.exception
 
-class InvalidPasswordException : AutokpassException("Invalid password")
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+
+class InvalidPasswordException(
+    strings: StringResources
+) : AutokpassException(strings.invalidCredentialsMessage)

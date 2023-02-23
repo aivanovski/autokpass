@@ -12,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeViewModel.ScreenState
 
@@ -48,6 +50,8 @@ private fun ScreenContent(
     isCancelButtonVisible: Boolean,
     onCancelClicked: () -> Unit
 ) {
+    val strings: StringResources = get()
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -68,7 +72,7 @@ private fun ScreenContent(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = strings.cancel,
                         style = AppTextStyles.button
                     )
                 }

@@ -33,6 +33,8 @@ import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.presentation.ui.root.RootViewModel
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeInteractor
@@ -54,16 +56,17 @@ import org.slf4j.LoggerFactory
 object KoinModule {
 
     val appModule = module {
+        single<StringResources> { StringResourcesImpl() }
         single<Printer> { StandardOutputPrinter() }
         single<FileSystemProvider> { DefaultFileSystemProvider() }
         single { AutotypeSequenceFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
-        single { ArgumentParser(get()) }
+        single { ArgumentParser(get(), get()) }
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
-        single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>()) }
+        single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>(), get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single { AutotypeExecutorFactory(get(), get()) }
@@ -71,20 +74,20 @@ object KoinModule {
         single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
 
         // use cases
-        single { PrintGreetingsUseCase(get()) }
+        single { PrintGreetingsUseCase(get(), get()) }
         single { ReadDatabaseUseCase(get()) }
         single { GetVisibleEntriesUseCase(get()) }
-        single { GetOSTypeUseCase(get()) }
+        single { GetOSTypeUseCase(get(), get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
-        single { KeepassDatabaseFactoryProvider(get(), get()) }
-        single { ReadConfigFileUseCase(get(), get()) }
+        single { KeepassDatabaseFactoryProvider(get(), get(), get()) }
+        single { ReadConfigFileUseCase(get(), get(), get()) }
 
-        // interactor
-        single { StartInteractor(get(), get(), get(), get()) }
+        // interactors
+        single { StartInteractor(get(), get(), get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get()) }
-        single { AutotypeInteractor(get(), get(), get(), get(), get(), get()) }
+        single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedArgs) -> UnlockViewModel(get(), get(), get(), router, appArgs) }
@@ -95,7 +98,7 @@ object KoinModule {
             SelectPatternViewModel(get(), get(), router, args, appArgs)
         }
         factory { (rootViewModel: RootViewModel, router: Router, args: AutotypeArgs, appArgs: ParsedArgs) ->
-            AutotypeViewModel(get(), get(), get(), rootViewModel, router, args, appArgs)
+            AutotypeViewModel(get(), get(), get(), get(), rootViewModel, router, args, appArgs)
         }
         factory { (rootViewModel: RootViewModel, router: Router, args: TerminationArgs) ->
             TerminationViewModel(get(), rootViewModel, router, args)

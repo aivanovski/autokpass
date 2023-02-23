@@ -8,6 +8,7 @@ import com.github.ai.autokpass.model.AutotypeState
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.root.RootViewModel
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ class AutotypeViewModel(
     private val interactor: AutotypeInteractor,
     private val errorInteractor: ErrorInteractor,
     dispatchers: Dispatchers,
+    private val strings: StringResources,
     private val rootViewModel: RootViewModel,
     private val router: Router,
     private val args: AutotypeArgs,
@@ -44,7 +46,7 @@ class AutotypeViewModel(
             val isAbleToAwait = isAbleToAwaitResult.getDataOrThrow()
             if (isAbleToAwait) {
                 _state.value = ScreenState.Data(
-                    message = "Please select window to start autotype",
+                    message = strings.autotypeSelectWindowMessage,
                     isCancelButtonVisible = true
                 )
 
@@ -73,14 +75,17 @@ class AutotypeViewModel(
                         when (val autotypeState = autotypeStateResult.getDataOrThrow()) {
                             is AutotypeState.CountDown -> {
                                 _state.value = ScreenState.Data(
-                                    message = "Autotype will start in ${autotypeState.secondsLeft} second(s)",
+                                    message = String.format(
+                                        strings.autotypeCountDownMessage,
+                                        autotypeState.secondsLeft
+                                    ),
                                     isCancelButtonVisible = false
                                 )
                             }
 
                             is AutotypeState.Autotyping -> {
                                 _state.value = ScreenState.Data(
-                                    message = "Autotyping",
+                                    message = strings.autotyping,
                                     isCancelButtonVisible = false
                                 )
                             }

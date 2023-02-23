@@ -6,16 +6,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.presentation.ui.core.CenteredBox
 import com.github.ai.autokpass.presentation.ui.core.EmptyStateView
 import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
 import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.SelectorView
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryViewModel.ScreenState
 
 @Composable
 fun SelectEntryScreen(viewModel: SelectEntryViewModel) {
     val state by viewModel.state.collectAsState()
+    val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {
         with(state) {
@@ -34,7 +37,7 @@ fun SelectEntryScreen(viewModel: SelectEntryViewModel) {
 
                 is ScreenState.Data -> {
                     SelectorView(
-                        title = "Select entry",
+                        title = strings.selectEntry,
                         query = query,
                         entries = entries.map { it.text },
                         highlights = entries.map { it.highlights },

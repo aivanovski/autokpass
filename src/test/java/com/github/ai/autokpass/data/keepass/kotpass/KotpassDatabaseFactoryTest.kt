@@ -13,6 +13,8 @@ import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.toKeepassKey
 import com.github.ai.autokpass.utils.mockFSProvider
 import com.github.ai.autokpass.utils.resourceAsString
@@ -31,6 +33,7 @@ import java.io.IOException
 class KotpassDatabaseFactoryTest {
 
     private val processExecutor = mockk<ProcessExecutor>()
+    private val strings: StringResources = StringResourcesImpl()
 
     @Test
     fun `open should load database with password`() {
@@ -44,7 +47,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()
@@ -71,7 +74,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()
@@ -101,7 +104,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()
@@ -134,7 +137,7 @@ class KotpassDatabaseFactoryTest {
         every { processExecutor.execute(keyBytes, COMMAND) }.returns(Result.Success(keyContent))
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = KeepassKey.FileKey(
                     file = File(key.getFilePath()),
@@ -164,7 +167,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = KeepassKey.PasswordKey(INVALID_DB_PASSWORD),
                 filePath = db.getFilePath()
@@ -189,7 +192,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = KeepassKey.PasswordKey(INVALID_DB_PASSWORD),
                 filePath = db.getFilePath()
@@ -215,7 +218,7 @@ class KotpassDatabaseFactoryTest {
         )
 
         // act
-        val result = KotpassDatabaseFactory(fsProvider, processExecutor)
+        val result = KotpassDatabaseFactory(fsProvider, processExecutor, strings)
             .open(
                 key = key.toKeepassKey(),
                 filePath = db.getFilePath()

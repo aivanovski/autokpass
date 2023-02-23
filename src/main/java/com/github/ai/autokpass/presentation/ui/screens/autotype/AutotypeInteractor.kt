@@ -1,6 +1,5 @@
 package com.github.ai.autokpass.presentation.ui.screens.autotype
 
-import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
@@ -15,6 +14,7 @@ import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,8 @@ class AutotypeInteractor(
     private val autotypeExecutorFactory: AutotypeExecutorFactory,
     private val sequenceFactory: AutotypeSequenceFactory,
     private val getOSTypeUseCase: GetOSTypeUseCase,
-    private val determineExecutorTypeUseCase: DetermineAutotypeExecutorTypeUseCase
+    private val determineExecutorTypeUseCase: DetermineAutotypeExecutorTypeUseCase,
+    private val strings: StringResources
 ) {
 
     fun isAbleToAwaitWindowChanged(
@@ -52,7 +53,9 @@ class AutotypeInteractor(
     suspend fun awaitWindowFocusChanged(): Result<Unit> =
         withContext(dispatchers.IO) {
             val appWindow = focusedWindowProvider.getFocusedWindow()
-                ?: return@withContext Result.Error(AutokpassException("Failed to get window name"))
+                ?: return@withContext Result.Error(
+                    AutokpassException(strings.errorFailedToGetWindowName)
+                )
 
             val startTime = System.currentTimeMillis()
 
@@ -61,7 +64,9 @@ class AutotypeInteractor(
             while (true) {
                 val currentWindow = focusedWindowProvider.getFocusedWindow()
                 if (currentWindow == null) {
-                    result = Result.Error(AutokpassException("Failed to get window focus"))
+                    result = Result.Error(
+                        AutokpassException(strings.errorFailedToGetWindowFocus)
+                    )
                     break
                 }
 
@@ -71,7 +76,7 @@ class AutotypeInteractor(
                 }
 
                 if (startTime >= System.currentTimeMillis() + AWAIT_TIMEOUT) {
-                    result = Result.Error(AutokpassException("Await timeout"))
+                    result = Result.Error(AutokpassException(strings.errorWindowFocusAwaitTimeout))
                     break
                 }
 
@@ -91,7 +96,7 @@ class AutotypeInteractor(
         return flow {
             val sequence = sequenceFactory.createAutotypeSequence(entry, pattern, delayBetweenActionsInMillis)
             if (sequence == null) {
-                emit(Result.Error(AutokpassException(Errors.FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE)))
+                emit(Result.Error(AutokpassException(strings.errorFailedToCompileAutotypeSequence)))
                 return@flow
             }
 

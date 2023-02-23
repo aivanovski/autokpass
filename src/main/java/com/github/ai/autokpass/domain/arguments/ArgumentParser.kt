@@ -1,10 +1,6 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
-import com.github.ai.autokpass.domain.Errors.GENERIC_EMPTY_ARGUMENT
-import com.github.ai.autokpass.domain.Errors.GENERIC_FAILED_TO_PARSE_ARGUMENT
-import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_DOES_NOT_EXIST
-import com.github.ai.autokpass.domain.Errors.GENERIC_FILE_IS_NOT_A_FILE
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.AutotypeExecutorType
@@ -12,9 +8,11 @@ import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 
 class ArgumentParser(
-    private val fileSystemProvider: FileSystemProvider
+    private val fileSystemProvider: FileSystemProvider,
+    private val strings: StringResources
 ) {
 
     fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
@@ -68,7 +66,11 @@ class ArgumentParser(
 
     private fun parseFilePath(path: String?): Result<String> {
         if (path.isNullOrBlank()) {
-            return Result.Error(ParsingException(String.format(GENERIC_EMPTY_ARGUMENT, Argument.FILE.cliName)))
+            return Result.Error(
+                ParsingException(
+                    String.format(strings.errorOptionCanNotBeEmpty, Argument.FILE.cliName)
+                )
+            )
         }
 
         val isPathValidResult = isPathValid(path)
@@ -85,7 +87,11 @@ class ArgumentParser(
         }
 
         if (path.isBlank()) {
-            return Result.Error(ParsingException(String.format(GENERIC_EMPTY_ARGUMENT, Argument.KEY_FILE.cliName)))
+            return Result.Error(
+                ParsingException(
+                    String.format(strings.errorOptionCanNotBeEmpty, Argument.KEY_FILE.cliName)
+                )
+            )
         }
 
         val isPathValidResult = isPathValid(path)
@@ -98,11 +104,15 @@ class ArgumentParser(
 
     private fun isPathValid(path: String): Result<Unit> {
         if (!fileSystemProvider.exists(path)) {
-            return Result.Error(ParsingException(String.format(GENERIC_FILE_DOES_NOT_EXIST, path)))
+            return Result.Error(
+                ParsingException(
+                    String.format(strings.errorFileDoesNotExist, path)
+                )
+            )
         }
 
         if (!fileSystemProvider.isFile(path)) {
-            return Result.Error(ParsingException(String.format(GENERIC_FILE_IS_NOT_A_FILE, path)))
+            return Result.Error(ParsingException(String.format(strings.errorFileIsNotFile, path)))
         }
 
         return Result.Success(Unit)
@@ -116,7 +126,7 @@ class ArgumentParser(
         val delay = delayStr.toIntSafely()
             ?: return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.DELAY.cliName, delayStr)
+                    String.format(strings.errorFailedToParseArgument, Argument.DELAY.cliName, delayStr)
                 )
             )
 
@@ -131,7 +141,7 @@ class ArgumentParser(
         val delay = delayStr.toIntSafely()
             ?: return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.AUTOTYPE_DELAY.cliName, delayStr)
+                    String.format(strings.errorFailedToParseArgument, Argument.AUTOTYPE_DELAY.cliName, delayStr)
                 )
             )
 
@@ -147,7 +157,7 @@ class ArgumentParser(
             .firstOrNull { it.cliName.equals(input, ignoreCase = true) }
             ?: return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.INPUT.cliName, input)
+                    String.format(strings.errorFailedToParseArgument, Argument.INPUT.cliName, input)
                 )
             )
 
@@ -163,7 +173,7 @@ class ArgumentParser(
             .firstOrNull { it.cliName.equals(type, ignoreCase = true) }
             ?: return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_FAILED_TO_PARSE_ARGUMENT, Argument.AUTOTYPE.cliName, type)
+                    String.format(strings.errorFailedToParseArgument, Argument.AUTOTYPE.cliName, type)
                 )
             )
 
@@ -178,7 +188,7 @@ class ArgumentParser(
         if (command.isBlank()) {
             return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_EMPTY_ARGUMENT, Argument.PROCESS_KEY_COMMAND.cliName)
+                    String.format(strings.errorOptionCanNotBeEmpty, Argument.PROCESS_KEY_COMMAND.cliName)
                 )
             )
         }

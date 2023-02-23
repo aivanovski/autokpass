@@ -1,11 +1,13 @@
 package com.github.ai.autokpass.domain
 
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import org.slf4j.Logger
 
 class ErrorInteractorImpl(
-    private val logger: Logger
+    private val logger: Logger,
+    private val strings: StringResources
 ) : ErrorInteractor {
 
     override fun processFailed(result: Result<*>): Boolean {
@@ -19,9 +21,9 @@ class ErrorInteractorImpl(
 
     override fun process(error: Result.Error) {
         val message = if (!error.exception.message.isNullOrEmpty()) {
-            Errors.ERROR_HAS_BEEN_OCCURRED + ": " + error.exception.message
+            strings.errorHasBeenOccurred + ": " + error.exception.message
         } else {
-            Errors.ERROR_HAS_BEEN_OCCURRED
+            strings.errorHasBeenOccurred
         }
 
         logger.error(message, error.exception)
