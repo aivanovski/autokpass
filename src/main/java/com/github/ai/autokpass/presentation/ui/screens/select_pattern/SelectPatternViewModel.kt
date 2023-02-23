@@ -25,8 +25,8 @@ class SelectPatternViewModel(
     private var query = EMPTY
     private var selectedIndex = 0
 
-    private var allPatterns: List<AutotypePattern>? = null
-    private var allTitles: List<String>? = null
+    private var patterns: List<AutotypePattern>? = null
+    private var titles: List<String>? = null
     private var filteredItems: List<SearchItem>? = null
 
     private val _state = MutableStateFlow<ScreenState>(createDataState())
@@ -86,10 +86,11 @@ class SelectPatternViewModel(
 
     private fun loadData() {
         viewModelScope.launch {
-            val (patterns, titles) = interactor.loadAll()
+            val (patterns, titles) = interactor.loadAll(args.entry)
 
-            allPatterns = patterns
-            allTitles = titles
+            this@SelectPatternViewModel.patterns = patterns
+            this@SelectPatternViewModel.titles = titles
+
             filteredItems = patterns.zip(titles)
                 .map { (pattern, title) ->
                     SearchItem(
@@ -104,14 +105,14 @@ class SelectPatternViewModel(
     }
 
     private fun search() {
-        val allPatterns = allPatterns ?: return
-        val allTitles = allTitles ?: return
+        val patterns = patterns ?: return
+        val titles = titles ?: return
 
         viewModelScope.launch {
             val items = interactor.filter(
                 query = query,
-                patterns = allPatterns,
-                titles = allTitles
+                patterns = patterns,
+                titles = titles
             )
 
             filteredItems = items
