@@ -1,7 +1,8 @@
 package com.github.ai.autokpass.domain
 
-import com.github.ai.autokpass.domain.Errors.ERROR_HAS_BEEN_OCCURRED
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -13,37 +14,40 @@ import org.slf4j.Logger
 class ErrorInteractorImplTest {
 
     private val logger = mockk<Logger>()
+    private val strings: StringResources = StringResourcesImpl()
 
     @Test
     fun `process should print Exception message`() {
         // arrange
         val exception = Exception(EXCEPTION_MESSAGE)
-        every { logger.error(LOGGER_MESSAGE, exception) }.returns(Unit)
+        val message = formatExceptionForLogger(exception)
+        every { logger.error(message, exception) }.returns(Unit)
 
         // act
-        ErrorInteractorImpl(logger).process(Result.Error(exception))
+        ErrorInteractorImpl(logger, strings).process(Result.Error(exception))
 
         // assert
-        verify { logger.error(LOGGER_MESSAGE, exception) }
+        verify { logger.error(message, exception) }
     }
 
     @Test
     fun `process should print default message if Exception message is empty`() {
         // arrange
         val exception = Exception(EMPTY)
-        every { logger.error(LOGGER_MESSAGE_EMPTY_EXCEPTION_MESSAGE, exception) }.returns(Unit)
+        val message = formatExceptionForLogger(exception)
+        every { logger.error(message, exception) }.returns(Unit)
 
         // act
-        ErrorInteractorImpl(logger).process(Result.Error(exception))
+        ErrorInteractorImpl(logger, strings).process(Result.Error(exception))
 
         // assert
-        verify { logger.error(LOGGER_MESSAGE_EMPTY_EXCEPTION_MESSAGE, exception) }
+        verify { logger.error(message, exception) }
     }
 
     @Test
     fun `processFailed should return false if result is success`() {
         // act
-        val result = ErrorInteractorImpl(logger).processFailed(Result.Success(null))
+        val result = ErrorInteractorImpl(logger, strings).processFailed(Result.Success(null))
 
         // assert
         result shouldBe false
@@ -53,14 +57,15 @@ class ErrorInteractorImplTest {
     fun `processFailed should return true and process Exception`() {
         // arrange
         val exception = Exception(EXCEPTION_MESSAGE)
-        every { logger.error(LOGGER_MESSAGE, exception) }.returns(Unit)
+        val message = formatExceptionForLogger(exception)
+        every { logger.error(message, exception) }.returns(Unit)
 
         // act
-        val result = ErrorInteractorImpl(logger)
+        val result = ErrorInteractorImpl(logger, strings)
             .processFailed(Result.Error(exception))
 
         // assert
-        verify { logger.error(LOGGER_MESSAGE, exception) }
+        verify { logger.error(message, exception) }
         result shouldBe true
     }
 
@@ -68,14 +73,15 @@ class ErrorInteractorImplTest {
     fun `processAndGetMessage should process error and return message`() {
         // arrange
         val exception = Exception(EXCEPTION_MESSAGE)
-        every { logger.error(LOGGER_MESSAGE, exception) }.returns(Unit)
+        val message = formatExceptionForLogger(exception)
+        every { logger.error(message, exception) }.returns(Unit)
 
         // act
-        val result = ErrorInteractorImpl(logger)
+        val result = ErrorInteractorImpl(logger, strings)
             .processAndGetMessage(Result.Error(exception))
 
         // assert
-        verify { logger.error(LOGGER_MESSAGE, exception) }
+        verify { logger.error(message, exception) }
         result shouldBe EXCEPTION_MESSAGE
     }
 
@@ -83,20 +89,27 @@ class ErrorInteractorImplTest {
     fun `processAndGetMessage should process error and convert Exception to String`() {
         // arrange
         val exception = Exception(EMPTY)
-        every { logger.error(LOGGER_MESSAGE_EMPTY_EXCEPTION_MESSAGE, exception) }.returns(Unit)
+        val message = formatExceptionForLogger(exception)
+        every { logger.error(message, exception) }.returns(Unit)
 
         // act
-        val result = ErrorInteractorImpl(logger)
+        val result = ErrorInteractorImpl(logger, strings)
             .processAndGetMessage(Result.Error(exception))
 
         // assert
-        verify { logger.error(LOGGER_MESSAGE_EMPTY_EXCEPTION_MESSAGE, exception) }
+        verify { logger.error(message, exception) }
         result shouldBe exception.toString()
     }
 
+    private fun formatExceptionForLogger(exception: Exception): String {
+        return if (exception.message.isNullOrEmpty()) {
+            strings.errorHasBeenOccurred
+        } else {
+            "${strings.errorHasBeenOccurred}: ${exception.message}"
+        }
+    }
+
     companion object {
-        private const val EXCEPTION_MESSAGE = "message"
-        private const val LOGGER_MESSAGE = "$ERROR_HAS_BEEN_OCCURRED: $EXCEPTION_MESSAGE"
-        private const val LOGGER_MESSAGE_EMPTY_EXCEPTION_MESSAGE = ERROR_HAS_BEEN_OCCURRED
+        private const val EXCEPTION_MESSAGE = "Test exception message"
     }
 }

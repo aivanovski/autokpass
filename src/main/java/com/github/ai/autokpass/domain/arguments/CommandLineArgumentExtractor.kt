@@ -9,15 +9,17 @@ import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 
 class CommandLineArgumentExtractor(
-    private val commandLineArguments: Array<String>
+    private val commandLineArguments: Array<String>,
+    private val strings: StringResources
 ) : ArgumentExtractor {
 
     override fun extractArguments(): Result<RawArgs> {
-        val parser = ArgParser("autokpass")
+        val parser = ArgParser(strings.appName)
 
         val filePath by parser.option(
             ArgType.String,

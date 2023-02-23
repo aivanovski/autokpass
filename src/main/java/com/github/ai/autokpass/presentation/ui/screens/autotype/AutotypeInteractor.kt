@@ -1,6 +1,5 @@
 package com.github.ai.autokpass.presentation.ui.screens.autotype
 
-import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
@@ -97,7 +96,7 @@ class AutotypeInteractor(
         return flow {
             val sequence = sequenceFactory.createAutotypeSequence(entry, pattern, delayBetweenActionsInMillis)
             if (sequence == null) {
-                emit(Result.Error(AutokpassException(Errors.FAILED_TO_COMPILE_AUTOTYPE_SEQUENCE)))
+                emit(Result.Error(AutokpassException(strings.errorFailedToCompileAutotypeSequence)))
                 return@flow
             }
 

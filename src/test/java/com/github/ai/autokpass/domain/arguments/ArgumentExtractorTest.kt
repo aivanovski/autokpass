@@ -2,10 +2,14 @@ package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class ArgumentExtractorTest {
+
+    private val strings: StringResources = StringResourcesImpl()
 
     @Test
     fun `extractArguments should return all nulls`() {
@@ -13,7 +17,7 @@ class ArgumentExtractorTest {
         val expected = argsWith()
 
         // act
-        val result = CommandLineArgumentExtractor(emptyArray()).extractArguments()
+        val result = CommandLineArgumentExtractor(emptyArray(), strings).extractArguments()
 
         // assert
         result shouldBe Result.Success(expected)
@@ -42,7 +46,7 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = CommandLineArgumentExtractor(args).extractArguments()
+        val result = CommandLineArgumentExtractor(args, strings).extractArguments()
 
         // assert
         result shouldBe Result.Success(expected)
@@ -71,7 +75,7 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = CommandLineArgumentExtractor(args).extractArguments()
+        val result = CommandLineArgumentExtractor(args, strings).extractArguments()
 
         // assert
         result shouldBe Result.Success(expected)

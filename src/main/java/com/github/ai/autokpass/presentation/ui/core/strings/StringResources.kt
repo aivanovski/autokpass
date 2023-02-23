@@ -11,6 +11,8 @@ interface StringResources {
     val autotyping: String
     val autotypeSelectWindowMessage: String
     val autotypeCountDownMessage: String
+    val invalidCredentialsMessage: String
+    val greetingsMessage: String
 
     // Errors
     val errorFailedToDetermineOsType: String
@@ -19,11 +21,12 @@ interface StringResources {
     val errorFailedToGetWindowName: String
     val errorFailedToGetWindowFocus: String
     val errorWindowFocusAwaitTimeout: String
+    val errorFailedToParseConfigFile: String
 
     // Errors with formatted values
     val errorOptionCanNotBeEmpty: String
     val errorFileDoesNotExist: String
     val errorFileIsNotFile: String
     val errorFailedToParseArgument: String
-    val errorFailedToGetValueFromEnvironment: String
+    val errorFailedToGetEnvironmentVariable: String
 }

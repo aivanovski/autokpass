@@ -11,7 +11,7 @@ class KeepassDatabaseFactoryProviderTest {
 
     @Test
     fun `getFactory should return Kotpass factory`() {
-        val factory = KeepassDatabaseFactoryProvider(mockk(), mockk())
+        val factory = KeepassDatabaseFactoryProvider(mockk(), mockk(), mockk())
             .getFactory(KeepassImplementation.KOTPASS)
 
         factory should beInstanceOf<KotpassDatabaseFactory>()

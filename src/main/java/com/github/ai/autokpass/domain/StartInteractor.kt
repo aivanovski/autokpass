@@ -8,6 +8,7 @@ import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
 import java.io.File
@@ -16,13 +17,14 @@ class StartInteractor(
     private val errorInteractor: ErrorInteractor,
     private val argumentParser: ArgumentParser,
     private val printGreetingsUseCase: PrintGreetingsUseCase,
-    private val readConfigUseCase: ReadConfigFileUseCase
+    private val readConfigUseCase: ReadConfigFileUseCase,
+    private val strings: StringResources
 ) {
 
     fun readArguments(commandLineArguments: Array<String>): Result<ParsedArgs> {
         printGreetingsUseCase.printGreetings()
 
-        val argsResult = CommandLineArgumentExtractor(commandLineArguments).extractArguments()
+        val argsResult = CommandLineArgumentExtractor(commandLineArguments, strings).extractArguments()
         if (argsResult.isFailed()) {
             return argsResult.asErrorOrThrow()
         }

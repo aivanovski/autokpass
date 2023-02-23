@@ -7,6 +7,7 @@ import com.github.ai.autokpass.domain.exception.InvalidPasswordException
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import io.github.anvell.kotpass.cryptography.EncryptedValue
 import io.github.anvell.kotpass.database.Credentials
 import io.github.anvell.kotpass.database.KeePassDatabase
@@ -17,6 +18,7 @@ import java.io.ByteArrayInputStream
 class KotpassDatabaseFactory(
     private val fileSystemProvider: FileSystemProvider,
     private val processExecutor: ProcessExecutor,
+    private val strings: StringResources
 ) : KeepassDatabaseFactory {
 
     override fun open(key: KeepassKey, filePath: String): Result<KeepassDatabase> {
@@ -37,7 +39,7 @@ class KotpassDatabaseFactory(
             Result.Success(KotpassDatabase(db))
         } catch (e: Exception) {
             if (e is CryptoError.InvalidKey) {
-                Result.Error(InvalidPasswordException())
+                Result.Error(InvalidPasswordException(strings))
             } else {
                 Result.Error(e)
             }

@@ -1,6 +1,5 @@
 package com.github.ai.autokpass.domain.usecases
 
-import com.github.ai.autokpass.domain.Errors
 import com.github.ai.autokpass.domain.SystemPropertyProvider
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase.Companion.PROPERTY_OS_NAME

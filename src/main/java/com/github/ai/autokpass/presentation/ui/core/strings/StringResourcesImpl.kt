@@ -37,6 +37,12 @@ class StringResourcesImpl : StringResources {
     override val autotypeCountDownMessage: String
         get() = resources.getString("autotypeCountDownMessage")
 
+    override val invalidCredentialsMessage: String
+        get() = resources.getString("invalidCredentialsMessage")
+
+    override val greetingsMessage: String
+        get() = resources.getString("greetingsMessage")
+
     override val errorFailedToDetermineOsType: String
         get() = resources.getString("errorFailedToDetermineOsType")
 
@@ -55,6 +61,9 @@ class StringResourcesImpl : StringResources {
     override val errorWindowFocusAwaitTimeout: String
         get() = resources.getString("errorWindowFocusAwaitTimeout")
 
+    override val errorFailedToParseConfigFile: String
+        get() = resources.getString("errorFailedToParseConfigFile")
+
     override val errorOptionCanNotBeEmpty: String
         get() = resources.getString("errorOptionCanNotBeEmpty")
 
@@ -67,6 +76,6 @@ class StringResourcesImpl : StringResources {
     override val errorFailedToParseArgument: String
         get() = resources.getString("errorFailedToParseArgument")
 
-    override val errorFailedToGetValueFromEnvironment: String
-        get() = resources.getString("errorFailedToGetValueFromEnvironment")
+    override val errorFailedToGetEnvironmentVariable: String
+        get() = resources.getString("errorFailedToGetEnvironmentVariable")
 }

@@ -1,17 +1,18 @@
 package com.github.ai.autokpass.domain.usecases
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
-import com.github.ai.autokpass.domain.Errors.GENERIC_FAILED_TO_GET_VALUE_FOR_VARIABLE
 import com.github.ai.autokpass.domain.SystemPropertyProvider
 import com.github.ai.autokpass.domain.arguments.FileArgumentExtractor
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.io.ByteArrayInputStream
 
 class ReadConfigFileUseCase(
     private val systemPropertyProvider: SystemPropertyProvider,
-    private val fileSystemProvider: FileSystemProvider
+    private val fileSystemProvider: FileSystemProvider,
+    private val strings: StringResources
 ) {
 
     fun readConfigArgs(): Result<RawArgs?> {
@@ -19,7 +20,7 @@ class ReadConfigFileUseCase(
         if (homePath.isEmpty()) {
             return Result.Error(
                 ParsingException(
-                    String.format(GENERIC_FAILED_TO_GET_VALUE_FOR_VARIABLE, ENVIRONMENT_USER_HOME)
+                    String.format(strings.errorFailedToGetEnvironmentVariable, ENVIRONMENT_USER_HOME)
                 )
             )
         }
@@ -40,7 +41,7 @@ class ReadConfigFileUseCase(
         }
 
         val content = ByteArrayInputStream(bytes)
-        val argsResult = FileArgumentExtractor(content).extractArguments()
+        val argsResult = FileArgumentExtractor(strings, content).extractArguments()
         if (argsResult.isFailed()) {
             return argsResult.asErrorOrThrow()
         }

@@ -3,11 +3,13 @@ package com.github.ai.autokpass.domain.arguments
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
 class FileArgumentExtractor(
+    private val strings: StringResources,
     private val content: InputStream
 ) : ArgumentExtractor {
 
@@ -23,7 +25,7 @@ class FileArgumentExtractor(
 
                 val keyAndValue = line.split("=")
                 if (keyAndValue.size != 2) {
-                    return Result.Error(ParsingException(FAILED_TO_PARSE_CONFIG_FILE))
+                    return Result.Error(ParsingException(strings.errorFailedToParseConfigFile))
                 }
 
                 argsMap[keyAndValue[0]] = keyAndValue[1]
@@ -43,9 +45,5 @@ class FileArgumentExtractor(
         } catch (exception: IOException) {
             Result.Error(exception)
         }
-    }
-
-    companion object {
-        private const val FAILED_TO_PARSE_CONFIG_FILE = "Failed to parse config file"
     }
 }

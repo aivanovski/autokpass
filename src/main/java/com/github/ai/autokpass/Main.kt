@@ -12,6 +12,7 @@ import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.di.KoinModule
 import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import com.github.ai.autokpass.presentation.ui.root.RootScreen
 import org.koin.core.context.startKoin
@@ -23,6 +24,7 @@ fun main(args: Array<String>) {
     }
 
     val interactor: StartInteractor = get()
+    val strings: StringResources = get()
 
     val argsResult = interactor.readArguments(args)
 
@@ -43,7 +45,7 @@ fun main(args: Array<String>) {
             onCloseRequest = {
                 exitApplication()
             },
-            title = "Autokpass",
+            title = strings.appName,
             state = windowState,
             alwaysOnTop = true,
             undecorated = false,

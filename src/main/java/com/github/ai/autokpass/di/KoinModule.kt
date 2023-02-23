@@ -62,11 +62,11 @@ object KoinModule {
         single { AutotypeSequenceFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
-        single { ArgumentParser(get()) }
+        single { ArgumentParser(get(), get()) }
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
-        single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>()) }
+        single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>(), get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }
         single { AutotypeExecutorFactory(get(), get()) }
@@ -74,16 +74,16 @@ object KoinModule {
         single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
 
         // use cases
-        single { PrintGreetingsUseCase(get()) }
+        single { PrintGreetingsUseCase(get(), get()) }
         single { ReadDatabaseUseCase(get()) }
         single { GetVisibleEntriesUseCase(get()) }
         single { GetOSTypeUseCase(get(), get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
-        single { KeepassDatabaseFactoryProvider(get(), get()) }
-        single { ReadConfigFileUseCase(get(), get()) }
+        single { KeepassDatabaseFactoryProvider(get(), get(), get()) }
+        single { ReadConfigFileUseCase(get(), get(), get()) }
 
-        // interactor
-        single { StartInteractor(get(), get(), get(), get()) }
+        // interactors
+        single { StartInteractor(get(), get(), get(), get(), get()) }
         single { UnlockInteractor(get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get()) }
