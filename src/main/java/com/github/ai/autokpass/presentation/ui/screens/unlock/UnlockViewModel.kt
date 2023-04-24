@@ -21,43 +21,44 @@ class UnlockViewModel(
     private val args: ParsedArgs
 ) : CoroutineViewModel(dispatchers) {
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
+    private var password = EMPTY
+    private var error: String? = null
+    private var isPasswordVisible = false
 
-    private val _password = MutableStateFlow(EMPTY)
-    val password: StateFlow<String> = _password
-
-    val isLoading = MutableStateFlow(false)
-    val isPasswordVisible = MutableStateFlow(false)
+    private val _state = MutableStateFlow(createScreenState())
+    val state: StateFlow<ScreenState> = _state
 
     fun onPasswordInputChanged(text: String) {
-        _password.value = text
-        if (error.value != null) {
-            _error.value = null
+        password = text
+        if (error != null) {
+            error = null
         }
+
+        updateScreenState()
     }
 
     fun togglePasswordVisibility() {
-        isPasswordVisible.value = !isPasswordVisible.value
+        isPasswordVisible = !isPasswordVisible
+        updateScreenState()
     }
 
-    fun removeError() {
-        _error.value = null
+    fun clearError() {
+        error = null
+        updateScreenState()
     }
 
     fun unlockDatabase() {
-        isLoading.value = true
-
-        val password = this._password.value
+        _state.value = ScreenState.Loading
 
         viewModelScope.launch {
             val unlockResult = interactor.unlockDatabase(password, args.filePath)
             if (unlockResult.isSucceeded()) {
                 navigateToMain(PasswordKey(password))
             } else {
-                _error.value = errorInteractor.processAndGetMessage(unlockResult.asErrorOrThrow())
-                isLoading.value = false
+                error = errorInteractor.processAndGetMessage(unlockResult.asErrorOrThrow())
             }
+
+            updateScreenState()
         }
     }
 
@@ -67,5 +68,27 @@ class UnlockViewModel(
                 args = SelectEntryArgs(key)
             )
         )
+    }
+
+    private fun updateScreenState() {
+        _state.value = createScreenState()
+    }
+
+    private fun createScreenState(): ScreenState =
+        ScreenState.Data(
+            password = password,
+            error = error,
+            isPasswordVisible = isPasswordVisible
+        )
+
+    sealed class ScreenState {
+
+        object Loading : ScreenState()
+
+        data class Data(
+            val password: String,
+            val error: String?,
+            val isPasswordVisible: Boolean
+        ) : ScreenState()
     }
 }
