@@ -3,10 +3,10 @@ package com.github.ai.autokpass.presentation.ui.screens.select_entry
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.github.ai.autokpass.di.GlobalInjector.get
+import com.github.ai.autokpass.extensions.collectAsStateImmediately
 import com.github.ai.autokpass.presentation.ui.core.CenteredBox
 import com.github.ai.autokpass.presentation.ui.core.EmptyStateView
 import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
@@ -17,7 +17,7 @@ import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryV
 
 @Composable
 fun SelectEntryScreen(viewModel: SelectEntryViewModel) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateImmediately()
     val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {

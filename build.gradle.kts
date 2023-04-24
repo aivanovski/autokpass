@@ -6,8 +6,8 @@ import java.util.Properties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    id("org.jetbrains.kotlin.jvm").version("1.7.20")
-    id("org.jetbrains.compose") version "1.2.1"
+    id("org.jetbrains.kotlin.jvm") version "1.7.20"
+    id("org.jetbrains.compose") version "1.4.0"
     jacoco
 }
 
@@ -99,8 +99,8 @@ dependencies {
     implementation(compose.materialIconsExtended)
 
     // Navigation
-    implementation("com.arkivanov.decompose:decompose:0.8.0")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:0.8.0")
+    implementation("com.arkivanov.decompose:decompose:1.0.0")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0")
 
     // DI
     implementation("io.insert-koin:koin-core:3.1.5")
