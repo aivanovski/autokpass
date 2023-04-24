@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.github.ai.autokpass.presentation.ui.core.navigation.Component
 import com.github.ai.autokpass.presentation.ui.core.theme.AppColors
 
-@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun RootScreen(rootComponent: RootComponent) {
     MaterialTheme(
