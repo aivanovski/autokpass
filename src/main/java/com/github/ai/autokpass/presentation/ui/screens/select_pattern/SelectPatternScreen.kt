@@ -3,17 +3,17 @@ package com.github.ai.autokpass.presentation.ui.screens.select_pattern
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.github.ai.autokpass.di.GlobalInjector.get
+import com.github.ai.autokpass.extensions.collectAsStateImmediately
 import com.github.ai.autokpass.presentation.ui.core.SelectorView
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternViewModel.ScreenState
 
 @Composable
 fun SelectPatternScreen(viewModel: SelectPatternViewModel) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateImmediately()
     val strings: StringResources = get()
 
     Box(modifier = Modifier.fillMaxSize()) {
