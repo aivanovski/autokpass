@@ -89,6 +89,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.3")
     testImplementation("io.mockk:mockk:1.12.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20")

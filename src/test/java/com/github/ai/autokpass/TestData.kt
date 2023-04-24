@@ -17,6 +17,7 @@ object TestData {
     const val DEFAULT_DELAY = 200L
     const val DEFAULT_INPUT_TEXT = "abc123"
     const val COMMAND = "gpg --passphrase abc123 --pinentry-mode loopback"
+    const val ERROR_MESSAGE = "Test error message"
     val EXCEPTION = AutokpassException("Test exception")
 
     val ENTRY1 = KeepassEntry(

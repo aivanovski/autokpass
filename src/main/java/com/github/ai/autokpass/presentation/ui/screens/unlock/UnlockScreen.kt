@@ -10,7 +10,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -33,28 +32,44 @@ import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.TextFieldIcons
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.ScreenState
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 
 @Composable
 fun UnlockScreen(viewModel: UnlockViewModel) {
-    val isLoading = viewModel.isLoading.collectAsState()
+    val state by viewModel.state.collectAsStateImmediately()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (isLoading.value) {
-            CenteredBox { ProgressBar() }
-        } else {
-            ScreenContent(viewModel)
+        with(state) {
+            when (this) {
+                is ScreenState.Loading -> {
+                    CenteredBox { ProgressBar() }
+                }
+
+                is ScreenState.Data -> {
+                    ScreenContent(
+                        state = this,
+                        onInputTextChanged = { text -> viewModel.onPasswordInputChanged(text) },
+                        onUnlockButtonClicked = { viewModel.unlockDatabase() },
+                        onPasswordIconClicked = { viewModel.togglePasswordVisibility() },
+                        onErrorIconClicked = { viewModel.clearError() }
+                    )
+                }
+            }
         }
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ScreenContent(viewModel: UnlockViewModel) {
-    val password by viewModel.password.collectAsStateImmediately()
-    val error by viewModel.error.collectAsState()
-    val isError = (error != null)
-    val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
+private fun ScreenContent(
+    state: ScreenState.Data,
+    onInputTextChanged: (text: String) -> Unit,
+    onUnlockButtonClicked: () -> Unit,
+    onPasswordIconClicked: () -> Unit,
+    onErrorIconClicked: () -> Unit
+) {
+    val isError = (state.error != null)
     val focusRequester = remember { FocusRequester() }
     val strings: StringResources = get()
 
@@ -65,16 +80,16 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                 .fillMaxWidth(fraction = 0.5f)
         ) {
             OutlinedTextField(
-                value = password,
+                value = state.password,
                 singleLine = true,
                 isError = isError,
                 textStyle = AppTextStyles.editor,
-                visualTransformation = if (isPasswordVisible) {
+                visualTransformation = if (state.isPasswordVisible) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
                 },
-                onValueChange = { text -> viewModel.onPasswordInputChanged(text) },
+                onValueChange = onInputTextChanged,
                 label = {
                     Text(
                         text = strings.password
@@ -84,9 +99,9 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                     TextFieldIcons(
                         isPasswordToggleEnabled = true,
                         isError = isError,
-                        isPasswordVisible = isPasswordVisible,
-                        onErrorIconClicked = { viewModel.removeError() },
-                        onPasswordIconClicked = { viewModel.togglePasswordVisibility() }
+                        isPasswordVisible = state.isPasswordVisible,
+                        onErrorIconClicked = onErrorIconClicked,
+                        onPasswordIconClicked = onPasswordIconClicked
                     )
                 },
                 modifier = Modifier
@@ -94,7 +109,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                     .focusRequester(focusRequester)
                     .onPreviewKeyEvent { event ->
                         if (event.type == KeyEventType.KeyUp && event.key == Key.Enter) {
-                            viewModel.unlockDatabase()
+                            onUnlockButtonClicked.invoke()
                             true
                         } else {
                             false
@@ -104,7 +119,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
 
             if (isError) {
                 Text(
-                    text = error ?: EMPTY,
+                    text = state.error ?: EMPTY,
                     style = AppTextStyles.error,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,9 +131,7 @@ private fun ScreenContent(viewModel: UnlockViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                onClick = {
-                    viewModel.unlockDatabase()
-                }
+                onClick = onUnlockButtonClicked
             ) {
                 Text(
                     text = strings.unlock,
