@@ -64,6 +64,9 @@ class StringResourcesImpl : StringResources {
     override val errorFailedToParseConfigFile: String
         get() = resources.getString("errorFailedToParseConfigFile")
 
+    override val errorNoArgumentsWereSpecified: String
+        get() = resources.getString("errorNoArgumentsWereSpecified")
+
     override val errorOptionCanNotBeEmpty: String
         get() = resources.getString("errorOptionCanNotBeEmpty")
 
