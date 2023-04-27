@@ -16,6 +16,10 @@ class ArgumentParser(
 ) {
 
     fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
+        if (args.isEmpty()) {
+            return Result.Error(ParsingException(strings.errorNoArgumentsWereSpecified))
+        }
+
         val pathResult = parseFilePath(args.filePath)
         if (pathResult.isFailed()) {
             return pathResult.asErrorOrThrow()
