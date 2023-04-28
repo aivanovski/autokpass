@@ -27,7 +27,6 @@ class DetermineAutotypeExecutorTypeUseCaseTest {
         // act
         val result = useCase.getAutotypeExecutorType(autotypeFromArgs = null)
 
-
         // assert
         verify { getOsTypeUseCase.getOSType() }
         result shouldBe Result.Success(XDOTOOL)

@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_pattern.model
+package com.github.ai.autokpass.presentation.ui.screens.selectPattern.model
 
 import com.github.ai.autokpass.model.AutotypePattern
 

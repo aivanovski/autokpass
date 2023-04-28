@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_entry
+package com.github.ai.autokpass.presentation.ui.screens.selectEntry
 
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
@@ -6,10 +6,10 @@ import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
-import com.github.ai.autokpass.presentation.ui.screens.select_entry.model.SearchItem
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
-import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternArgs
+import com.github.ai.autokpass.presentation.ui.screens.selectEntry.model.SearchItem
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -102,7 +102,7 @@ class SelectEntryViewModel(
             val filterEntriesResult = interactor.filter(
                 allEntries = allEntries,
                 allTitles = allTitles,
-                query = query,
+                query = query
             )
 
             if (filterEntriesResult.isSucceeded()) {

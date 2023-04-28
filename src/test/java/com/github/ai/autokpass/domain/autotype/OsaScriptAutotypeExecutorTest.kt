@@ -4,6 +4,9 @@ import com.github.ai.autokpass.TestData.DEFAULT_AUTOTYPE_ITEMS
 import com.github.ai.autokpass.TestData.DEFAULT_DELAY
 import com.github.ai.autokpass.TestData.DEFAULT_INPUT_TEXT
 import com.github.ai.autokpass.TestData.EXCEPTION
+import com.github.ai.autokpass.domain.autotype.OsaScriptAutotypeExecutor.Companion.ENTER_COMMAND
+import com.github.ai.autokpass.domain.autotype.OsaScriptAutotypeExecutor.Companion.TAB_COMMAND
+import com.github.ai.autokpass.domain.autotype.OsaScriptAutotypeExecutor.Companion.TEXT_COMMAND
 import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.process.ProcessExecutor
@@ -25,6 +28,7 @@ class OsaScriptAutotypeExecutorTest {
     fun `execute should run osascript correctly`() {
         // arrange
         val sequence = AutotypeSequence(DEFAULT_AUTOTYPE_ITEMS)
+        val textCommand = String.format(TEXT_COMMAND, DEFAULT_INPUT_TEXT)
 
         every { processExecutor.executeWithBash(any()) }.returns(Result.Success(EMPTY))
         every { throttler.sleep(any()) }.returns(Unit)
@@ -34,7 +38,7 @@ class OsaScriptAutotypeExecutorTest {
 
         // assert
         verifySequence {
-            processExecutor.executeWithBash(TEXT_COMMAND)
+            processExecutor.executeWithBash(textCommand)
             processExecutor.executeWithBash(TAB_COMMAND)
             processExecutor.executeWithBash(ENTER_COMMAND)
             throttler.sleep(DEFAULT_DELAY)
@@ -46,8 +50,9 @@ class OsaScriptAutotypeExecutorTest {
     fun `execute should return error`() {
         // arrange
         val sequence = AutotypeSequence(DEFAULT_AUTOTYPE_ITEMS)
+        val textCommand = String.format(TEXT_COMMAND, DEFAULT_INPUT_TEXT)
 
-        every { processExecutor.executeWithBash(TEXT_COMMAND) }.returns(Result.Success(EMPTY))
+        every { processExecutor.executeWithBash(textCommand) }.returns(Result.Success(EMPTY))
         every { processExecutor.executeWithBash(TAB_COMMAND) }.returns(Result.Error(EXCEPTION))
 
         // act
@@ -55,7 +60,7 @@ class OsaScriptAutotypeExecutorTest {
 
         // assert
         verifySequence {
-            processExecutor.executeWithBash(TEXT_COMMAND)
+            processExecutor.executeWithBash(textCommand)
             processExecutor.executeWithBash(TAB_COMMAND)
         }
         with(result) {
@@ -66,14 +71,5 @@ class OsaScriptAutotypeExecutorTest {
 
     private fun newExecutor(): OsaScriptAutotypeExecutor {
         return OsaScriptAutotypeExecutor(processExecutor, throttler)
-    }
-
-    companion object {
-        private const val ENTER_COMMAND =
-            """echo "tell application \"System Events\" to key code 36" | osascript"""
-        private const val TAB_COMMAND =
-            """echo "tell application \"System Events\" to key code 48" | osascript"""
-        private const val TEXT_COMMAND =
-            """echo "tell application \"System Events\" to keystroke \"${DEFAULT_INPUT_TEXT}\"" | osascript"""
     }
 }

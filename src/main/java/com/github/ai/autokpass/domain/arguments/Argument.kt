@@ -1,5 +1,8 @@
 package com.github.ai.autokpass.domain.arguments
 
+import com.github.ai.autokpass.util.StringUtils.NEW_LINE
+import com.github.ai.autokpass.util.StringUtils.SPACE
+
 enum class Argument(
     val fullName: String,
     val shortName: String,
@@ -23,14 +26,20 @@ enum class Argument(
         fullName = "delay",
         shortName = "d",
         defaultValue = "3000",
-        description = "Delay in seconds or milliseconds before autotype will be started. Default value - 3 seconds"
+        description = """
+            Delay in seconds or milliseconds before autotype will be started.
+            Default value - 3 seconds
+        """.trimIndent().replace(NEW_LINE, SPACE)
     ),
 
     AUTOTYPE_DELAY(
         fullName = "autotype-delay",
         shortName = "b",
         defaultValue = "200",
-        description = "Delay seconds or milliseconds between autotype actions. Default value - 200 milliseconds"
+        description = """
+            Delay seconds or milliseconds between autotype actions.
+            Default value - 200 milliseconds
+        """.trimIndent().replace(NEW_LINE, SPACE)
     ),
 
     AUTOTYPE(
@@ -40,13 +49,16 @@ enum class Argument(
             xdotool - default for Linux (xdotool should be installed on the host machine)
             osascript - default for macOS (keyboard pressing will be emulated via AppleScript)
             cliclick - optional for macOS (cliclick should be installed on the host machine)
-            """
+        """.trimIndent()
     ),
 
     PROCESS_KEY_COMMAND(
         fullName = "process-key-command",
         shortName = "c",
-        description = "Executes shell commands on file specified in --key-file and uses it to unlock database"
+        description = """
+            Executes shell command on file specified with --key-file
+            and uses the result to unlock database
+        """.trimIndent().replace(NEW_LINE, SPACE)
     );
 
     val cliName: String = "--$fullName"

@@ -20,7 +20,10 @@ class ReadConfigFileUseCase(
         if (homePath.isEmpty()) {
             return Result.Error(
                 ParsingException(
-                    String.format(strings.errorFailedToGetEnvironmentVariable, ENVIRONMENT_USER_HOME)
+                    String.format(
+                        strings.errorFailedToGetEnvironmentVariable,
+                        ENVIRONMENT_USER_HOME
+                    )
                 )
             )
         }

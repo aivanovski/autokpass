@@ -14,21 +14,15 @@ class OsaScriptAutotypeExecutor(
         for (item in sequence.items) {
             val itemResult = when (item) {
                 is AutotypeSequenceItem.Enter -> {
-                    processExecutor.executeWithBash(
-                        """echo "tell application \"System Events\" to key code 36" | osascript"""
-                    )
+                    processExecutor.executeWithBash(ENTER_COMMAND)
                 }
 
                 is AutotypeSequenceItem.Tab -> {
-                    processExecutor.executeWithBash(
-                        """echo "tell application \"System Events\" to key code 48" | osascript"""
-                    )
+                    processExecutor.executeWithBash(TAB_COMMAND)
                 }
 
                 is AutotypeSequenceItem.Text -> {
-                    processExecutor.executeWithBash(
-                        """echo "tell application \"System Events\" to keystroke \"${item.text}\"" | osascript"""
-                    )
+                    processExecutor.executeWithBash(String.format(TEXT_COMMAND, item.text))
                 }
 
                 is AutotypeSequenceItem.Delay -> {
@@ -43,5 +37,16 @@ class OsaScriptAutotypeExecutor(
         }
 
         return Result.Success(Unit)
+    }
+
+    companion object {
+        internal const val ENTER_COMMAND =
+            """echo "tell application \"System Events\" to key code 36" | osascript"""
+
+        internal const val TAB_COMMAND =
+            """echo "tell application \"System Events\" to key code 48" | osascript"""
+
+        internal const val TEXT_COMMAND = "echo \"tell application \\\"System Events\\\" to " +
+            "keystroke \\\"%s\\\"\" | osascript"
     }
 }

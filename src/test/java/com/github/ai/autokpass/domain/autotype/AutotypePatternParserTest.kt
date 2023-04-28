@@ -10,9 +10,9 @@ class AutotypePatternParserTest {
     fun `parse should return valid pattern`() {
         // arrange
         val input = listOf(
-             "{USERNAME}{TAB}{PASSWORD}{ENTER}",
-             "{USERNAME}{ENTER}",
-             "{PASSWORD}{ENTER}"
+            "{USERNAME}{TAB}{PASSWORD}{ENTER}",
+            "{USERNAME}{ENTER}",
+            "{PASSWORD}{ENTER}"
         )
 
         val patterns = listOf(

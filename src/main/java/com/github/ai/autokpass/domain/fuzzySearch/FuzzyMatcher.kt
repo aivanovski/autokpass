@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.fuzzy_search
+package com.github.ai.autokpass.domain.fuzzySearch
 
 import com.github.ai.autokpass.model.MatcherResult
 

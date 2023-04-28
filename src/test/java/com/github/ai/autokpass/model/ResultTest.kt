@@ -1,12 +1,12 @@
 package com.github.ai.autokpass.model
 
+import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.types.beTheSameInstanceAs
+import java.lang.ClassCastException
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import java.lang.ClassCastException
 
 class ResultTest {
 

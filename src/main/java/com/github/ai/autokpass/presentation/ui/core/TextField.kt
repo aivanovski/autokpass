@@ -30,7 +30,7 @@ fun TextFieldIcons(
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
+                        indication = rememberRipple(bounded = false)
                     ) {
                         onErrorIconClicked.invoke()
                     }
@@ -38,14 +38,18 @@ fun TextFieldIcons(
             )
         }
         isPasswordToggleEnabled -> {
-            val icon = if (isPasswordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility
+            val icon = if (isPasswordVisible) {
+                Icons.Rounded.VisibilityOff
+            } else {
+                Icons.Rounded.Visibility
+            }
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
+                        indication = rememberRipple(bounded = false)
                     ) {
                         onPasswordIconClicked.invoke()
                     }

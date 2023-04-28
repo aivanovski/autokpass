@@ -26,9 +26,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
+import org.junit.jupiter.api.Test
 
 class KotpassDatabaseFactoryTest {
 

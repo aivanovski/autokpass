@@ -15,6 +15,7 @@ import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 
 class AutotypeInteractor(
     private val dispatchers: Dispatchers,
@@ -94,7 +94,11 @@ class AutotypeInteractor(
         delayBetweenActionsInMillis: Long
     ): Flow<Result<AutotypeState>> {
         return flow {
-            val sequence = sequenceFactory.createAutotypeSequence(entry, pattern, delayBetweenActionsInMillis)
+            val sequence = sequenceFactory.createAutotypeSequence(
+                entry,
+                pattern,
+                delayBetweenActionsInMillis
+            )
             if (sequence == null) {
                 emit(Result.Error(AutokpassException(strings.errorFailedToCompileAutotypeSequence)))
                 return@flow

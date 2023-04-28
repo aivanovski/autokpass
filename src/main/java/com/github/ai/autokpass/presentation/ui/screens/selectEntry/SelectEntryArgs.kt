@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_entry
+package com.github.ai.autokpass.presentation.ui.screens.selectEntry
 
 import com.github.ai.autokpass.model.KeepassKey
 

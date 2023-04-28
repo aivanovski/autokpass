@@ -4,11 +4,11 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.github.ai.autokpass.model.ParsedArgs
-import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.Screen
+import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeComponent
-import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryComponent
-import com.github.ai.autokpass.presentation.ui.screens.select_pattern.SelectPatternComponent
+import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryComponent
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternComponent
 import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationComponent
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockScreenComponent
 

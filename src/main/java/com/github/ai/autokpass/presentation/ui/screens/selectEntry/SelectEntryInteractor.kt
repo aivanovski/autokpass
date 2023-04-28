@@ -1,13 +1,13 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_entry
+package com.github.ai.autokpass.presentation.ui.screens.selectEntry
 
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.domain.formatter.EntryFormatter
-import com.github.ai.autokpass.domain.fuzzy_search.FuzzyMatcher
+import com.github.ai.autokpass.domain.fuzzySearch.FuzzyMatcher
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
-import com.github.ai.autokpass.presentation.ui.screens.select_entry.model.SearchItem
+import com.github.ai.autokpass.presentation.ui.screens.selectEntry.model.SearchItem
 import kotlinx.coroutines.withContext
 
 class SelectEntryInteractor(

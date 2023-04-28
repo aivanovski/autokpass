@@ -4,15 +4,15 @@ import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.util.StringUtils.EMPTY
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.nulls.shouldBeNull
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
 import java.util.UUID
+import org.junit.jupiter.api.Test
 
 class AutotypeSequenceFactoryTest {
 
     @Test
-    fun `createAutotypeSequence should return sequence with username and password for default pattern`() {
+    fun `createAutotypeSequence should return sequence for default pattern`() {
         // arrange
         val entry = createEntry(username = USERNAME, password = PASSWORD)
         val sequenceItems = listOf(

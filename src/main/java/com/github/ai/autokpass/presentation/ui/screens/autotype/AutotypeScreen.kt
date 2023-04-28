@@ -40,7 +40,6 @@ fun AutotypeScreen(viewModel: AutotypeViewModel) {
                 }
             }
         }
-
     }
 }
 
