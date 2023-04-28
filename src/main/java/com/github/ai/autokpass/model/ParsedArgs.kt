@@ -9,7 +9,6 @@ data class ParsedArgs(
     val keyPath: String?,
     val startDelayInMillis: Long,
     val delayBetweenActionsInMillis: Long,
-    val inputReaderType: InputReaderType,
     val autotypeType: AutotypeExecutorType?,
     val keyProcessingCommand: String?
 ) {
@@ -20,7 +19,6 @@ data class ParsedArgs(
             keyPath = null,
             startDelayInMillis = Argument.DELAY.getDefaultAsLong(),
             delayBetweenActionsInMillis = Argument.AUTOTYPE_DELAY.getDefaultAsLong(),
-            inputReaderType = InputReaderType.STANDARD,
             autotypeType = null,
             keyProcessingCommand = null
         )

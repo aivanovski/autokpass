@@ -5,7 +5,6 @@ data class RawArgs(
     val keyPath: String?,
     val startDelay: String?,
     val delayBetweenActions: String?,
-    val inputType: String?,
     val autotypeType: String?,
     val keyProcessingCommand: String?
 ) {
@@ -15,7 +14,6 @@ data class RawArgs(
             keyPath.isNullOrEmpty() &&
             startDelay.isNullOrEmpty() &&
             delayBetweenActions.isNullOrEmpty() &&
-            inputType.isNullOrEmpty() &&
             autotypeType.isNullOrEmpty() &&
             keyProcessingCommand.isNullOrEmpty()
     }
