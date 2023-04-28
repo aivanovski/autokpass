@@ -1,0 +1,121 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Upload coverage.csv file
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage.csv
+          path: build/reports/coverage/coverage.csv
+
+  build-linux:
+    name: Build Linux
+    needs: [ run-tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup version variable
+        run: echo "VERSION=$(grep '^version=' src/main/resources/version.properties | cut -d= -f2)" >> $GITHUB_ENV
+
+      - name: Build debug jar
+        run: ./gradlew packageUberJarForCurrentOS
+
+      - name: Store jar file
+        uses: actions/upload-artifact@v3
+        with:
+          name: autokpass-linux-x64-${{env.VERSION}}.jar
+          path: ./build/compose/jars/autokpass-linux-x64-${{env.VERSION}}.jar
+
+  build-macos:
+    name: Build macOS
+    needs: [ run-tests ]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set environment variables
+        run: echo "VERSION=$(grep '^version=' src/main/resources/version.properties | cut -d= -f2)" >> $GITHUB_ENV
+
+      - name: Build dmg file
+        run: ./gradlew packageDmg
+
+      - name: Build debug jar
+        run: ./gradlew packageUberJarForCurrentOS
+
+      - name: Store dmg file
+        uses: actions/upload-artifact@v3
+        with:
+          name: autokpass-${{env.VERSION}}.dmg
+          path: ./build/compose/binaries/main/dmg/autokpass-${{env.VERSION}}.dmg
+
+      - name: Store jar file
+        uses: actions/upload-artifact@v3
+        with:
+          name: autokpass-macos-x64-${{env.VERSION}}.jar
+          path: ./build/compose/jars/autokpass-macos-x64-${{env.VERSION}}.jar
+
+  create-coverage-badge:
+    name: Create coverage badge
+    needs: [ build-linux, build-macos ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get coverage.csv
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage.csv
+          path: artifacts
+
+      - name: Create JaCoCo Badge
+        id: jacoco
+        uses: cicirello/jacoco-badge-generator@v2.8.1
+        with:
+          jacoco-csv-file: artifacts/coverage.csv
+          badges-directory: .github/badges
+          generate-coverage-badge: true
+
+      - name: Log coverage percentage
+        run: |
+          echo "coverage = ${{steps.jacoco.outputs.coverage}}"
+
+      - name: Commit and push the badge (if it changed)
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
+          message: 'Commit coverage badge'
+          add: '*.svg'
