@@ -125,7 +125,11 @@ class ArgumentParser(
         val delay = delayStr.toIntSafely()
             ?: return Result.Error(
                 ParsingException(
-                    String.format(strings.errorFailedToParseArgument, Argument.DELAY.cliName, delayStr)
+                    String.format(
+                        strings.errorFailedToParseArgument,
+                        Argument.DELAY.cliName,
+                        delayStr
+                    )
                 )
             )
 
@@ -146,7 +150,11 @@ class ArgumentParser(
         val delay = delayStr.toIntSafely()
             ?: return Result.Error(
                 ParsingException(
-                    String.format(strings.errorFailedToParseArgument, Argument.AUTOTYPE_DELAY.cliName, delayStr)
+                    String.format(
+                        strings.errorFailedToParseArgument,
+                        Argument.AUTOTYPE_DELAY.cliName,
+                        delayStr
+                    )
                 )
             )
 
@@ -168,7 +176,11 @@ class ArgumentParser(
             .firstOrNull { it.cliName.equals(type, ignoreCase = true) }
             ?: return Result.Error(
                 ParsingException(
-                    String.format(strings.errorFailedToParseArgument, Argument.AUTOTYPE.cliName, type)
+                    String.format(
+                        strings.errorFailedToParseArgument,
+                        Argument.AUTOTYPE.cliName,
+                        type
+                    )
                 )
             )
 
@@ -183,7 +195,10 @@ class ArgumentParser(
         if (command.isBlank()) {
             return Result.Error(
                 ParsingException(
-                    String.format(strings.errorOptionCanNotBeEmpty, Argument.PROCESS_KEY_COMMAND.cliName)
+                    String.format(
+                        strings.errorOptionCanNotBeEmpty,
+                        Argument.PROCESS_KEY_COMMAND.cliName
+                    )
                 )
             )
         }

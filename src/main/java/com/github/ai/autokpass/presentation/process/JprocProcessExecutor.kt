@@ -1,8 +1,8 @@
 package com.github.ai.autokpass.presentation.process
 
 import com.github.ai.autokpass.extensions.splitIntoCommandAndArgs
-import org.buildobjects.process.ProcBuilder
 import com.github.ai.autokpass.model.Result
+import org.buildobjects.process.ProcBuilder
 
 class JprocProcessExecutor : ProcessExecutor {
 

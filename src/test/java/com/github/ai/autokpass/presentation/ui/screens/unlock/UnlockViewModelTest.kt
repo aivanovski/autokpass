@@ -12,7 +12,7 @@ import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
-import com.github.ai.autokpass.presentation.ui.screens.select_entry.SelectEntryArgs
+import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.ScreenState
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.github.ai.autokpass.utils.TestDispatchers
@@ -22,8 +22,8 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.lang.Exception
+import org.junit.jupiter.api.Test
 
 internal class UnlockViewModelTest {
 

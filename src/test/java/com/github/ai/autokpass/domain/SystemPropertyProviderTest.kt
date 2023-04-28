@@ -1,8 +1,8 @@
 package com.github.ai.autokpass.domain
 
+import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.nulls.beNull
 import org.junit.jupiter.api.Test
 
 class SystemPropertyProviderTest {

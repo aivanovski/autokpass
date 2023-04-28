@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_pattern
+package com.github.ai.autokpass.presentation.ui.screens.selectEntry
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
@@ -8,12 +8,12 @@ import com.github.ai.autokpass.presentation.ui.core.navigation.Component
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import org.koin.core.parameter.parametersOf
 
-class SelectPatternComponent(
+class SelectEntryComponent(
     private val rootComponent: RootComponent,
-    args: SelectPatternArgs
+    args: SelectEntryArgs
 ) : Component, ComponentContext by rootComponent {
 
-    private val viewModel: SelectPatternViewModel = get(
+    private val viewModel: SelectEntryViewModel = get(
         params = parametersOf(
             rootComponent.router,
             args,
@@ -27,6 +27,6 @@ class SelectPatternComponent(
 
     @Composable
     override fun render() {
-        SelectPatternScreen(viewModel)
+        SelectEntryScreen(viewModel)
     }
 }

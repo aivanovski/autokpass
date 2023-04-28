@@ -26,7 +26,9 @@ internal class UnlockInteractorTest {
     fun `unlockDatabase should return result`() = runTest(UnconfinedTestDispatcher()) {
         // arrange
         val db = mockk<KeepassDatabase>()
-        every { readDatabaseUseCase.readDatabase(PasswordKey(DB_PASSWORD), DB_PATH) }.returns(Result.Success(db))
+        every {
+            readDatabaseUseCase.readDatabase(PasswordKey(DB_PASSWORD), DB_PATH)
+        }.returns(Result.Success(db))
 
         // act
         val result = interactor().unlockDatabase(DB_PASSWORD, DB_PATH)
@@ -39,7 +41,9 @@ internal class UnlockInteractorTest {
     fun `unlockDatabase should return error`() = runTest(UnconfinedTestDispatcher()) {
         // arrange
         val exception = Exception(ERROR_MESSAGE)
-        every { readDatabaseUseCase.readDatabase(PasswordKey(DB_PASSWORD), DB_PATH) }.returns(Result.Error(exception))
+        every {
+            readDatabaseUseCase.readDatabase(PasswordKey(DB_PASSWORD), DB_PATH)
+        }.returns(Result.Error(exception))
 
         // act
         val result = interactor().unlockDatabase(DB_PASSWORD, DB_PATH)

@@ -1,10 +1,10 @@
 package com.github.ai.autokpass.domain.autotype
 
-import com.github.ai.autokpass.model.PatternItemType
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
+import com.github.ai.autokpass.model.PatternItemType
 
 class AutotypeSequenceFactory {
 

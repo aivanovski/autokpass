@@ -1,9 +1,9 @@
 package com.github.ai.autokpass.domain.autotype
 
-import com.github.ai.autokpass.presentation.process.ProcessExecutor
 import com.github.ai.autokpass.model.AutotypeSequence
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.process.ProcessExecutor
 
 class XdotoolAutotypeExecutor(
     private val processExecutor: ProcessExecutor,

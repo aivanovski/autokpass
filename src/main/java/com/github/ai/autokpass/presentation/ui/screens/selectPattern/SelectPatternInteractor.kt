@@ -1,12 +1,12 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_pattern
+package com.github.ai.autokpass.presentation.ui.screens.selectPattern
 
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
-import com.github.ai.autokpass.domain.fuzzy_search.FuzzyMatcher
+import com.github.ai.autokpass.domain.fuzzySearch.FuzzyMatcher
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.KeepassEntry
-import com.github.ai.autokpass.presentation.ui.screens.select_pattern.model.SearchItem
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.model.SearchItem
 import kotlinx.coroutines.withContext
 
 class SelectPatternInteractor(

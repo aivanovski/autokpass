@@ -10,8 +10,14 @@ class PrintGreetingsUseCase(
 ) {
 
     fun printGreetings() {
+        val content = PrintGreetingsUseCase::class.java.classLoader.getResourceAsStream(
+            PROPERTIES_FILE_NAME
+        )
+
         val properties = Properties()
-        properties.load(PrintGreetingsUseCase::class.java.classLoader.getResourceAsStream(PROPERTIES_FILE_NAME))
+            .apply {
+                load(content)
+            }
 
         val version = properties[PROPERTY_VERSION]
         printer.println(String.format(strings.greetingsMessage, version))

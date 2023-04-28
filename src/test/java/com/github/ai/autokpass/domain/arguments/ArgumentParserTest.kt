@@ -15,7 +15,6 @@ import io.kotest.matchers.types.beInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import java.lang.String.format
 
 class ArgumentParserTest {
 
@@ -39,6 +38,10 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(filePath = null)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorOptionCanNotBeEmpty,
+            Argument.FILE.cliName
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -46,12 +49,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorOptionCanNotBeEmpty,
-                Argument.FILE.cliName
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -59,6 +57,10 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(filePath = EMPTY)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorOptionCanNotBeEmpty,
+            Argument.FILE.cliName
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -66,12 +68,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorOptionCanNotBeEmpty,
-                Argument.FILE.cliName
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -79,6 +76,11 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(filePath = FILE_PATH)
         val fsProvider = mockk<FileSystemProvider>()
+        val expectedMessage = String.format(
+            strings.errorFileDoesNotExist,
+            FILE_PATH
+        )
+
         every { fsProvider.exists(FILE_PATH) }.returns(false)
 
         // act
@@ -87,7 +89,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(format(strings.errorFileDoesNotExist, FILE_PATH))
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -95,6 +97,7 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(filePath = FILE_PATH)
         val fsProvider = mockk<FileSystemProvider>()
+        val expectedMessage = String.format(strings.errorFileIsNotFile, FILE_PATH)
         every { fsProvider.exists(FILE_PATH) }.returns(true)
         every { fsProvider.isFile(FILE_PATH) }.returns(false)
 
@@ -104,7 +107,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(format(strings.errorFileIsNotFile, FILE_PATH))
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -140,6 +143,10 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(keyPath = EMPTY)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorOptionCanNotBeEmpty,
+            Argument.KEY_FILE.cliName
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -147,12 +154,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorOptionCanNotBeEmpty,
-                Argument.KEY_FILE.cliName
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -160,6 +162,10 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(keyPath = KEY_PATH)
         val fsProvider = mockk<FileSystemProvider>()
+        val expectedMessage = String.format(
+            strings.errorFileDoesNotExist,
+            KEY_PATH
+        )
         every { fsProvider.exists(FILE_PATH) }.returns(true)
         every { fsProvider.isFile(FILE_PATH) }.returns(true)
         every { fsProvider.exists(KEY_PATH) }.returns(false)
@@ -170,7 +176,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(format(strings.errorFileDoesNotExist, KEY_PATH))
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -178,6 +184,8 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(filePath = KEY_PATH)
         val fsProvider = mockk<FileSystemProvider>()
+        val expectedMessage = String.format(strings.errorFileIsNotFile, KEY_PATH)
+
         every { fsProvider.exists(FILE_PATH) }.returns(true)
         every { fsProvider.isFile(FILE_PATH) }.returns(true)
         every { fsProvider.exists(KEY_PATH) }.returns(true)
@@ -189,7 +197,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(format(strings.errorFileIsNotFile, KEY_PATH))
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -209,7 +217,7 @@ class ArgumentParserTest {
     }
 
     @Test
-    fun `validateAndParse should return autotype delay if --autotype-delay specified in milliseconds`() {
+    fun `validateAndParse should return autotype delay if --autotype-delay specified in millis`() {
         // arrange
         val args = argsWith(delayBetweenActions = DELAY_IN_MILLISECONDS)
         val expectedArgs = args.toParsedArgs(
@@ -247,13 +255,18 @@ class ArgumentParserTest {
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe(args.copy(delayBetweenActions = null).toParsedArgs())
+        result.getDataOrThrow() shouldBe (args.copy(delayBetweenActions = null).toParsedArgs())
     }
 
     @Test
     fun `validateAndParse should return error if --autotype-delay is invalid`() {
         // arrange
         val args = argsWith(delayBetweenActions = INVALID_VALUE)
+        val expectedMessage = String.format(
+            strings.errorFailedToParseArgument,
+            Argument.AUTOTYPE_DELAY.cliName,
+            INVALID_VALUE
+        )
 
         // act
         val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
@@ -261,13 +274,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorFailedToParseArgument,
-                Argument.AUTOTYPE_DELAY.cliName,
-                INVALID_VALUE
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -343,6 +350,11 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(startDelay = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorFailedToParseArgument,
+            Argument.DELAY.cliName,
+            INVALID_VALUE
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -350,13 +362,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorFailedToParseArgument,
-                Argument.DELAY.cliName,
-                INVALID_VALUE
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -392,6 +398,11 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(autotypeExecutorType = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorFailedToParseArgument,
+            Argument.AUTOTYPE.cliName,
+            INVALID_VALUE
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -399,13 +410,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorFailedToParseArgument,
-                Argument.AUTOTYPE.cliName,
-                INVALID_VALUE
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     @Test
@@ -471,6 +476,10 @@ class ArgumentParserTest {
         // arrange
         val args = argsWith(keyProcessingCommand = EMPTY)
         val fsProvider = providerForAnyFile()
+        val expectedMessage = String.format(
+            strings.errorOptionCanNotBeEmpty,
+            Argument.PROCESS_KEY_COMMAND.cliName
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
@@ -478,9 +487,7 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(strings.errorOptionCanNotBeEmpty, Argument.PROCESS_KEY_COMMAND.cliName)
-        )
+        result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
     private fun argsWith(
@@ -502,8 +509,10 @@ class ArgumentParserTest {
     }
 
     private fun RawArgs.toParsedArgs(
-        startDelayInMillis: Long = startDelay?.toLong() ?: Argument.DELAY.getDefaultAsLong(),
-        delayBetweenActionsInMillis: Long = delayBetweenActions?.toLong() ?: Argument.AUTOTYPE_DELAY.getDefaultAsLong()
+        startDelayInMillis: Long = startDelay?.toLong()
+            ?: Argument.DELAY.getDefaultAsLong(),
+        delayBetweenActionsInMillis: Long = delayBetweenActions?.toLong()
+            ?: Argument.AUTOTYPE_DELAY.getDefaultAsLong()
     ): ParsedArgs =
         ParsedArgs(
             filePath = filePath ?: EMPTY,

@@ -66,7 +66,10 @@ class KotpassDatabaseFactory(
                         Credentials.from(EncryptedValue.fromBinary(keyBytes))
                     )
                 } else {
-                    val processedKeyResult = processExecutor.execute(keyBytes, key.processingCommand)
+                    val processedKeyResult = processExecutor.execute(
+                        keyBytes,
+                        key.processingCommand
+                    )
                     if (processedKeyResult.isFailed()) {
                         return processedKeyResult.asErrorOrThrow()
                     }

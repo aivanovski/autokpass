@@ -1,7 +1,7 @@
 package com.github.ai.autokpass.domain.autotype
 
-import com.github.ai.autokpass.model.PatternItemType
 import com.github.ai.autokpass.model.AutotypePattern
+import com.github.ai.autokpass.model.PatternItemType
 
 class AutotypePatternParser {
 

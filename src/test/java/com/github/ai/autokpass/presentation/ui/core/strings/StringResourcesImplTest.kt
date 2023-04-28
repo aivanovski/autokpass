@@ -2,8 +2,8 @@ package com.github.ai.autokpass.presentation.ui.core.strings
 
 import com.github.ai.autokpass.utils.resourceAsString
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.lang.reflect.Method
+import org.junit.jupiter.api.Test
 
 internal class StringResourcesImplTest {
 

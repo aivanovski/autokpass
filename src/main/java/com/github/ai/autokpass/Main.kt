@@ -33,7 +33,7 @@ fun main(args: Array<String>) {
     val rootComponent = RootComponent(
         componentContext = DefaultComponentContext(lifecycle),
         startScreen = interactor.determineStartScreen(argsResult),
-        appArguments = arguments,
+        appArguments = arguments
     )
 
     application {
@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
             state = windowState,
             alwaysOnTop = true,
             undecorated = false,
-            resizable = true,
+            resizable = true
         ) {
             RootScreen(rootComponent = rootComponent)
         }

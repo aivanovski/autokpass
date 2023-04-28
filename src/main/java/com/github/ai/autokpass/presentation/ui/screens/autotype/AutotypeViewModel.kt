@@ -37,7 +37,9 @@ class AutotypeViewModel(
             val isAbleToAwaitResult = interactor.isAbleToAwaitWindowChanged(appArgs.autotypeType)
             if (isAbleToAwaitResult.isFailed()) {
                 _state.value = ScreenState.Error(
-                    message = errorInteractor.processAndGetMessage(isAbleToAwaitResult.asErrorOrThrow())
+                    message = errorInteractor.processAndGetMessage(
+                        isAbleToAwaitResult.asErrorOrThrow()
+                    )
                 )
                 return@launch
             }
@@ -68,7 +70,9 @@ class AutotypeViewModel(
                 .collect { autotypeStateResult ->
                     if (autotypeStateResult.isFailed()) {
                         _state.value = ScreenState.Error(
-                            message = errorInteractor.processAndGetMessage(autotypeStateResult.asErrorOrThrow())
+                            message = errorInteractor.processAndGetMessage(
+                                autotypeStateResult.asErrorOrThrow()
+                            )
                         )
                     } else {
                         when (val autotypeState = autotypeStateResult.getDataOrThrow()) {

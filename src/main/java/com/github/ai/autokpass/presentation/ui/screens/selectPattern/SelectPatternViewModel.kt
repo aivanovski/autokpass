@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.presentation.ui.screens.select_pattern
+package com.github.ai.autokpass.presentation.ui.screens.selectPattern
 
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.extensions.ensureInRange
@@ -8,7 +8,7 @@ import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeArgs
-import com.github.ai.autokpass.presentation.ui.screens.select_pattern.model.SearchItem
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.model.SearchItem
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
