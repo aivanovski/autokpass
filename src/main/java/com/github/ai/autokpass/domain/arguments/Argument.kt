@@ -43,12 +43,6 @@ enum class Argument(
             """
     ),
 
-    INPUT(
-        fullName = "input",
-        shortName = "i",
-        description = "Type of input (for debug purposes)"
-    ),
-
     PROCESS_KEY_COMMAND(
         fullName = "process-key-command",
         shortName = "c",

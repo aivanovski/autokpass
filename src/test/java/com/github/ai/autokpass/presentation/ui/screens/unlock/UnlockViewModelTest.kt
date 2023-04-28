@@ -7,7 +7,6 @@ import com.github.ai.autokpass.TestData.DEFAULT_DELAY_BETWEEN_ACTIONS
 import com.github.ai.autokpass.TestData.ERROR_MESSAGE
 import com.github.ai.autokpass.TestData.KEY_PATH
 import com.github.ai.autokpass.domain.ErrorInteractor
-import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.Result
@@ -201,7 +200,6 @@ internal class UnlockViewModelTest {
             keyPath = KEY_PATH,
             startDelayInMillis = DEFAULT_DELAY,
             delayBetweenActionsInMillis = DEFAULT_DELAY_BETWEEN_ACTIONS,
-            inputReaderType = InputReaderType.STANDARD,
             autotypeType = null,
             keyProcessingCommand = COMMAND
         )

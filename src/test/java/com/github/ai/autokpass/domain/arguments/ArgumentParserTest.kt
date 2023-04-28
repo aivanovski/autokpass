@@ -4,7 +4,6 @@ import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.model.AutotypeExecutorType
-import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
@@ -33,29 +32,6 @@ class ArgumentParserTest {
 
         // assert
         result.isSucceeded() shouldBe true
-    }
-
-    @Test
-    fun `validateAndParse should return error if everything is empty`() {
-        // arrange
-        val args = argsWith(
-            filePath = null,
-            keyPath = null,
-            startDelay = null,
-            delayBetweenActions = null,
-            inputType = null,
-            autotypeExecutorType = null,
-            keyProcessingCommand = null
-        )
-        val fsProvider = providerForAnyFile()
-
-        // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
-
-        // assert
-        result.isFailed() shouldBe true
-        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
     }
 
     @Test
@@ -384,58 +360,6 @@ class ArgumentParserTest {
     }
 
     @Test
-    fun `validateAndParse should return default value if --input is not specified`() {
-        // arrange
-        val args = argsWith(inputType = null)
-        val fsProvider = providerForAnyFile()
-
-        // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
-
-        // assert
-
-        result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe(
-            args.copy(inputType = InputReaderType.SECRET.cliName).toParsedArgs()
-        )
-    }
-
-    @Test
-    fun `validateAndParse should return result if --input is specified`() {
-        // arrange
-        val args = argsWith(inputType = InputReaderType.STANDARD.cliName)
-        val fsProvider = providerForAnyFile()
-
-        // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
-
-        // assert
-        result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
-    }
-
-    @Test
-    fun `validateAndParse should return error if --input is invalid`() {
-        // arrange
-        val args = argsWith(inputType = INVALID_VALUE)
-        val fsProvider = providerForAnyFile()
-
-        // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
-
-        // assert
-        result.isFailed() shouldBe true
-        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorFailedToParseArgument,
-                Argument.INPUT.cliName,
-                INVALID_VALUE
-            )
-        )
-    }
-
-    @Test
     fun `validateAndParse should return null if --autotype is not specified`() {
         // arrange
         val args = argsWith(autotypeExecutorType = null)
@@ -496,12 +420,22 @@ class ArgumentParserTest {
         // assert
         result.isFailed() shouldBe true
         result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe(
-            format(
-                strings.errorOptionCanNotBeEmpty,
-                Argument.FILE.cliName
-            )
-        )
+        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
+    }
+
+    @Test
+    fun `validateAndParse should return error if all null`() {
+        // arrange
+        val args = argsWith(null, null, null, null, null, null)
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+
+        // assert
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
     }
 
     @Test
@@ -554,7 +488,6 @@ class ArgumentParserTest {
         keyPath: String? = null,
         startDelay: String? = Argument.DELAY.defaultValue,
         delayBetweenActions: String? = Argument.AUTOTYPE_DELAY.defaultValue,
-        inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
         keyProcessingCommand: String? = null
     ): RawArgs {
@@ -563,7 +496,6 @@ class ArgumentParserTest {
             keyPath = keyPath,
             startDelay = startDelay,
             delayBetweenActions = delayBetweenActions,
-            inputType = inputType,
             autotypeType = autotypeExecutorType,
             keyProcessingCommand = keyProcessingCommand
         )
@@ -578,7 +510,6 @@ class ArgumentParserTest {
             keyPath = keyPath,
             startDelayInMillis = startDelayInMillis,
             delayBetweenActionsInMillis = delayBetweenActionsInMillis,
-            inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
             keyProcessingCommand = keyProcessingCommand
         )

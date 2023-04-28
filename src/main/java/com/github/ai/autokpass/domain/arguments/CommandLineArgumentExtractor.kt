@@ -4,7 +4,6 @@ import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
 import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE_DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
-import com.github.ai.autokpass.domain.arguments.Argument.INPUT
 import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.model.RawArgs
@@ -49,13 +48,6 @@ class CommandLineArgumentExtractor(
             description = DELAY.description
         )
 
-        val inputReader by parser.option(
-            ArgType.String,
-            shortName = INPUT.shortName,
-            fullName = INPUT.fullName,
-            description = INPUT.description
-        )
-
         val autotypeType by parser.option(
             ArgType.String,
             shortName = AUTOTYPE.shortName,
@@ -78,7 +70,6 @@ class CommandLineArgumentExtractor(
                 keyPath = keyPath,
                 startDelay = startDelay,
                 delayBetweenActions = delayBetweenActions,
-                inputType = inputReader,
                 autotypeType = autotypeType,
                 keyProcessingCommand = keyCommand
             )

@@ -36,7 +36,6 @@ class FileArgumentExtractor(
                 keyPath = argsMap[Argument.KEY_FILE.fullName],
                 startDelay = argsMap[Argument.DELAY.fullName],
                 delayBetweenActions = argsMap[Argument.AUTOTYPE_DELAY.fullName],
-                inputType = argsMap[Argument.INPUT.fullName],
                 autotypeType = argsMap[Argument.AUTOTYPE.fullName],
                 keyProcessingCommand = argsMap[Argument.PROCESS_KEY_COMMAND.fullName]
             )

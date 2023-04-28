@@ -5,7 +5,6 @@ import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.AutotypeExecutorType
-import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
@@ -42,11 +41,6 @@ class ArgumentParser(
             return autotypeDelayResult.asErrorOrThrow()
         }
 
-        val inputTypeResult = parseInput(args.inputType)
-        if (inputTypeResult.isFailed()) {
-            return inputTypeResult.asErrorOrThrow()
-        }
-
         val autotypeResult = parseAutotypeExecutorType(args.autotypeType)
         if (autotypeResult.isFailed()) {
             return autotypeResult.asErrorOrThrow()
@@ -63,7 +57,6 @@ class ArgumentParser(
                 keyPath = keyPathResult.getDataOrThrow(),
                 startDelayInMillis = startDelayResult.getDataOrThrow(),
                 delayBetweenActionsInMillis = autotypeDelayResult.getDataOrThrow(),
-                inputReaderType = inputTypeResult.getDataOrThrow(),
                 autotypeType = autotypeResult.getDataOrThrow(),
                 keyProcessingCommand = keyProcessingCommandResult.getDataOrThrow()
             )
@@ -164,22 +157,6 @@ class ArgumentParser(
         }
 
         return Result.Success(processedDelay)
-    }
-
-    private fun parseInput(input: String?): Result<InputReaderType> {
-        if (input == null) {
-            return Result.Success(InputReaderType.SECRET)
-        }
-
-        val type = InputReaderType.values()
-            .firstOrNull { it.cliName.equals(input, ignoreCase = true) }
-            ?: return Result.Error(
-                ParsingException(
-                    String.format(strings.errorFailedToParseArgument, Argument.INPUT.cliName, input)
-                )
-            )
-
-        return Result.Success(type)
     }
 
     private fun parseAutotypeExecutorType(type: String?): Result<AutotypeExecutorType?> {

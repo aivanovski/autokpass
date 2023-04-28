@@ -31,7 +31,6 @@ class ArgumentExtractorTest {
             keyPath = KEY_PATH,
             delayInSeconds = DELAY,
             autotypeDelayInMillis = AUTOTYPE_DELAY,
-            inputType = INPUT_TYPE,
             autotypeExecutorType = AUTOTYPE_EXECUTOR_TYPE,
             keyProcessingCommand = COMMAND
         )
@@ -40,7 +39,6 @@ class ArgumentExtractorTest {
             Argument.KEY_FILE.cliName, KEY_PATH,
             Argument.DELAY.cliName, DELAY,
             Argument.AUTOTYPE_DELAY.cliName, AUTOTYPE_DELAY,
-            Argument.INPUT.cliName, INPUT_TYPE,
             Argument.AUTOTYPE.cliName, AUTOTYPE_EXECUTOR_TYPE,
             Argument.PROCESS_KEY_COMMAND.cliName, COMMAND
         )
@@ -60,7 +58,6 @@ class ArgumentExtractorTest {
             keyPath = KEY_PATH,
             delayInSeconds = DELAY,
             autotypeDelayInMillis = AUTOTYPE_DELAY,
-            inputType = INPUT_TYPE,
             autotypeExecutorType = AUTOTYPE_EXECUTOR_TYPE,
             keyProcessingCommand = COMMAND
         )
@@ -69,7 +66,6 @@ class ArgumentExtractorTest {
             Argument.KEY_FILE.cliShortName, KEY_PATH,
             Argument.DELAY.cliShortName, DELAY,
             Argument.AUTOTYPE_DELAY.cliShortName, AUTOTYPE_DELAY,
-            Argument.INPUT.cliShortName, INPUT_TYPE,
             Argument.AUTOTYPE.cliShortName, AUTOTYPE_EXECUTOR_TYPE,
             Argument.PROCESS_KEY_COMMAND.cliShortName, COMMAND
         )
@@ -86,7 +82,6 @@ class ArgumentExtractorTest {
         keyPath: String? = null,
         delayInSeconds: String? = null,
         autotypeDelayInMillis: String? = null,
-        inputType: String? = null,
         autotypeExecutorType: String? = null,
         keyProcessingCommand: String? = null
     ): RawArgs {
@@ -95,7 +90,6 @@ class ArgumentExtractorTest {
             keyPath = keyPath,
             startDelay = delayInSeconds,
             delayBetweenActions = autotypeDelayInMillis,
-            inputType = inputType,
             autotypeType = autotypeExecutorType,
             keyProcessingCommand = keyProcessingCommand
         )
