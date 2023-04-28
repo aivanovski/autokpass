@@ -4,7 +4,6 @@ import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
 import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE_DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
-import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
 import com.github.ai.autokpass.model.RawArgs
