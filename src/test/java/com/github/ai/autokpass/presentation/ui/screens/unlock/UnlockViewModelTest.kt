@@ -3,6 +3,7 @@ package com.github.ai.autokpass.presentation.ui.screens.unlock
 import com.github.ai.autokpass.TestData.COMMAND
 import com.github.ai.autokpass.TestData.DB_PATH
 import com.github.ai.autokpass.TestData.DEFAULT_DELAY
+import com.github.ai.autokpass.TestData.DEFAULT_DELAY_BETWEEN_ACTIONS
 import com.github.ai.autokpass.TestData.ERROR_MESSAGE
 import com.github.ai.autokpass.TestData.KEY_PATH
 import com.github.ai.autokpass.domain.ErrorInteractor
@@ -198,8 +199,8 @@ internal class UnlockViewModelTest {
         ParsedArgs(
             filePath = DB_PATH,
             keyPath = KEY_PATH,
-            delayInSeconds = null,
-            autotypeDelayInMillis = DEFAULT_DELAY,
+            startDelayInMillis = DEFAULT_DELAY,
+            delayBetweenActionsInMillis = DEFAULT_DELAY_BETWEEN_ACTIONS,
             inputReaderType = InputReaderType.STANDARD,
             autotypeType = null,
             keyProcessingCommand = COMMAND

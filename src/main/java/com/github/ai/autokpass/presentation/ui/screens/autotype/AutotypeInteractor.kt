@@ -90,8 +90,8 @@ class AutotypeInteractor(
         appArgs: ParsedArgs,
         entry: KeepassEntry,
         pattern: AutotypePattern,
-        delayBetweenActionsInMillis: Long,
-        startDelayInSeconds: Long?
+        startDelayInMillis: Long,
+        delayBetweenActionsInMillis: Long
     ): Flow<Result<AutotypeState>> {
         return flow {
             val sequence = sequenceFactory.createAutotypeSequence(entry, pattern, delayBetweenActionsInMillis)
@@ -108,11 +108,20 @@ class AutotypeInteractor(
                 return@flow
             }
 
-            if (startDelayInSeconds != null) {
-                for (seconds in startDelayInSeconds downTo 1) {
-                    emit(Result.Success(AutotypeState.CountDown(seconds.toInt())))
-                    delay(1000L)
-                }
+            var timeLeft = startDelayInMillis
+            while (timeLeft > 0) {
+                val delay = calculateNextDelayForCountdown(timeLeft)
+
+                emit(
+                    Result.Success(
+                        AutotypeState.CountDown(
+                            secondsLeft = formatTimeForCountdown(timeLeft)
+                        )
+                    )
+                )
+
+                delay(delay)
+                timeLeft -= delay
             }
 
             emit(Result.Success(AutotypeState.Autotyping))
@@ -129,8 +138,25 @@ class AutotypeInteractor(
             .shareIn(CoroutineScope(dispatchers.IO), SharingStarted.Lazily)
     }
 
+    private fun calculateNextDelayForCountdown(millisLeft: Long): Long {
+        return if (millisLeft % ONE_SECOND != 0L) {
+            millisLeft % ONE_SECOND
+        } else {
+            ONE_SECOND
+        }
+    }
+
+    private fun formatTimeForCountdown(millisLeft: Long): String {
+        return if (millisLeft % ONE_SECOND != 0L) {
+            (millisLeft.toDouble() / ONE_SECOND.toDouble()).toString()
+        } else {
+            (millisLeft / 1000L).toString()
+        }
+    }
+
     companion object {
         private val DELAY_BETWEEN_FOCUS_CHECK = TimeUnit.MILLISECONDS.toMillis(200)
         private val AWAIT_TIMEOUT = TimeUnit.SECONDS.toMillis(30)
+        private val ONE_SECOND = TimeUnit.SECONDS.toMillis(1)
     }
 }

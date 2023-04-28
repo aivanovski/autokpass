@@ -2,6 +2,7 @@ package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.exception.ParsingException
+import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType
 import com.github.ai.autokpass.model.ParsedArgs
@@ -32,6 +33,29 @@ class ArgumentParserTest {
 
         // assert
         result.isSucceeded() shouldBe true
+    }
+
+    @Test
+    fun `validateAndParse should return error if everything is empty`() {
+        // arrange
+        val args = argsWith(
+            filePath = null,
+            keyPath = null,
+            startDelay = null,
+            delayBetweenActions = null,
+            inputType = null,
+            autotypeExecutorType = null,
+            keyProcessingCommand = null
+        )
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+
+        // assert
+        result.isFailed() shouldBe true
+        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
+        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
     }
 
     @Test
@@ -193,22 +217,41 @@ class ArgumentParserTest {
     }
 
     @Test
-    fun `validateAndParse should return autotype delay if --autotype-delay specified`() {
+    fun `validateAndParse should return autotype delay if --autotype-delay specified in seconds`() {
         // arrange
-        val args = argsWith(autotypeDelayInMillis = DELAY)
+        val args = argsWith(delayBetweenActions = DELAY_IN_SECONDS)
+        val expectedArgs = args.toParsedArgs(
+            delayBetweenActionsInMillis = DELAY_IN_SECONDS.toLong() * 1000L
+        )
 
         // act
         val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe expectedArgs
+    }
+
+    @Test
+    fun `validateAndParse should return autotype delay if --autotype-delay specified in milliseconds`() {
+        // arrange
+        val args = argsWith(delayBetweenActions = DELAY_IN_MILLISECONDS)
+        val expectedArgs = args.toParsedArgs(
+            delayBetweenActionsInMillis = DELAY_IN_MILLISECONDS.toLong()
+        )
+
+        // act
+        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+
+        // assert
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe expectedArgs
     }
 
     @Test
     fun `validateAndParse should return null if --autotype-delay is null`() {
         // arrange
-        val args = argsWith(autotypeDelayInMillis = null)
+        val args = argsWith(delayBetweenActions = null)
 
         // act
         val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
@@ -221,20 +264,20 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return null if --autotype-delay is empty`() {
         // arrange
-        val args = argsWith(autotypeDelayInMillis = EMPTY)
+        val args = argsWith(delayBetweenActions = EMPTY)
 
         // act
         val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe(args.copy(autotypeDelayInMillis = null).toParsedArgs())
+        result.getDataOrThrow() shouldBe(args.copy(delayBetweenActions = null).toParsedArgs())
     }
 
     @Test
     fun `validateAndParse should return error if --autotype-delay is invalid`() {
         // arrange
-        val args = argsWith(autotypeDelayInMillis = INVALID_VALUE)
+        val args = argsWith(delayBetweenActions = INVALID_VALUE)
 
         // act
         val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
@@ -252,37 +295,46 @@ class ArgumentParserTest {
     }
 
     @Test
-    fun `validateAndParse should return delay if --delay specified`() {
+    fun `validateAndParse should return delay if --delay specified in seconds`() {
         // arrange
-        val args = argsWith(delayInSeconds = DELAY)
+        val args = argsWith(startDelay = DELAY_IN_SECONDS)
         val fsProvider = providerForAnyFile()
+        val expectedArgs = args.toParsedArgs(
+            startDelayInMillis = DELAY_IN_SECONDS.toLong() * 1000L
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe expectedArgs
     }
 
     @Test
-    fun `validateAndParse should return null if --delay is null`() {
+    fun `validateAndParse should return delay if --delay specified in milliseconds`() {
         // arrange
-        val args = argsWith(delayInSeconds = null)
+        val args = argsWith(startDelay = DELAY_IN_MILLISECONDS)
         val fsProvider = providerForAnyFile()
+        val expectedArgs = args.toParsedArgs(
+            startDelayInMillis = DELAY_IN_MILLISECONDS.toLong()
+        )
 
         // act
         val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe expectedArgs
     }
 
     @Test
-    fun `validateAndParse should return null if --delay is empty`() {
+    fun `validateAndParse should return default value if --delay is null`() {
         // arrange
-        val args = argsWith(delayInSeconds = EMPTY)
+        val args = argsWith(startDelay = null)
+        val expectedArgs = args.toParsedArgs(
+            startDelayInMillis = Argument.DELAY.getDefaultAsLong()
+        )
         val fsProvider = providerForAnyFile()
 
         // act
@@ -290,13 +342,30 @@ class ArgumentParserTest {
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe(args.copy(delayInSeconds = null).toParsedArgs())
+        result.getDataOrThrow() shouldBe expectedArgs
+    }
+
+    @Test
+    fun `validateAndParse should return default value if --delay is empty`() {
+        // arrange
+        val args = argsWith(startDelay = EMPTY)
+        val expectedArgs = args.toParsedArgs(
+            startDelayInMillis = Argument.DELAY.getDefaultAsLong()
+        )
+        val fsProvider = providerForAnyFile()
+
+        // act
+        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+
+        // assert
+        result.isSucceeded() shouldBe true
+        result.getDataOrThrow() shouldBe expectedArgs
     }
 
     @Test
     fun `validateAndParse should return error if --delay is invalid`() {
         // arrange
-        val args = argsWith(delayInSeconds = INVALID_VALUE)
+        val args = argsWith(startDelay = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
 
         // act
@@ -483,8 +552,8 @@ class ArgumentParserTest {
     private fun argsWith(
         filePath: String? = FILE_PATH,
         keyPath: String? = null,
-        delayInSeconds: String? = null,
-        autotypeDelayInMillis: String? = null,
+        startDelay: String? = Argument.DELAY.defaultValue,
+        delayBetweenActions: String? = Argument.AUTOTYPE_DELAY.defaultValue,
         inputType: String? = InputReaderType.SECRET.cliName,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
         keyProcessingCommand: String? = null
@@ -492,20 +561,23 @@ class ArgumentParserTest {
         return RawArgs(
             filePath = filePath,
             keyPath = keyPath,
-            delayInSeconds = delayInSeconds,
-            autotypeDelayInMillis = autotypeDelayInMillis,
+            startDelay = startDelay,
+            delayBetweenActions = delayBetweenActions,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
             keyProcessingCommand = keyProcessingCommand
         )
     }
 
-    private fun RawArgs.toParsedArgs(): ParsedArgs =
+    private fun RawArgs.toParsedArgs(
+        startDelayInMillis: Long = startDelay?.toLong() ?: Argument.DELAY.getDefaultAsLong(),
+        delayBetweenActionsInMillis: Long = delayBetweenActions?.toLong() ?: Argument.AUTOTYPE_DELAY.getDefaultAsLong()
+    ): ParsedArgs =
         ParsedArgs(
             filePath = filePath ?: EMPTY,
             keyPath = keyPath,
-            delayInSeconds = delayInSeconds?.toLong(),
-            autotypeDelayInMillis = autotypeDelayInMillis?.toLong(),
+            startDelayInMillis = startDelayInMillis,
+            delayBetweenActionsInMillis = delayBetweenActionsInMillis,
             inputReaderType = InputReaderType.values().first { it.cliName == inputType },
             autotypeType = AutotypeExecutorType.values().firstOrNull { it.cliName == autotypeType },
             keyProcessingCommand = keyProcessingCommand
@@ -523,7 +595,8 @@ class ArgumentParserTest {
     companion object {
         private const val FILE_PATH = "/tmp/filePath"
         private const val KEY_PATH = "/tmp/keyPath"
-        private const val DELAY = "123"
+        private const val DELAY_IN_SECONDS = "8"
+        private const val DELAY_IN_MILLISECONDS = "1550"
         private const val INVALID_VALUE = "abc123/_=[]"
         private const val COMMAND = "gpg --decrypt"
     }
