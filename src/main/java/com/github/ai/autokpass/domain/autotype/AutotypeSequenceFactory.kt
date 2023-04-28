@@ -106,8 +106,4 @@ class AutotypeSequenceFactory {
 
         return filteredItems
     }
-
-    companion object {
-        const val DEFAULT_DELAY_BETWEEN_ACTIONS = 200L
-    }
 }

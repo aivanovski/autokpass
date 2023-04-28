@@ -2,7 +2,6 @@ package com.github.ai.autokpass.presentation.ui.screens.autotype
 
 import androidx.compose.ui.unit.dp
 import com.github.ai.autokpass.domain.ErrorInteractor
-import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory.Companion.DEFAULT_DELAY_BETWEEN_ACTIONS
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.model.AutotypeState
 import com.github.ai.autokpass.model.ParsedArgs
@@ -63,8 +62,8 @@ class AutotypeViewModel(
                 appArgs = appArgs,
                 entry = args.entry,
                 pattern = args.pattern,
-                delayBetweenActionsInMillis = appArgs.autotypeDelayInMillis ?: DEFAULT_DELAY_BETWEEN_ACTIONS,
-                startDelayInSeconds = appArgs.delayInSeconds
+                startDelayInMillis = appArgs.startDelayInMillis,
+                delayBetweenActionsInMillis = appArgs.delayBetweenActionsInMillis
             )
                 .collect { autotypeStateResult ->
                     if (autotypeStateResult.isFailed()) {

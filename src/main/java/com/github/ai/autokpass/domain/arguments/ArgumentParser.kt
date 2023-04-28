@@ -2,6 +2,7 @@ package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.domain.exception.ParsingException
+import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.InputReaderType
@@ -9,6 +10,7 @@ import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.model.RawArgs
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import java.util.concurrent.TimeUnit
 
 class ArgumentParser(
     private val fileSystemProvider: FileSystemProvider,
@@ -30,12 +32,12 @@ class ArgumentParser(
             return keyPathResult.asErrorOrThrow()
         }
 
-        val delayResult = parseDelay(args.delayInSeconds)
-        if (delayResult.isFailed()) {
-            return delayResult.asErrorOrThrow()
+        val startDelayResult = parseStartDelay(args.startDelay)
+        if (startDelayResult.isFailed()) {
+            return startDelayResult.asErrorOrThrow()
         }
 
-        val autotypeDelayResult = parseAutotypeDelay(args.autotypeDelayInMillis)
+        val autotypeDelayResult = parseDelayBetweenActions(args.delayBetweenActions)
         if (autotypeDelayResult.isFailed()) {
             return autotypeDelayResult.asErrorOrThrow()
         }
@@ -59,8 +61,8 @@ class ArgumentParser(
             ParsedArgs(
                 filePath = pathResult.getDataOrThrow(),
                 keyPath = keyPathResult.getDataOrThrow(),
-                delayInSeconds = delayResult.getDataOrThrow(),
-                autotypeDelayInMillis = autotypeDelayResult.getDataOrThrow(),
+                startDelayInMillis = startDelayResult.getDataOrThrow(),
+                delayBetweenActionsInMillis = autotypeDelayResult.getDataOrThrow(),
                 inputReaderType = inputTypeResult.getDataOrThrow(),
                 autotypeType = autotypeResult.getDataOrThrow(),
                 keyProcessingCommand = keyProcessingCommandResult.getDataOrThrow()
@@ -122,9 +124,9 @@ class ArgumentParser(
         return Result.Success(Unit)
     }
 
-    private fun parseDelay(delayStr: String?): Result<Long?> {
+    private fun parseStartDelay(delayStr: String?): Result<Long> {
         if (delayStr.isNullOrBlank()) {
-            return Result.Success(null)
+            return Result.Success(Argument.DELAY.getDefaultAsLong())
         }
 
         val delay = delayStr.toIntSafely()
@@ -134,12 +136,18 @@ class ArgumentParser(
                 )
             )
 
-        return Result.Success(delay.toLong())
+        val processedDelay = if (delay <= DELAY_MILLISECONDS_THRESHOLD) {
+            TimeUnit.SECONDS.toMillis(delay.toLong())
+        } else {
+            delay.toLong()
+        }
+
+        return Result.Success(processedDelay)
     }
 
-    private fun parseAutotypeDelay(delayStr: String?): Result<Long?> {
+    private fun parseDelayBetweenActions(delayStr: String?): Result<Long> {
         if (delayStr.isNullOrBlank()) {
-            return Result.Success(null)
+            return Result.Success(Argument.AUTOTYPE_DELAY.getDefaultAsLong())
         }
 
         val delay = delayStr.toIntSafely()
@@ -149,7 +157,13 @@ class ArgumentParser(
                 )
             )
 
-        return Result.Success(delay.toLong())
+        val processedDelay = if (delay <= DELAY_MILLISECONDS_THRESHOLD) {
+            TimeUnit.SECONDS.toMillis(delay.toLong())
+        } else {
+            delay.toLong()
+        }
+
+        return Result.Success(processedDelay)
     }
 
     private fun parseInput(input: String?): Result<InputReaderType> {
@@ -198,5 +212,13 @@ class ArgumentParser(
         }
 
         return Result.Success(command)
+    }
+
+    companion object {
+        /**
+         * The maximum value for delay that will be considered as seconds.
+         * If the value is greater than, it will be considered as milliseconds.
+         */
+        private const val DELAY_MILLISECONDS_THRESHOLD = 99
     }
 }

@@ -35,14 +35,14 @@ class CommandLineArgumentExtractor(
             description = KEY_FILE.description
         )
 
-        val delayInSeconds by parser.option(
+        val startDelay by parser.option(
             ArgType.String,
             shortName = DELAY.shortName,
             fullName = DELAY.fullName,
             description = DELAY.description
         )
 
-        val autotypeDelayInMillis by parser.option(
+        val delayBetweenActions by parser.option(
             ArgType.String,
             shortName = AUTOTYPE_DELAY.shortName,
             fullName = AUTOTYPE_DELAY.fullName,
@@ -76,8 +76,8 @@ class CommandLineArgumentExtractor(
             RawArgs(
                 filePath = filePath,
                 keyPath = keyPath,
-                delayInSeconds = delayInSeconds,
-                autotypeDelayInMillis = autotypeDelayInMillis,
+                startDelay = startDelay,
+                delayBetweenActions = delayBetweenActions,
                 inputType = inputReader,
                 autotypeType = autotypeType,
                 keyProcessingCommand = keyCommand

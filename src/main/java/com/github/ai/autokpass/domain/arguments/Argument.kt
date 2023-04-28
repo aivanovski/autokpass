@@ -3,7 +3,8 @@ package com.github.ai.autokpass.domain.arguments
 enum class Argument(
     val fullName: String,
     val shortName: String,
-    val description: String
+    val description: String,
+    val defaultValue: String? = null
 ) {
 
     FILE(
@@ -21,13 +22,15 @@ enum class Argument(
     DELAY(
         fullName = "delay",
         shortName = "d",
-        description = "Delay in seconds before autotype will be started"
+        defaultValue = "3000",
+        description = "Delay in seconds or milliseconds before autotype will be started. Default value - 3 seconds"
     ),
 
     AUTOTYPE_DELAY(
         fullName = "autotype-delay",
         shortName = "b",
-        description = "Delay in milliseconds between autotype actions"
+        defaultValue = "200",
+        description = "Delay seconds or milliseconds between autotype actions. Default value - 200 milliseconds"
     ),
 
     AUTOTYPE(
@@ -35,8 +38,8 @@ enum class Argument(
         shortName = "a",
         description = """Program responsible for emulation of keyboard pressing, available options:
             xdotool - default for Linux (xdotool should be installed on the host machine)
-            cliclick - default for macOS (cliclick should be installed on the host machine)
-            osascript - optional for macOS (keyboard pressing will be emulated via AppleScript)
+            osascript - default for macOS (keyboard pressing will be emulated via AppleScript)
+            cliclick - optional for macOS (cliclick should be installed on the host machine)
             """
     ),
 

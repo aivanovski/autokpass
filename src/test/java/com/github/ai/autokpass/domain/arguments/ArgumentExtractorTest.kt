@@ -93,8 +93,8 @@ class ArgumentExtractorTest {
         return RawArgs(
             filePath = filePath,
             keyPath = keyPath,
-            delayInSeconds = delayInSeconds,
-            autotypeDelayInMillis = autotypeDelayInMillis,
+            startDelay = delayInSeconds,
+            delayBetweenActions = autotypeDelayInMillis,
             inputType = inputType,
             autotypeType = autotypeExecutorType,
             keyProcessingCommand = keyProcessingCommand

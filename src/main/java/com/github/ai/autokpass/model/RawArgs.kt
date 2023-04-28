@@ -3,8 +3,8 @@ package com.github.ai.autokpass.model
 data class RawArgs(
     val filePath: String?,
     val keyPath: String?,
-    val delayInSeconds: String?,
-    val autotypeDelayInMillis: String?,
+    val startDelay: String?,
+    val delayBetweenActions: String?,
     val inputType: String?,
     val autotypeType: String?,
     val keyProcessingCommand: String?
@@ -13,8 +13,8 @@ data class RawArgs(
     fun isEmpty(): Boolean {
         return filePath.isNullOrEmpty() &&
             keyPath.isNullOrEmpty() &&
-            delayInSeconds.isNullOrEmpty() &&
-            autotypeDelayInMillis.isNullOrEmpty() &&
+            startDelay.isNullOrEmpty() &&
+            delayBetweenActions.isNullOrEmpty() &&
             inputType.isNullOrEmpty() &&
             autotypeType.isNullOrEmpty() &&
             keyProcessingCommand.isNullOrEmpty()
