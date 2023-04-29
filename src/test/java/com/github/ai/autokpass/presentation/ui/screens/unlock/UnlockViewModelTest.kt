@@ -8,7 +8,7 @@ import com.github.ai.autokpass.TestData.ERROR_MESSAGE
 import com.github.ai.autokpass.TestData.KEY_PATH
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
@@ -33,18 +33,14 @@ internal class UnlockViewModelTest {
     private val router = mockk<Router>()
 
     @Test
-    fun `init should set Data state`() {
+    fun `init should set Loading state`() {
         // arrange
         val viewModel = viewModel()
 
         // act
 
         // assert
-        viewModel.state.value shouldBe ScreenState.Data(
-            password = EMPTY,
-            error = null,
-            isPasswordVisible = false
-        )
+        viewModel.state.value shouldBe ScreenState.Loading
     }
 
     @Test
@@ -185,7 +181,7 @@ internal class UnlockViewModelTest {
         unlockDatabase()
     }
 
-    private fun viewModel(args: ParsedArgs = newArgs()): UnlockViewModel =
+    private fun viewModel(args: ParsedConfig = newArgs()): UnlockViewModel =
         UnlockViewModel(
             interactor = interactor,
             errorInteractor = errorInteractor,
@@ -194,8 +190,8 @@ internal class UnlockViewModelTest {
             args = args
         )
 
-    private fun newArgs(): ParsedArgs =
-        ParsedArgs(
+    private fun newArgs(): ParsedConfig =
+        ParsedConfig(
             filePath = DB_PATH,
             keyPath = KEY_PATH,
             startDelayInMillis = DEFAULT_DELAY,

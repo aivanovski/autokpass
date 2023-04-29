@@ -3,7 +3,7 @@ package com.github.ai.autokpass.presentation.ui.screens.unlock
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import com.github.ai.autokpass.di.GlobalInjector.get
-import com.github.ai.autokpass.extensions.registerCoroutineViewModel
+import com.github.ai.autokpass.extensions.registerViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Component
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import org.koin.core.parameter.parametersOf
@@ -20,7 +20,7 @@ class UnlockScreenComponent(
     )
 
     init {
-        lifecycle.registerCoroutineViewModel(viewModel)
+        lifecycle.registerViewModel(viewModel)
     }
 
     @Composable

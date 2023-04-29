@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.di
 
+import com.github.ai.autokpass.data.config.ConfigRepository
 import com.github.ai.autokpass.data.file.DefaultFileSystemProvider
 import com.github.ai.autokpass.data.file.FileSystemProvider
 import com.github.ai.autokpass.data.keepass.KeepassDatabaseFactoryProvider
@@ -7,7 +8,7 @@ import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.ErrorInteractorImpl
 import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.domain.SystemPropertyProvider
-import com.github.ai.autokpass.domain.arguments.ArgumentParser
+import com.github.ai.autokpass.domain.arguments.ConfigParser
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
@@ -24,11 +25,10 @@ import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseC
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
-import com.github.ai.autokpass.domain.usecases.ReadConfigFileUseCase
 import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.domain.window.XdotoolFocusedWindowProvider
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.presentation.printer.Printer
 import com.github.ai.autokpass.presentation.printer.StandardOutputPrinter
 import com.github.ai.autokpass.presentation.process.JprocProcessExecutor
@@ -46,8 +46,6 @@ import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryVi
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractor
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel
-import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationArgs
-import com.github.ai.autokpass.presentation.ui.screens.termination.TerminationViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
@@ -63,7 +61,7 @@ object KoinModule {
         single { AutotypeSequenceFactory() }
         single { AutotypePatternParser() }
         single { AutotypePatternFormatter() }
-        single { ArgumentParser(get(), get()) }
+        single { ConfigParser(get(), get()) }
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
         single<ProcessExecutor> { JprocProcessExecutor() }
@@ -75,6 +73,9 @@ object KoinModule {
         single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
         single { AutotypePatternFactory() }
 
+        // services
+        single { ConfigRepository(get(), get(), get(), get()) }
+
         // use cases
         single { PrintGreetingsUseCase(get(), get()) }
         single { ReadDatabaseUseCase(get()) }
@@ -82,17 +83,16 @@ object KoinModule {
         single { GetOSTypeUseCase(get(), get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
         single { KeepassDatabaseFactoryProvider(get(), get(), get()) }
-        single { ReadConfigFileUseCase(get(), get(), get()) }
 
         // interactors
-        single { StartInteractor(get(), get(), get(), get(), get()) }
-        single { UnlockInteractor(get(), get()) }
+        single { StartInteractor(get(), get()) }
+        single { UnlockInteractor(get(), get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
-        factory { (router: Router, appArgs: ParsedArgs) ->
+        factory { (router: Router, appArgs: ParsedConfig) ->
             UnlockViewModel(
                 get(),
                 get(),
@@ -101,7 +101,7 @@ object KoinModule {
                 appArgs
             )
         }
-        factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedArgs) ->
+        factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedConfig) ->
             SelectEntryViewModel(
                 get(),
                 get(),
@@ -111,16 +111,15 @@ object KoinModule {
                 appArgs
             )
         }
-        factory { (router: Router, args: SelectPatternArgs, appArgs: ParsedArgs) ->
+        factory { (router: Router, args: SelectPatternArgs) ->
             SelectPatternViewModel(
                 get(),
                 get(),
                 router,
-                args,
-                appArgs
+                args
             )
         }
-        factory { (vm: RootViewModel, r: Router, a: AutotypeArgs, appArgs: ParsedArgs) ->
+        factory { (vm: RootViewModel, r: Router, a: AutotypeArgs, appArgs: ParsedConfig) ->
             AutotypeViewModel(
                 get(),
                 get(),
@@ -130,14 +129,6 @@ object KoinModule {
                 r,
                 a,
                 appArgs
-            )
-        }
-        factory { (rootViewModel: RootViewModel, router: Router, args: TerminationArgs) ->
-            TerminationViewModel(
-                get(),
-                rootViewModel,
-                router,
-                args
             )
         }
     }

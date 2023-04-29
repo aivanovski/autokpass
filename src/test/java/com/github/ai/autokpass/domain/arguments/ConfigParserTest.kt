@@ -1,11 +1,12 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
+import com.github.ai.autokpass.domain.exception.EmptyConfigException
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.model.AutotypeExecutorType
-import com.github.ai.autokpass.model.ParsedArgs
-import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.ParsedConfig
+import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.util.StringUtils.EMPTY
@@ -16,18 +17,18 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class ArgumentParserTest {
+class ConfigParserTest {
 
     private val strings: StringResources = StringResourcesImpl()
 
     @Test
     fun `validateAndParse should return result if --file exists`() {
         // arrange
-        val args = argsWith(filePath = FILE_PATH)
+        val config = newConfig(filePath = FILE_PATH)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
@@ -36,7 +37,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --file is null`() {
         // arrange
-        val args = argsWith(filePath = null)
+        val config = newConfig(filePath = null)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorOptionCanNotBeEmpty,
@@ -44,7 +45,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -55,7 +56,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --file is empty`() {
         // arrange
-        val args = argsWith(filePath = EMPTY)
+        val config = newConfig(filePath = EMPTY)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorOptionCanNotBeEmpty,
@@ -63,7 +64,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -74,7 +75,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --file doesn't exist`() {
         // arrange
-        val args = argsWith(filePath = FILE_PATH)
+        val config = newConfig(filePath = FILE_PATH)
         val fsProvider = mockk<FileSystemProvider>()
         val expectedMessage = String.format(
             strings.errorFileDoesNotExist,
@@ -84,7 +85,7 @@ class ArgumentParserTest {
         every { fsProvider.exists(FILE_PATH) }.returns(false)
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -95,14 +96,14 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --file is a directory`() {
         // arrange
-        val args = argsWith(filePath = FILE_PATH)
+        val config = newConfig(filePath = FILE_PATH)
         val fsProvider = mockk<FileSystemProvider>()
         val expectedMessage = String.format(strings.errorFileIsNotFile, FILE_PATH)
         every { fsProvider.exists(FILE_PATH) }.returns(true)
         every { fsProvider.isFile(FILE_PATH) }.returns(false)
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -113,35 +114,35 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return result if --key-file exists`() {
         // arrange
-        val args = argsWith(keyPath = KEY_PATH)
+        val config = newConfig(keyPath = KEY_PATH)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return result if --key-file is null`() {
         // arrange
-        val args = argsWith(keyPath = null)
+        val config = newConfig(keyPath = null)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return error if --key-file is empty`() {
         // arrange
-        val args = argsWith(keyPath = EMPTY)
+        val config = newConfig(keyPath = EMPTY)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorOptionCanNotBeEmpty,
@@ -149,7 +150,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -160,7 +161,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --key-file doesn't exist`() {
         // arrange
-        val args = argsWith(keyPath = KEY_PATH)
+        val config = newConfig(keyPath = KEY_PATH)
         val fsProvider = mockk<FileSystemProvider>()
         val expectedMessage = String.format(
             strings.errorFileDoesNotExist,
@@ -171,7 +172,7 @@ class ArgumentParserTest {
         every { fsProvider.exists(KEY_PATH) }.returns(false)
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -182,7 +183,7 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if --key-file is a directory`() {
         // arrange
-        val args = argsWith(filePath = KEY_PATH)
+        val config = newConfig(filePath = KEY_PATH)
         val fsProvider = mockk<FileSystemProvider>()
         val expectedMessage = String.format(strings.errorFileIsNotFile, KEY_PATH)
 
@@ -192,7 +193,7 @@ class ArgumentParserTest {
         every { fsProvider.isFile(KEY_PATH) }.returns(false)
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -203,65 +204,65 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return autotype delay if --autotype-delay specified in seconds`() {
         // arrange
-        val args = argsWith(delayBetweenActions = DELAY_IN_SECONDS)
-        val expectedArgs = args.toParsedArgs(
+        val config = newConfig(delayBetweenActions = DELAY_IN_SECONDS)
+        val expectedConfig = config.toParsedConfig(
             delayBetweenActionsInMillis = DELAY_IN_SECONDS.toLong() * 1000L
         )
 
         // act
-        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+        val result = ConfigParser(providerForAnyFile(), strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return autotype delay if --autotype-delay specified in millis`() {
         // arrange
-        val args = argsWith(delayBetweenActions = DELAY_IN_MILLISECONDS)
-        val expectedArgs = args.toParsedArgs(
+        val config = newConfig(delayBetweenActions = DELAY_IN_MILLISECONDS)
+        val expectedConfig = config.toParsedConfig(
             delayBetweenActionsInMillis = DELAY_IN_MILLISECONDS.toLong()
         )
 
         // act
-        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+        val result = ConfigParser(providerForAnyFile(), strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return null if --autotype-delay is null`() {
         // arrange
-        val args = argsWith(delayBetweenActions = null)
+        val config = newConfig(delayBetweenActions = null)
 
         // act
-        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+        val result = ConfigParser(providerForAnyFile(), strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return null if --autotype-delay is empty`() {
         // arrange
-        val args = argsWith(delayBetweenActions = EMPTY)
+        val config = newConfig(delayBetweenActions = EMPTY)
 
         // act
-        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+        val result = ConfigParser(providerForAnyFile(), strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe (args.copy(delayBetweenActions = null).toParsedArgs())
+        result.getDataOrThrow() shouldBe (config.copy(delayBetweenActions = null).toParsedConfig())
     }
 
     @Test
     fun `validateAndParse should return error if --autotype-delay is invalid`() {
         // arrange
-        val args = argsWith(delayBetweenActions = INVALID_VALUE)
+        val config = newConfig(delayBetweenActions = INVALID_VALUE)
         val expectedMessage = String.format(
             strings.errorFailedToParseArgument,
             Argument.AUTOTYPE_DELAY.cliName,
@@ -269,7 +270,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(providerForAnyFile(), strings).validateAndParse(args)
+        val result = ConfigParser(providerForAnyFile(), strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -280,75 +281,75 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return delay if --delay specified in seconds`() {
         // arrange
-        val args = argsWith(startDelay = DELAY_IN_SECONDS)
+        val config = newConfig(startDelay = DELAY_IN_SECONDS)
         val fsProvider = providerForAnyFile()
-        val expectedArgs = args.toParsedArgs(
+        val expectedConfig = config.toParsedConfig(
             startDelayInMillis = DELAY_IN_SECONDS.toLong() * 1000L
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return delay if --delay specified in milliseconds`() {
         // arrange
-        val args = argsWith(startDelay = DELAY_IN_MILLISECONDS)
+        val config = newConfig(startDelay = DELAY_IN_MILLISECONDS)
         val fsProvider = providerForAnyFile()
-        val expectedArgs = args.toParsedArgs(
+        val expectedConfig = config.toParsedConfig(
             startDelayInMillis = DELAY_IN_MILLISECONDS.toLong()
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return default value if --delay is null`() {
         // arrange
-        val args = argsWith(startDelay = null)
-        val expectedArgs = args.toParsedArgs(
+        val config = newConfig(startDelay = null)
+        val expectedConfig = config.toParsedConfig(
             startDelayInMillis = Argument.DELAY.getDefaultAsLong()
         )
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return default value if --delay is empty`() {
         // arrange
-        val args = argsWith(startDelay = EMPTY)
-        val expectedArgs = args.toParsedArgs(
+        val config = newConfig(startDelay = EMPTY)
+        val expectedConfig = config.toParsedConfig(
             startDelayInMillis = Argument.DELAY.getDefaultAsLong()
         )
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe expectedArgs
+        result.getDataOrThrow() shouldBe expectedConfig
     }
 
     @Test
     fun `validateAndParse should return error if --delay is invalid`() {
         // arrange
-        val args = argsWith(startDelay = INVALID_VALUE)
+        val config = newConfig(startDelay = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorFailedToParseArgument,
@@ -357,7 +358,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -368,35 +369,35 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return null if --autotype is not specified`() {
         // arrange
-        val args = argsWith(autotypeExecutorType = null)
+        val config = newConfig(autotypeExecutorType = null)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return value if --autotype is specified`() {
         // arrange
-        val args = argsWith(autotypeExecutorType = AutotypeExecutorType.XDOTOOL.cliName)
+        val config = newConfig(autotypeExecutorType = AutotypeExecutorType.XDOTOOL.cliName)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return error if --autotype is invalid`() {
         // arrange
-        val args = argsWith(autotypeExecutorType = INVALID_VALUE)
+        val config = newConfig(autotypeExecutorType = INVALID_VALUE)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorFailedToParseArgument,
@@ -405,7 +406,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -416,65 +417,63 @@ class ArgumentParserTest {
     @Test
     fun `validateAndParse should return error if all empty`() {
         // arrange
-        val args = argsWith(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)
+        val config = newConfig(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
-        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
+        result.getExceptionOrThrow() should beInstanceOf<EmptyConfigException>()
     }
 
     @Test
     fun `validateAndParse should return error if all null`() {
         // arrange
-        val args = argsWith(null, null, null, null, null, null)
+        val config = newConfig(null, null, null, null, null, null)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
-        result.getExceptionOrThrow() should beInstanceOf<ParsingException>()
-        result.getExceptionOrThrow().message shouldBe strings.errorNoArgumentsWereSpecified
+        result.getExceptionOrThrow() should beInstanceOf<EmptyConfigException>()
     }
 
     @Test
     fun `validateAndParse should return value if --process-key-command is specified`() {
         // arrange
-        val args = argsWith(keyProcessingCommand = COMMAND)
+        val config = newConfig(keyProcessingCommand = COMMAND)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return value if --process-key-command is not specified`() {
         // arrange
-        val args = argsWith(keyProcessingCommand = null)
+        val config = newConfig(keyProcessingCommand = null)
         val fsProvider = providerForAnyFile()
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe args.toParsedArgs()
+        result.getDataOrThrow() shouldBe config.toParsedConfig()
     }
 
     @Test
     fun `validateAndParse should return error if --process-key-command is empty`() {
         // arrange
-        val args = argsWith(keyProcessingCommand = EMPTY)
+        val config = newConfig(keyProcessingCommand = EMPTY)
         val fsProvider = providerForAnyFile()
         val expectedMessage = String.format(
             strings.errorOptionCanNotBeEmpty,
@@ -482,7 +481,7 @@ class ArgumentParserTest {
         )
 
         // act
-        val result = ArgumentParser(fsProvider, strings).validateAndParse(args)
+        val result = ConfigParser(fsProvider, strings).validateAndParse(config)
 
         // assert
         result.isFailed() shouldBe true
@@ -490,15 +489,15 @@ class ArgumentParserTest {
         result.getExceptionOrThrow().message shouldBe expectedMessage
     }
 
-    private fun argsWith(
+    private fun newConfig(
         filePath: String? = FILE_PATH,
         keyPath: String? = null,
         startDelay: String? = Argument.DELAY.defaultValue,
         delayBetweenActions: String? = Argument.AUTOTYPE_DELAY.defaultValue,
         autotypeExecutorType: String? = AutotypeExecutorType.XDOTOOL.cliName,
         keyProcessingCommand: String? = null
-    ): RawArgs {
-        return RawArgs(
+    ): RawConfig {
+        return RawConfig(
             filePath = filePath,
             keyPath = keyPath,
             startDelay = startDelay,
@@ -508,13 +507,13 @@ class ArgumentParserTest {
         )
     }
 
-    private fun RawArgs.toParsedArgs(
+    private fun RawConfig.toParsedConfig(
         startDelayInMillis: Long = startDelay?.toLong()
             ?: Argument.DELAY.getDefaultAsLong(),
         delayBetweenActionsInMillis: Long = delayBetweenActions?.toLong()
             ?: Argument.AUTOTYPE_DELAY.getDefaultAsLong()
-    ): ParsedArgs =
-        ParsedArgs(
+    ): ParsedConfig =
+        ParsedConfig(
             filePath = filePath ?: EMPTY,
             keyPath = keyPath,
             startDelayInMillis = startDelayInMillis,

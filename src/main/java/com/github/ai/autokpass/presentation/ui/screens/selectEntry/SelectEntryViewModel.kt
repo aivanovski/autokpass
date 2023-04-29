@@ -3,7 +3,7 @@ package com.github.ai.autokpass.presentation.ui.screens.selectEntry
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.model.KeepassEntry
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
@@ -22,7 +22,7 @@ class SelectEntryViewModel(
     dispatchers: Dispatchers,
     private val router: Router,
     private val args: SelectEntryArgs,
-    private val appArgs: ParsedArgs
+    private val appArgs: ParsedConfig
 ) : CoroutineViewModel(dispatchers) {
 
     private val _state = MutableStateFlow<ScreenState>(ScreenState.Loading)

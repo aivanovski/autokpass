@@ -3,7 +3,8 @@ package com.github.ai.autokpass.presentation.ui.screens.unlock
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
+import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
@@ -18,15 +19,32 @@ class UnlockViewModel(
     private val errorInteractor: ErrorInteractor,
     dispatchers: Dispatchers,
     private val router: Router,
-    private val args: ParsedArgs
+    private val args: ParsedConfig
 ) : CoroutineViewModel(dispatchers) {
 
     private var password = EMPTY
     private var error: String? = null
     private var isPasswordVisible = false
 
-    private val _state = MutableStateFlow(createScreenState())
+    private val _state = MutableStateFlow<ScreenState>(ScreenState.Loading)
     val state: StateFlow<ScreenState> = _state
+
+    override fun start() {
+        super.start()
+        viewModelScope.launch {
+            interactor.loadConfig()
+                .collect(::onConfigUpdated)
+        }
+    }
+
+    private fun onConfigUpdated(result: Result<ParsedConfig>) {
+        if (result.isFailed()) {
+            val message = errorInteractor.processAndGetMessage(result.asErrorOrThrow())
+            _state.value = ScreenState.Error(message)
+        } else {
+            _state.value = createDataState()
+        }
+    }
 
     fun onPasswordInputChanged(text: String) {
         password = text
@@ -71,10 +89,10 @@ class UnlockViewModel(
     }
 
     private fun updateScreenState() {
-        _state.value = createScreenState()
+        _state.value = createDataState()
     }
 
-    private fun createScreenState(): ScreenState =
+    private fun createDataState(): ScreenState =
         ScreenState.Data(
             password = password,
             error = error,
@@ -89,6 +107,10 @@ class UnlockViewModel(
             val password: String,
             val error: String?,
             val isPasswordVisible: Boolean
+        ) : ScreenState()
+
+        data class Error(
+            val message: String
         ) : ScreenState()
     }
 }
