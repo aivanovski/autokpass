@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.dp
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.model.AutotypeState
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
@@ -22,7 +22,7 @@ class AutotypeViewModel(
     private val rootViewModel: RootViewModel,
     private val router: Router,
     private val args: AutotypeArgs,
-    private val appArgs: ParsedArgs
+    private val appArgs: ParsedConfig
 ) : CoroutineViewModel(dispatchers) {
 
     private val _state = MutableStateFlow<ScreenState>(initState())

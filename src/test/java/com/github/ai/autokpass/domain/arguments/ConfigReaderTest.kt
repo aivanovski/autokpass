@@ -1,32 +1,32 @@
 package com.github.ai.autokpass.domain.arguments
 
-import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class ArgumentExtractorTest {
+class ConfigReaderTest {
 
     private val strings: StringResources = StringResourcesImpl()
 
     @Test
-    fun `extractArguments should return all nulls`() {
+    fun `readConfig should return all nulls`() {
         // arrange
-        val expected = argsWith()
+        val expected = newConfig()
 
         // act
-        val result = CommandLineArgumentExtractor(emptyArray(), strings).extractArguments()
+        val result = CommandLineConfigReader(emptyArray(), strings).readConfig()
 
         // assert
         result shouldBe Result.Success(expected)
     }
 
     @Test
-    fun `extractArguments should extract all arguments by full name`() {
+    fun `readConfig should extract all arguments by full name`() {
         // arrange
-        val expected = argsWith(
+        val expected = newConfig(
             filePath = FILE_PATH,
             keyPath = KEY_PATH,
             delayInSeconds = DELAY,
@@ -44,16 +44,16 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = CommandLineArgumentExtractor(args, strings).extractArguments()
+        val result = CommandLineConfigReader(args, strings).readConfig()
 
         // assert
         result shouldBe Result.Success(expected)
     }
 
     @Test
-    fun `extractArguments should extract all arguments by short name`() {
+    fun `readConfig should extract all arguments by short name`() {
         // arrange
-        val expected = argsWith(
+        val expected = newConfig(
             filePath = FILE_PATH,
             keyPath = KEY_PATH,
             delayInSeconds = DELAY,
@@ -71,21 +71,21 @@ class ArgumentExtractorTest {
         )
 
         // act
-        val result = CommandLineArgumentExtractor(args, strings).extractArguments()
+        val result = CommandLineConfigReader(args, strings).readConfig()
 
         // assert
         result shouldBe Result.Success(expected)
     }
 
-    private fun argsWith(
+    private fun newConfig(
         filePath: String? = null,
         keyPath: String? = null,
         delayInSeconds: String? = null,
         autotypeDelayInMillis: String? = null,
         autotypeExecutorType: String? = null,
         keyProcessingCommand: String? = null
-    ): RawArgs {
-        return RawArgs(
+    ): RawConfig {
+        return RawConfig(
             filePath = filePath,
             keyPath = keyPath,
             startDelay = delayInSeconds,
@@ -101,7 +101,6 @@ class ArgumentExtractorTest {
         private const val DELAY = "123"
         private const val COMMAND = "gpg --decrypt"
         private const val AUTOTYPE_DELAY = "456"
-        private const val INPUT_TYPE = "inputType"
         private const val AUTOTYPE_EXECUTOR_TYPE = "autotypeExecutorType"
     }
 }

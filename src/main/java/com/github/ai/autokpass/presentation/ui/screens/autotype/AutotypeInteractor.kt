@@ -12,7 +12,7 @@ import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.AutotypeState
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.OSType
-import com.github.ai.autokpass.model.ParsedArgs
+import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.util.concurrent.TimeUnit
@@ -87,7 +87,7 @@ class AutotypeInteractor(
         }
 
     suspend fun buildAutotypeFlow(
-        appArgs: ParsedArgs,
+        appArgs: ParsedConfig,
         entry: KeepassEntry,
         pattern: AutotypePattern,
         startDelayInMillis: Long,

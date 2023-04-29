@@ -1,6 +1,6 @@
 package com.github.ai.autokpass.model
 
-data class RawArgs(
+data class RawConfig(
     val filePath: String?,
     val keyPath: String?,
     val startDelay: String?,
@@ -16,5 +16,16 @@ data class RawArgs(
             delayBetweenActions.isNullOrEmpty() &&
             autotypeType.isNullOrEmpty() &&
             keyProcessingCommand.isNullOrEmpty()
+    }
+
+    companion object {
+        val EMPTY = RawConfig(
+            filePath = null,
+            keyPath = null,
+            startDelay = null,
+            delayBetweenActions = null,
+            autotypeType = null,
+            keyProcessingCommand = null
+        )
     }
 }

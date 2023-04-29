@@ -1,58 +1,59 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
+import com.github.ai.autokpass.domain.exception.EmptyConfigException
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.extensions.toIntSafely
 import com.github.ai.autokpass.model.AutotypeExecutorType
-import com.github.ai.autokpass.model.ParsedArgs
-import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.ParsedConfig
+import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.util.concurrent.TimeUnit
 
-class ArgumentParser(
+class ConfigParser(
     private val fileSystemProvider: FileSystemProvider,
     private val strings: StringResources
 ) {
 
-    fun validateAndParse(args: RawArgs): Result<ParsedArgs> {
-        if (args.isEmpty()) {
-            return Result.Error(ParsingException(strings.errorNoArgumentsWereSpecified))
+    fun validateAndParse(config: RawConfig): Result<ParsedConfig> {
+        if (config.isEmpty()) {
+            return Result.Error(EmptyConfigException(strings))
         }
 
-        val pathResult = parseFilePath(args.filePath)
+        val pathResult = parseFilePath(config.filePath)
         if (pathResult.isFailed()) {
             return pathResult.asErrorOrThrow()
         }
 
-        val keyPathResult = parseKeyPath(args.keyPath)
+        val keyPathResult = parseKeyPath(config.keyPath)
         if (keyPathResult.isFailed()) {
             return keyPathResult.asErrorOrThrow()
         }
 
-        val startDelayResult = parseStartDelay(args.startDelay)
+        val startDelayResult = parseStartDelay(config.startDelay)
         if (startDelayResult.isFailed()) {
             return startDelayResult.asErrorOrThrow()
         }
 
-        val autotypeDelayResult = parseDelayBetweenActions(args.delayBetweenActions)
+        val autotypeDelayResult = parseDelayBetweenActions(config.delayBetweenActions)
         if (autotypeDelayResult.isFailed()) {
             return autotypeDelayResult.asErrorOrThrow()
         }
 
-        val autotypeResult = parseAutotypeExecutorType(args.autotypeType)
+        val autotypeResult = parseAutotypeExecutorType(config.autotypeType)
         if (autotypeResult.isFailed()) {
             return autotypeResult.asErrorOrThrow()
         }
 
-        val keyProcessingCommandResult = parseKeyProcessingCommand(args.keyProcessingCommand)
+        val keyProcessingCommandResult = parseKeyProcessingCommand(config.keyProcessingCommand)
         if (keyProcessingCommandResult.isFailed()) {
             return keyProcessingCommandResult.asErrorOrThrow()
         }
 
         return Result.Success(
-            ParsedArgs(
+            ParsedConfig(
                 filePath = pathResult.getDataOrThrow(),
                 keyPath = keyPathResult.getDataOrThrow(),
                 startDelayInMillis = startDelayResult.getDataOrThrow(),

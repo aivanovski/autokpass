@@ -4,7 +4,7 @@ import com.github.ai.autokpass.domain.arguments.Argument
 import com.github.ai.autokpass.extensions.getDefaultAsLong
 import com.github.ai.autokpass.util.StringUtils
 
-data class ParsedArgs(
+data class ParsedConfig(
     val filePath: String,
     val keyPath: String?,
     val startDelayInMillis: Long,
@@ -14,7 +14,7 @@ data class ParsedArgs(
 ) {
 
     companion object {
-        val EMPTY = ParsedArgs(
+        val EMPTY = ParsedConfig(
             filePath = StringUtils.EMPTY,
             keyPath = null,
             startDelayInMillis = Argument.DELAY.getDefaultAsLong(),

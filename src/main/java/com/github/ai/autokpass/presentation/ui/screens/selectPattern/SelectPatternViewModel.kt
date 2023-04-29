@@ -3,7 +3,6 @@ package com.github.ai.autokpass.presentation.ui.screens.selectPattern
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.extensions.ensureInRange
 import com.github.ai.autokpass.model.AutotypePattern
-import com.github.ai.autokpass.model.ParsedArgs
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
@@ -18,8 +17,7 @@ class SelectPatternViewModel(
     private val interactor: SelectPatternInteractor,
     dispatchers: Dispatchers,
     private val router: Router,
-    private val args: SelectPatternArgs,
-    private val appArgs: ParsedArgs
+    private val args: SelectPatternArgs
 ) : CoroutineViewModel(dispatchers) {
 
     private var query = EMPTY

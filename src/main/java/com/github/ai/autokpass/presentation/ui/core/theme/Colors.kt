@@ -12,6 +12,8 @@ data class AutokpassColors(
     val primaryTextColor: Color,
     val secondaryTextColor: Color,
     val error: Color,
+    val icon: Color,
+    val topBarBackground: Color,
     val highlightedTextColor: Color,
     val materialColors: Colors
 )
@@ -22,6 +24,8 @@ val AppColors = AutokpassColors(
     primaryTextColor = Color(0xff_e1e3df),
     secondaryTextColor = Color(0xff_c0c9c1),
     error = Color(0xff_cf6679),
+    icon = Color(0xFF_9E9E9E),
+    topBarBackground = Color(0xFF_383838),
     highlightedTextColor = Color(0xff_388E3C),
     materialColors = darkColors(
         primary = Color(0xff_364b3f),

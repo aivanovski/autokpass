@@ -28,32 +28,44 @@ import androidx.compose.ui.unit.dp
 import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.extensions.collectAsStateImmediately
 import com.github.ai.autokpass.presentation.ui.core.CenteredBox
+import com.github.ai.autokpass.presentation.ui.core.ErrorStateView
 import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.TextFieldIcons
+import com.github.ai.autokpass.presentation.ui.core.TopBar
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.ScreenState
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 
 @Composable
 fun UnlockScreen(viewModel: UnlockViewModel) {
+    val strings = StringResourcesImpl()
     val state by viewModel.state.collectAsStateImmediately()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        with(state) {
-            when (this) {
-                is ScreenState.Loading -> {
-                    CenteredBox { ProgressBar() }
-                }
-
-                is ScreenState.Data -> {
-                    ScreenContent(
-                        state = this,
-                        onInputTextChanged = { text -> viewModel.onPasswordInputChanged(text) },
-                        onUnlockButtonClicked = { viewModel.unlockDatabase() },
-                        onPasswordIconClicked = { viewModel.togglePasswordVisibility() },
-                        onErrorIconClicked = { viewModel.clearError() }
-                    )
+    TopBar(
+        title = strings.appName
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            with(state) {
+                when (this) {
+                    is ScreenState.Loading -> {
+                        CenteredBox { ProgressBar() }
+                    }
+                    is ScreenState.Data -> {
+                        ScreenContent(
+                            state = this,
+                            onInputTextChanged = { text -> viewModel.onPasswordInputChanged(text) },
+                            onUnlockButtonClicked = { viewModel.unlockDatabase() },
+                            onPasswordIconClicked = { viewModel.togglePasswordVisibility() },
+                            onErrorIconClicked = { viewModel.clearError() }
+                        )
+                    }
+                    is ScreenState.Error -> {
+                        CenteredBox {
+                            ErrorStateView(message = message)
+                        }
+                    }
                 }
             }
         }

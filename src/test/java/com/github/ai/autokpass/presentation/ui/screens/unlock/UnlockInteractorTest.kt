@@ -3,6 +3,7 @@ package com.github.ai.autokpass.presentation.ui.screens.unlock
 import com.github.ai.autokpass.TestData.DB_PASSWORD
 import com.github.ai.autokpass.TestData.DB_PATH
 import com.github.ai.autokpass.TestData.ERROR_MESSAGE
+import com.github.ai.autokpass.data.config.ConfigRepository
 import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.domain.usecases.ReadDatabaseUseCase
 import com.github.ai.autokpass.model.KeepassKey.PasswordKey
@@ -21,6 +22,7 @@ internal class UnlockInteractorTest {
 
     private val dispatchers = TestDispatchers()
     private val readDatabaseUseCase = mockk<ReadDatabaseUseCase>()
+    private val configRepository = mockk<ConfigRepository>()
 
     @Test
     fun `unlockDatabase should return result`() = runTest(UnconfinedTestDispatcher()) {
@@ -55,6 +57,7 @@ internal class UnlockInteractorTest {
     private fun interactor(): UnlockInteractor =
         UnlockInteractor(
             dispatchers = dispatchers,
-            readDatabaseUseCase = readDatabaseUseCase
+            readDatabaseUseCase = readDatabaseUseCase,
+            configRepository = configRepository
         )
 }

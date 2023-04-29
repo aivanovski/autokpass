@@ -1,23 +1,23 @@
 package com.github.ai.autokpass.domain.arguments
 
 import com.github.ai.autokpass.domain.exception.ParsingException
-import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class FileArgumentExtractor(
+class FileConfigReader(
     private val strings: StringResources,
     private val content: InputStream
-) : ArgumentExtractor {
+) : ConfigReader {
 
-    override fun extractArguments(): Result<RawArgs> {
+    override fun readConfig(): Result<RawConfig> {
         return try {
             val reader = InputStreamReader(content)
 
-            val argsMap = mutableMapOf<String, String>()
+            val values = mutableMapOf<String, String>()
             for (line in reader.readLines()) {
                 if (line.startsWith("#")) {
                     continue
@@ -28,19 +28,19 @@ class FileArgumentExtractor(
                     return Result.Error(ParsingException(strings.errorFailedToParseConfigFile))
                 }
 
-                argsMap[keyAndValue[0]] = keyAndValue[1]
+                values[keyAndValue[0]] = keyAndValue[1]
             }
 
-            val args = RawArgs(
-                filePath = argsMap[Argument.FILE.fullName],
-                keyPath = argsMap[Argument.KEY_FILE.fullName],
-                startDelay = argsMap[Argument.DELAY.fullName],
-                delayBetweenActions = argsMap[Argument.AUTOTYPE_DELAY.fullName],
-                autotypeType = argsMap[Argument.AUTOTYPE.fullName],
-                keyProcessingCommand = argsMap[Argument.PROCESS_KEY_COMMAND.fullName]
+            val config = RawConfig(
+                filePath = values[Argument.FILE.fullName],
+                keyPath = values[Argument.KEY_FILE.fullName],
+                startDelay = values[Argument.DELAY.fullName],
+                delayBetweenActions = values[Argument.AUTOTYPE_DELAY.fullName],
+                autotypeType = values[Argument.AUTOTYPE.fullName],
+                keyProcessingCommand = values[Argument.PROCESS_KEY_COMMAND.fullName]
             )
 
-            Result.Success(args)
+            Result.Success(config)
         } catch (exception: IOException) {
             Result.Error(exception)
         }

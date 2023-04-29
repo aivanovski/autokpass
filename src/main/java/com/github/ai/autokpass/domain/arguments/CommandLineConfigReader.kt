@@ -6,18 +6,18 @@ import com.github.ai.autokpass.domain.arguments.Argument.DELAY
 import com.github.ai.autokpass.domain.arguments.Argument.FILE
 import com.github.ai.autokpass.domain.arguments.Argument.KEY_FILE
 import com.github.ai.autokpass.domain.arguments.Argument.PROCESS_KEY_COMMAND
-import com.github.ai.autokpass.model.RawArgs
+import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 
-class CommandLineArgumentExtractor(
+class CommandLineConfigReader(
     private val commandLineArguments: Array<String>,
     private val strings: StringResources
-) : ArgumentExtractor {
+) : ConfigReader {
 
-    override fun extractArguments(): Result<RawArgs> {
+    override fun readConfig(): Result<RawConfig> {
         val parser = ArgParser(strings.appName)
 
         val filePath by parser.option(
@@ -65,7 +65,7 @@ class CommandLineArgumentExtractor(
         parser.parse(commandLineArguments)
 
         return Result.Success(
-            RawArgs(
+            RawConfig(
                 filePath = filePath,
                 keyPath = keyPath,
                 startDelay = startDelay,
