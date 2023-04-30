@@ -6,4 +6,5 @@ interface FileSystemProvider {
     fun exists(path: String): Boolean
     fun isFile(path: String): Boolean
     fun readFile(path: String): Result<ByteArray>
+    fun writeFile(path: String, bytes: ByteArray): Result<Unit>
 }

@@ -8,7 +8,9 @@ import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.ErrorInteractorImpl
 import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.domain.SystemPropertyProvider
-import com.github.ai.autokpass.domain.arguments.ConfigParser
+import com.github.ai.autokpass.data.config.ConfigParser
+import com.github.ai.autokpass.data.config.FileConfigReader
+import com.github.ai.autokpass.data.config.FileConfigWriter
 import com.github.ai.autokpass.domain.autotype.AutotypeExecutorFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFactory
 import com.github.ai.autokpass.domain.autotype.AutotypePatternFormatter
@@ -72,6 +74,8 @@ object KoinModule {
         single<Dispatchers> { DefaultDispatchers() }
         single<FuzzyMatcher> { Fzf4jFuzzyMatcher() }
         single { AutotypePatternFactory() }
+        single { FileConfigReader(get(), get(), get()) }
+        single { FileConfigWriter(get(), get(), get()) }
 
         // services
         single { ConfigRepository(get(), get(), get(), get()) }

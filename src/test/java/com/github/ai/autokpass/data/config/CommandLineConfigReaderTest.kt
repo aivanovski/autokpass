@@ -1,5 +1,6 @@
-package com.github.ai.autokpass.domain.arguments
+package com.github.ai.autokpass.data.config
 
+import com.github.ai.autokpass.domain.arguments.Argument
 import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
@@ -7,7 +8,7 @@ import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class ConfigReaderTest {
+class CommandLineConfigReaderTest {
 
     private val strings: StringResources = StringResourcesImpl()
 

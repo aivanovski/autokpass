@@ -1,4 +1,4 @@
-package com.github.ai.autokpass.domain.arguments
+package com.github.ai.autokpass.data.config
 
 import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE
 import com.github.ai.autokpass.domain.arguments.Argument.AUTOTYPE_DELAY

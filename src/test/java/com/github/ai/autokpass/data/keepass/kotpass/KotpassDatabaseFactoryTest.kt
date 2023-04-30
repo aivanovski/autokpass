@@ -186,7 +186,7 @@ class KotpassDatabaseFactoryTest {
         // arrange
         val db = DB_WITH_PASSWORD
         val fsProvider = mockFSProvider(
-            errors = listOf(
+            errorOnRead = listOf(
                 db.getFilePath() to IOException()
             )
         )
@@ -212,7 +212,7 @@ class KotpassDatabaseFactoryTest {
         val db = TestData.DB_WITH_FILE_KEY
         val key = db.key.asFileKey()
         val fsProvider = mockFSProvider(
-            errors = listOf(
+            errorOnRead = listOf(
                 key.getFilePath() to IOException()
             )
         )

@@ -1,9 +1,11 @@
 package com.github.ai.autokpass.data.file
 
 import com.github.ai.autokpass.model.Result
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.IOException
 
 class DefaultFileSystemProvider : FileSystemProvider {
@@ -22,6 +24,19 @@ class DefaultFileSystemProvider : FileSystemProvider {
             }
         } else {
             Result.Error(FileNotFoundException(path))
+        }
+    }
+
+    override fun writeFile(path: String, bytes: ByteArray): Result<Unit> {
+        return try {
+            BufferedOutputStream(FileOutputStream(path, false))
+                .use { out ->
+                    out.write(bytes)
+                }
+
+            Result.Success(Unit)
+        } catch (exception: IOException) {
+            Result.Error(exception)
         }
     }
 }

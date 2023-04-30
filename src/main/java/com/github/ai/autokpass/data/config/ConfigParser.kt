@@ -1,6 +1,7 @@
-package com.github.ai.autokpass.domain.arguments
+package com.github.ai.autokpass.data.config
 
 import com.github.ai.autokpass.data.file.FileSystemProvider
+import com.github.ai.autokpass.domain.arguments.Argument
 import com.github.ai.autokpass.domain.exception.EmptyConfigException
 import com.github.ai.autokpass.domain.exception.ParsingException
 import com.github.ai.autokpass.extensions.getDefaultAsLong

@@ -12,9 +12,10 @@ object TestData {
     const val DB_PASSWORD = "abc123"
     const val DB_PATH = "/path/db.kdbx"
     const val KEY_PATH = "/path/key"
-    const val DEFAULT_DELAY = 100L
-    const val DEFAULT_DELAY_BETWEEN_ACTIONS = 1234L
+    const val DEFAULT_DELAY = 123L
+    const val DEFAULT_DELAY_BETWEEN_ACTIONS = 456L
     const val DEFAULT_INPUT_TEXT = "abc123"
+    const val DEFAULT_AUTOTYPE_TYPE = "xdotool"
     const val COMMAND = "gpg --passphrase abc123 --pinentry-mode loopback"
     const val ERROR_MESSAGE = "Test error message"
     val EXCEPTION = AutokpassException("Test exception")
