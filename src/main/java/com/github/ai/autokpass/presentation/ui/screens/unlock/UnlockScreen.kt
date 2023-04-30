@@ -1,13 +1,19 @@
 package com.github.ai.autokpass.presentation.ui.screens.unlock
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,11 +23,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -34,6 +42,7 @@ import com.github.ai.autokpass.presentation.ui.core.TextFieldIcons
 import com.github.ai.autokpass.presentation.ui.core.TopBar
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
+import com.github.ai.autokpass.presentation.ui.core.theme.AppColors
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.ScreenState
 import com.github.ai.autokpass.util.StringUtils.EMPTY
@@ -44,13 +53,33 @@ fun UnlockScreen(viewModel: UnlockViewModel) {
     val state by viewModel.state.collectAsStateImmediately()
 
     TopBar(
-        title = strings.appName
+        title = strings.appName,
+        endContent = {
+            Image(
+                painter = painterResource("images/settings_24.svg"),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(AppColors.icon),
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+                    .size(36.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false)
+                    ) {
+                        viewModel.onSettingsButtonClicked()
+                    }
+            )
+        }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             with(state) {
                 when (this) {
                     is ScreenState.Loading -> {
                         CenteredBox { ProgressBar() }
+                    }
+                    is ScreenState.Error -> {
+                        CenteredBox { ErrorStateView(message) }
                     }
                     is ScreenState.Data -> {
                         ScreenContent(
@@ -60,11 +89,6 @@ fun UnlockScreen(viewModel: UnlockViewModel) {
                             onPasswordIconClicked = { viewModel.togglePasswordVisibility() },
                             onErrorIconClicked = { viewModel.clearError() }
                         )
-                    }
-                    is ScreenState.Error -> {
-                        CenteredBox {
-                            ErrorStateView(message = message)
-                        }
                     }
                 }
             }

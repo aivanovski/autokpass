@@ -25,4 +25,7 @@ sealed class Screen : Parcelable {
     data class Autotype(
         val args: AutotypeArgs
     ) : Screen()
+
+    @Parcelize
+    object Settings : Screen()
 }

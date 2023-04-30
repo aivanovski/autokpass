@@ -50,4 +50,18 @@ class ConfigRepository(
     fun load(): Flow<Result<ParsedConfig>> {
         return current
     }
+
+    fun getCurrent(): Result<ParsedConfig> {
+        return current.value
+    }
+
+    fun save(config: ParsedConfig): Result<Unit> {
+        val result = writer.writeConfig(config)
+
+        if (result.isSucceeded()) {
+            current.value = Result.Success(config)
+        }
+
+        return result
+    }
 }

@@ -80,6 +80,10 @@ class UnlockViewModel(
         }
     }
 
+    fun onSettingsButtonClicked() {
+        router.navigateTo(Screen.Settings)
+    }
+
     private fun navigateToMain(key: PasswordKey) {
         router.navigateTo(
             Screen.SelectEntry(

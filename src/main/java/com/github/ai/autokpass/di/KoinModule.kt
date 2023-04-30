@@ -1,5 +1,6 @@
 package com.github.ai.autokpass.di
 
+import com.github.ai.autokpass.data.config.ConfigReader
 import com.github.ai.autokpass.data.config.ConfigRepository
 import com.github.ai.autokpass.data.file.DefaultFileSystemProvider
 import com.github.ai.autokpass.data.file.FileSystemProvider
@@ -48,6 +49,8 @@ import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryVi
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractor
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel
+import com.github.ai.autokpass.presentation.ui.screens.settings.SettingsInteractor
+import com.github.ai.autokpass.presentation.ui.screens.settings.SettingsViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
@@ -77,7 +80,7 @@ object KoinModule {
         single { FileConfigReader(get(), get(), get()) }
         single { FileConfigWriter(get(), get(), get()) }
 
-        // services
+        // repositories
         single { ConfigRepository(get(), get(), get(), get()) }
 
         // use cases
@@ -94,6 +97,7 @@ object KoinModule {
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
+        single { SettingsInteractor(get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedConfig) ->
@@ -133,6 +137,14 @@ object KoinModule {
                 r,
                 a,
                 appArgs
+            )
+        }
+        factory { (router: Router) ->
+            SettingsViewModel(
+                get(),
+                get(),
+                get(),
+                router
             )
         }
     }
