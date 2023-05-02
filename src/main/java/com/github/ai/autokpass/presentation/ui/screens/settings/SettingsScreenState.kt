@@ -1,5 +1,7 @@
 package com.github.ai.autokpass.presentation.ui.screens.settings
 
+import com.github.ai.autokpass.model.AutotypeExecutorType
+
 sealed class SettingsScreenState {
 
     object Loading : SettingsScreenState()
@@ -9,8 +11,9 @@ sealed class SettingsScreenState {
         val keyPath: String,
         val delay: String,
         val delayBetweenActions: String,
-        val autotype: String,
-        val command: String
+        val command: String,
+        val selectedAutotypeType: AutotypeExecutorType,
+        val availableAutotypeTypes: List<AutotypeExecutorType>
     ) : SettingsScreenState()
 
     data class Error(

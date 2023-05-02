@@ -2,6 +2,7 @@ package com.github.ai.autokpass.presentation.ui.screens.settings
 
 import com.github.ai.autokpass.domain.ErrorInteractor
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
+import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
@@ -21,6 +22,8 @@ class SettingsViewModel(
     override fun start() {
         super.start()
         viewModelScope.launch {
+            val executors = interactor.loadAvailableAutotypeTypes()
+
             val loadConfigResult = interactor.loadConfig()
             if (loadConfigResult.isSucceeded()) {
                 val config = loadConfigResult.getDataOrThrow()
@@ -30,8 +33,9 @@ class SettingsViewModel(
                     keyPath = config.keyPath ?: EMPTY,
                     delay = config.startDelayInMillis.toString(),
                     delayBetweenActions = config.delayBetweenActionsInMillis.toString(),
-                    autotype = config.autotypeType?.cliName ?: EMPTY,
-                    command = config.keyProcessingCommand ?: EMPTY
+                    command = config.keyProcessingCommand ?: EMPTY,
+                    selectedAutotypeType = AutotypeExecutorType.XDOTOOL,
+                    availableAutotypeTypes = executors
                 )
             } else {
                 state.value = SettingsScreenState.Error(
@@ -57,7 +61,6 @@ class SettingsViewModel(
             keyProcessingCommand = null
         )
 
-
         viewModelScope.launch {
             val saveResult = interactor.saveConfig(config)
             if (saveResult.isSucceeded()) {
@@ -78,5 +81,25 @@ class SettingsViewModel(
     fun onKeyPathChanged(keyPath: String) {
         val currentState = (state.value as? SettingsScreenState.Data) ?: return
         state.value = currentState.copy(keyPath = keyPath)
+    }
+
+    fun onDelayChanged(delay: String) {
+        val currentState = (state.value as? SettingsScreenState.Data) ?: return
+        state.value = currentState.copy(delay = delay)
+    }
+
+    fun onDelayBetweenActionsChanged(delayBetweenActions: String) {
+        val currentState = (state.value as? SettingsScreenState.Data) ?: return
+        state.value = currentState.copy(delayBetweenActions = delayBetweenActions)
+    }
+
+    fun onCommandChanged(command: String) {
+        val currentState = (state.value as? SettingsScreenState.Data) ?: return
+        state.value = currentState.copy(command = command)
+    }
+
+    fun onAutotypeChanged(type: AutotypeExecutorType) {
+        val currentState = (state.value as? SettingsScreenState.Data) ?: return
+        state.value = currentState.copy(selectedAutotypeType = type)
     }
 }

@@ -97,7 +97,7 @@ object KoinModule {
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
-        single { SettingsInteractor(get(), get()) }
+        single { SettingsInteractor(get(), get(), get()) }
 
         // View Models
         factory { (router: Router, appArgs: ParsedConfig) ->

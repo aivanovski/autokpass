@@ -11,7 +11,8 @@ data class AutokpassTextStyles(
     val primary: TextStyle,
     val secondary: TextStyle,
     val button: TextStyle,
-    val error: TextStyle
+    val error: TextStyle,
+    val hint: TextStyle
 )
 
 val AppTextStyles = AutokpassTextStyles(
@@ -36,5 +37,9 @@ val AppTextStyles = AutokpassTextStyles(
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         color = AppColors.error
+    ),
+    hint = TextStyle(
+        fontSize = 14.sp,
+        color = AppColors.hintTextColor
     )
 )
