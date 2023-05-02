@@ -67,6 +67,9 @@ class StringResourcesImpl : StringResources {
     override val errorNoArgumentsWereSpecified: String
         get() = resources.getString("errorNoArgumentsWereSpecified")
 
+    override val errorNoAccessibilityPermission: String
+        get() = resources.getString("errorNoAccessibilityPermission")
+
     override val errorOptionCanNotBeEmpty: String
         get() = resources.getString("errorOptionCanNotBeEmpty")
 

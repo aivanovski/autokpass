@@ -23,6 +23,7 @@ interface StringResources {
     val errorWindowFocusAwaitTimeout: String
     val errorFailedToParseConfigFile: String
     val errorNoArgumentsWereSpecified: String
+    val errorNoAccessibilityPermission: String
 
     // Errors with formatted values
     val errorOptionCanNotBeEmpty: String

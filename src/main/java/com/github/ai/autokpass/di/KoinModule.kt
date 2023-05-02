@@ -64,7 +64,7 @@ object KoinModule {
         single { ConfigParser(get(), get()) }
         single { ThreadThrottler() }
         single { SystemPropertyProvider() }
-        single<ProcessExecutor> { JprocProcessExecutor() }
+        single<ProcessExecutor> { JprocProcessExecutor(get()) }
         single<ErrorInteractor> { ErrorInteractorImpl(logger<ErrorInteractorImpl>(), get()) }
         single<EntryFormatter> { DefaultEntryFormatter() }
         single<FocusedWindowProvider> { XdotoolFocusedWindowProvider(get()) }

@@ -1,10 +1,15 @@
 package com.github.ai.autokpass.presentation.process
 
+import com.github.ai.autokpass.domain.exception.NoMacOsAccessibilityPermissionException
 import com.github.ai.autokpass.extensions.splitIntoCommandAndArgs
 import com.github.ai.autokpass.model.Result
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
+import org.buildobjects.process.ExternalProcessFailureException
 import org.buildobjects.process.ProcBuilder
 
-class JprocProcessExecutor : ProcessExecutor {
+class JprocProcessExecutor(
+    private val strings: StringResources
+) : ProcessExecutor {
 
     override fun execute(command: String): Result<String> {
         val (com, arguments) = command.splitIntoCommandAndArgs()
@@ -48,7 +53,17 @@ class JprocProcessExecutor : ProcessExecutor {
 
             Result.Success(builder.run().outputString)
         } catch (exception: Exception) {
-            Result.Error(exception)
+            if (exception is ExternalProcessFailureException &&
+                exception.message?.contains(NO_PERMISSION_MESSAGE, ignoreCase = true) == true
+            ) {
+                Result.Error(NoMacOsAccessibilityPermissionException(strings))
+            } else {
+                Result.Error(exception)
+            }
         }
+    }
+
+    companion object {
+        private const val NO_PERMISSION_MESSAGE = "not allowed to send keystrokes"
     }
 }
