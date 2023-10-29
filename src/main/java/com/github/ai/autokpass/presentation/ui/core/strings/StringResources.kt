@@ -13,6 +13,7 @@ interface StringResources {
     val autotypeCountDownMessage: String
     val invalidCredentialsMessage: String
     val greetingsMessage: String
+    val noEntriesInDatabase: String
 
     // Errors
     val errorFailedToDetermineOsType: String

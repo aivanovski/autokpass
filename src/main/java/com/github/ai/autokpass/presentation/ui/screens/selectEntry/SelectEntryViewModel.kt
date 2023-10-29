@@ -8,6 +8,7 @@ import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.CoroutineViewModel
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.model.SearchItem
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.util.StringUtils.EMPTY
@@ -20,6 +21,7 @@ class SelectEntryViewModel(
     private val interactor: SelectEntryInteractor,
     private val errorInteractor: ErrorInteractor,
     dispatchers: Dispatchers,
+    private val strings: StringResources,
     private val router: Router,
     private val args: SelectEntryArgs,
     private val appArgs: ParsedConfig
@@ -73,7 +75,7 @@ class SelectEntryViewModel(
                         selectedIndex = selectedIndex
                     )
                 } else {
-                    _state.value = ScreenState.Empty("No entries in database")
+                    _state.value = ScreenState.Empty(strings.noEntriesInDatabase)
                 }
             } else {
                 showError(getEntriesResult.asErrorOrThrow())

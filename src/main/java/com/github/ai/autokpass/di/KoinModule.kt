@@ -106,6 +106,7 @@ object KoinModule {
                 get(),
                 get(),
                 get(),
+                get(),
                 router,
                 args,
                 appArgs
