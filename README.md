@@ -1,4 +1,4 @@
-![https://github.com/aivanovski/autokpass/workflows/Build/badge.svg](https://github.com/aivanovski/autokpass/workflows/Build/badge.svg) ![https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg](https://github.com/aivanovski/autokpass/workflows/Run%20tests/badge.svg) ![Coverage](.github/badges/jacoco.svg)
+![https://github.com/aivanovski/autokpass/workflows/Build/badge.svg](https://github.com/aivanovski/autokpass/workflows/Build/badge.svg) ![Coverage](.github/badges/jacoco.svg)
 
 # Autokpass
 Autokpass is a small GUI utility that provides functionality to paste username or/and password from your KeePass database into any aplication by simulating keyboard typing. </br>
