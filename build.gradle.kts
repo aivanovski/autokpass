@@ -91,11 +91,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.3")
     testImplementation("io.mockk:mockk:1.12.3")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
 
     // Compose
     implementation(compose.desktop.currentOs)

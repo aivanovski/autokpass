@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.github.ai.autokpass.model.ParsedConfig
 import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.navigation.Router
+import com.github.ai.autokpass.presentation.ui.core.navigation.RouterImpl
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeComponent
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryComponent
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternComponent
@@ -18,7 +19,7 @@ class RootComponent(
 ) : ComponentContext by componentContext {
 
     val navigation = StackNavigation<Screen>()
-    val router = Router(this)
+    val router: Router = RouterImpl(this)
     val viewModel = RootViewModel()
     val childStack = childStack(
         source = navigation,

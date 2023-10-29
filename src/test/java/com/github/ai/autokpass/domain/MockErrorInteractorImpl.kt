@@ -3,7 +3,7 @@ package com.github.ai.autokpass.domain
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 
-class ErrorInteractorTestImpl : ErrorInteractor {
+class MockErrorInteractorImpl : ErrorInteractor {
 
     override fun processFailed(result: Result<*>): Boolean {
         return result.isFailed()

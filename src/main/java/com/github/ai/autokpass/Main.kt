@@ -12,6 +12,7 @@ import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.di.KoinModule
 import com.github.ai.autokpass.domain.StartInteractor
 import com.github.ai.autokpass.model.ParsedConfig
+import com.github.ai.autokpass.presentation.ui.Screen
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.root.RootComponent
 import com.github.ai.autokpass.presentation.ui.root.RootScreen
@@ -32,7 +33,7 @@ fun main(args: Array<String>) {
     val lifecycle = LifecycleRegistry()
     val rootComponent = RootComponent(
         componentContext = DefaultComponentContext(lifecycle),
-        startScreen = interactor.determineStartScreen(configResult),
+        startScreen = Screen.Unlock,
         appArguments = arguments
     )
 

@@ -47,6 +47,7 @@ import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatte
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractor
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractorImpl
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel
 import org.koin.dsl.module
 import org.slf4j.Logger
@@ -86,19 +87,18 @@ object KoinModule {
 
         // interactors
         single { StartInteractor(get(), get()) }
-        single { UnlockInteractor(get(), get(), get()) }
+        single<UnlockInteractor> { UnlockInteractorImpl(get(), get(), get()) }
         single { SelectEntryInteractor(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
-        factory { (router: Router, appArgs: ParsedConfig) ->
+        factory { (router: Router) ->
             UnlockViewModel(
                 get(),
                 get(),
                 get(),
-                router,
-                appArgs
+                router
             )
         }
         factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedConfig) ->

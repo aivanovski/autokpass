@@ -12,7 +12,6 @@ import com.github.ai.autokpass.model.RawConfig
 import com.github.ai.autokpass.model.Result
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import java.io.ByteArrayInputStream
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ConfigRepository(
@@ -22,41 +21,57 @@ class ConfigRepository(
     private val strings: StringResources
 ) {
 
-    private val current = MutableStateFlow<Result<ParsedConfig>>(
-        Result.Error(EmptyConfigException(strings))
-    )
+    private val currentConfig = MutableStateFlow<ConfigState>(ConfigState.Empty)
 
     fun initialize(commandLineArguments: Array<String>): Result<ParsedConfig> {
-        val configResult = CommandLineConfigReader(
+        val readCommandLineValuesResult = CommandLineConfigReader(
             commandLineArguments,
             strings
         ).readConfig()
 
-        if (configResult.isFailed()) {
-            return configResult.asErrorOrThrow()
+        if (readCommandLineValuesResult.isFailed()) {
+            return readCommandLineValuesResult.asErrorOrThrow()
         }
 
-        val fileConfigResult = readConfigFromFile()
-        if (fileConfigResult.isFailed()) {
-            return fileConfigResult.asErrorOrThrow()
+        val readFileValuesResult = readConfigFromFile()
+        if (readFileValuesResult.isFailed()) {
+            return readFileValuesResult.asErrorOrThrow()
         }
 
-        val config = configResult.getDataOrThrow()
-        val fileConfig = fileConfigResult.getDataOrThrow()
+        val commandLineValues = readCommandLineValuesResult.getDataOrThrow()
+        val fileValues = readFileValuesResult.getDataOrThrow()
 
-        val result = when {
-            fileConfig != null && config.isEmpty() -> configParser.validateAndParse(fileConfig)
-            !config.isEmpty() -> configParser.validateAndParse(config)
+        val config = when {
+            fileValues != null && commandLineValues.isEmpty() -> {
+                ConfigState.FileConfig(
+                    config = configParser.validateAndParse(fileValues)
+                )
+            }
+
+            !commandLineValues.isEmpty() -> {
+                ConfigState.CommandLineConfig(
+                    config = configParser.validateAndParse(commandLineValues)
+                )
+            }
+
+            else -> ConfigState.Empty
+        }
+
+        currentConfig.value = config
+
+        return when (config) {
+            is ConfigState.CommandLineConfig -> config.config
+            is ConfigState.FileConfig -> config.config
             else -> Result.Error(EmptyConfigException(strings))
         }
-
-        current.value = result
-
-        return result
     }
 
-    fun load(): Flow<Result<ParsedConfig>> {
-        return current
+    fun getCurrent(): Result<ParsedConfig> {
+        return when (val config = currentConfig.value) {
+            is ConfigState.CommandLineConfig -> config.config
+            is ConfigState.FileConfig -> config.config
+            else -> Result.Error(EmptyConfigException(strings))
+        }
     }
 
     private fun readConfigFromFile(): Result<RawConfig?> {
@@ -99,6 +114,19 @@ class ConfigRepository(
         } else {
             Result.Success(null)
         }
+    }
+
+    private sealed class ConfigState {
+
+        object Empty : ConfigState()
+
+        data class CommandLineConfig(
+            val config: Result<ParsedConfig>
+        ) : ConfigState()
+
+        data class FileConfig(
+            val config: Result<ParsedConfig>
+        ) : ConfigState()
     }
 
     companion object {
