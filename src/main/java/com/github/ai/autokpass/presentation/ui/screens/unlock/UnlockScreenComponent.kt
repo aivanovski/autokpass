@@ -14,8 +14,7 @@ class UnlockScreenComponent(
 
     private val viewModel: UnlockViewModel = get(
         params = parametersOf(
-            rootComponent.router,
-            rootComponent.appArguments
+            rootComponent.router
         )
     )
 

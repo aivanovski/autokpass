@@ -35,7 +35,11 @@ import com.github.ai.autokpass.presentation.ui.core.TopBar
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResourcesImpl
 import com.github.ai.autokpass.presentation.ui.core.theme.AppTextStyles
-import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.ScreenState
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.UnlockIntent.OnErrorIconClicked
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.UnlockIntent.OnPasswordInputChanged
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.UnlockIntent.OnPasswordVisibilityChanged
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.UnlockIntent.OnUnlockButtonClicked
+import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockViewModel.UnlockState
 import com.github.ai.autokpass.util.StringUtils.EMPTY
 
 @Composable
@@ -49,19 +53,27 @@ fun UnlockScreen(viewModel: UnlockViewModel) {
         Box(modifier = Modifier.fillMaxSize()) {
             with(state) {
                 when (this) {
-                    is ScreenState.Loading -> {
+                    is UnlockState.Loading -> {
                         CenteredBox { ProgressBar() }
                     }
-                    is ScreenState.Data -> {
+                    is UnlockState.Data -> {
                         ScreenContent(
                             state = this,
-                            onInputTextChanged = { text -> viewModel.onPasswordInputChanged(text) },
-                            onUnlockButtonClicked = { viewModel.unlockDatabase() },
-                            onPasswordIconClicked = { viewModel.togglePasswordVisibility() },
-                            onErrorIconClicked = { viewModel.clearError() }
+                            onInputTextChanged = { text ->
+                                viewModel.sendIntent(OnPasswordInputChanged(text))
+                            },
+                            onUnlockButtonClicked = {
+                                viewModel.sendIntent(OnUnlockButtonClicked)
+                            },
+                            onPasswordIconClicked = {
+                                viewModel.sendIntent(OnPasswordVisibilityChanged)
+                            },
+                            onErrorIconClicked = {
+                                viewModel.sendIntent(OnErrorIconClicked)
+                            }
                         )
                     }
-                    is ScreenState.Error -> {
+                    is UnlockState.Error -> {
                         CenteredBox {
                             ErrorStateView(message = message)
                         }
@@ -75,7 +87,7 @@ fun UnlockScreen(viewModel: UnlockViewModel) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
-    state: ScreenState.Data,
+    state: UnlockState.Data,
     onInputTextChanged: (text: String) -> Unit,
     onUnlockButtonClicked: () -> Unit,
     onPasswordIconClicked: () -> Unit,
