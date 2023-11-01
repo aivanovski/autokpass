@@ -22,6 +22,7 @@ class StringResourcesImpl : StringResources {
     override val invalidCredentialsMessage: String by resourceMap
     override val greetingsMessage: String by resourceMap
     override val noEntriesInDatabase: String by resourceMap
+    override val entryIsEmpty: String by resourceMap
     override val errorFailedToDetermineOsType: String by resourceMap
     override val errorFailedToCompileAutotypeSequence: String by resourceMap
     override val errorHasBeenOccurred: String by resourceMap

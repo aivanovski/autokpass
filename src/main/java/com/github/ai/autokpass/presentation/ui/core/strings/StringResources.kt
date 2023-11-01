@@ -14,6 +14,7 @@ interface StringResources {
     val invalidCredentialsMessage: String
     val greetingsMessage: String
     val noEntriesInDatabase: String
+    val entryIsEmpty: String
 
     // Errors
     val errorFailedToDetermineOsType: String

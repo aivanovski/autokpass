@@ -3,6 +3,7 @@ package com.github.ai.autokpass
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.model.AutotypeSequenceItem
 import com.github.ai.autokpass.model.KeepassEntry
+import com.github.ai.autokpass.util.StringUtils.EMPTY
 import com.github.ai.autokpass.utils.resourceAsBytes
 import java.util.UUID
 
@@ -40,6 +41,14 @@ object TestData {
         title = "title3",
         username = "username3",
         password = "password3",
+        isAutotypeEnabled = true
+    )
+
+    val EMPTY_ENTRY = KeepassEntry(
+        uid = UUID.fromString("00000000-0000-0000-0000-000000000010"),
+        title = EMPTY,
+        username = EMPTY,
+        password = EMPTY,
         isAutotypeEnabled = true
     )
 
