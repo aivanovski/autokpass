@@ -173,9 +173,11 @@ class UnlockViewModel(
     }
 
     private fun navigateToMain(key: KeepassKey) {
+        val config = config ?: return
+
         router.navigateTo(
             Screen.SelectEntry(
-                args = SelectEntryArgs(key)
+                args = SelectEntryArgs(key, config.filePath)
             )
         )
     }

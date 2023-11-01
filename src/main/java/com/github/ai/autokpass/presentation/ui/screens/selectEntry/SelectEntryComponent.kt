@@ -16,8 +16,7 @@ class SelectEntryComponent(
     private val viewModel: SelectEntryViewModel = get(
         params = parametersOf(
             rootComponent.router,
-            args,
-            rootComponent.appArguments
+            args
         )
     )
 

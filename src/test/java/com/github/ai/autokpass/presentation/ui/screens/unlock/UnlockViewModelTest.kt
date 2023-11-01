@@ -97,7 +97,7 @@ internal class UnlockViewModelTest {
             viewModel.start()
 
             // assert
-            router.lastScreen shouldBe Screen.SelectEntry(args = SelectEntryArgs(key))
+            router.lastScreen shouldBe Screen.SelectEntry(args = SelectEntryArgs(key, DB_PATH))
             viewModel.state.value shouldBe UnlockState.Loading
         }
     }
@@ -179,7 +179,7 @@ internal class UnlockViewModelTest {
             viewModel.sendIntent(OnUnlockButtonClicked)
 
             // assert
-            router.lastScreen shouldBe Screen.SelectEntry(SelectEntryArgs(key))
+            router.lastScreen shouldBe Screen.SelectEntry(SelectEntryArgs(key, DB_PATH))
             viewModel.state.value shouldBe UnlockState.Loading
         }
 

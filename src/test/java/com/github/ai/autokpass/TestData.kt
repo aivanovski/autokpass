@@ -20,7 +20,7 @@ object TestData {
     val EXCEPTION = AutokpassException("Test exception")
 
     val ENTRY1 = KeepassEntry(
-        uid = UUID.fromString("11111111-2222-3333-4444-555555555555"),
+        uid = UUID.fromString("00000000-0000-0000-0000-000000000001"),
         title = "title1",
         username = "username1",
         password = "password1",
@@ -28,11 +28,19 @@ object TestData {
     )
 
     val ENTRY2 = KeepassEntry(
-        uid = UUID.fromString("22222222-2222-3333-4444-555555555555"),
+        uid = UUID.fromString("00000000-0000-0000-0000-000000000002"),
         title = "title2",
         username = "username2",
         password = "password2",
         isAutotypeEnabled = false
+    )
+
+    val ENTRY3 = KeepassEntry(
+        uid = UUID.fromString("00000000-0000-0000-0000-000000000003"),
+        title = "title3",
+        username = "username3",
+        password = "password3",
+        isAutotypeEnabled = true
     )
 
     val DEFAULT_AUTOTYPE_ITEMS = listOf(
@@ -42,7 +50,7 @@ object TestData {
         AutotypeSequenceItem.Delay(DEFAULT_DELAY)
     )
 
-    val ENTRIES = listOf(ENTRY1, ENTRY2)
+    val ENTRIES = listOf(ENTRY1, ENTRY2, ENTRY3)
 
     private val TEST_DB_ENTRIES = listOf(
         KeepassEntry(

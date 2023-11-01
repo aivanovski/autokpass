@@ -42,6 +42,7 @@ import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeInteract
 import com.github.ai.autokpass.presentation.ui.screens.autotype.AutotypeViewModel
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryArgs
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryInteractor
+import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryInteractorImpl
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryViewModel
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractor
@@ -88,7 +89,7 @@ object KoinModule {
         // interactors
         single { StartInteractor(get(), get()) }
         single<UnlockInteractor> { UnlockInteractorImpl(get(), get(), get()) }
-        single { SelectEntryInteractor(get(), get(), get(), get()) }
+        single<SelectEntryInteractor> { SelectEntryInteractorImpl(get(), get(), get(), get()) }
         single { SelectPatternInteractor(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
@@ -101,15 +102,14 @@ object KoinModule {
                 router
             )
         }
-        factory { (router: Router, args: SelectEntryArgs, appArgs: ParsedConfig) ->
+        factory { (router: Router, args: SelectEntryArgs) ->
             SelectEntryViewModel(
                 get(),
                 get(),
                 get(),
                 get(),
                 router,
-                args,
-                appArgs
+                args
             )
         }
         factory { (router: Router, args: SelectPatternArgs) ->

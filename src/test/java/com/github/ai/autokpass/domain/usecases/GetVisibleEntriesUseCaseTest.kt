@@ -3,7 +3,6 @@ package com.github.ai.autokpass.domain.usecases
 import com.github.ai.autokpass.TestData.DB_PASSWORD
 import com.github.ai.autokpass.TestData.DB_PATH
 import com.github.ai.autokpass.TestData.ENTRIES
-import com.github.ai.autokpass.TestData.ENTRY1
 import com.github.ai.autokpass.data.keepass.KeepassDatabase
 import com.github.ai.autokpass.model.KeepassKey
 import com.github.ai.autokpass.model.Result
@@ -23,6 +22,7 @@ class GetVisibleEntriesUseCaseTest {
         val key = KeepassKey.PasswordKey(DB_PASSWORD)
         val readDbUseCase = mockk<ReadDatabaseUseCase>()
         val db = mockk<KeepassDatabase>()
+        val expected = ENTRIES.filter { entry -> entry.isAutotypeEnabled }
 
         every { readDbUseCase.readDatabase(key, DB_PATH) }.returns(Result.Success(db))
         every { db.getAllEntries() }.returns(ENTRIES)
@@ -35,8 +35,7 @@ class GetVisibleEntriesUseCaseTest {
         verify { readDbUseCase.readDatabase(key, DB_PATH) }
         verify { db.getAllEntries() }
 
-        result.isSucceeded() shouldBe true
-        result.getDataOrThrow() shouldBe listOf(ENTRY1)
+        result shouldBe Result.Success(expected)
     }
 
     @Test
