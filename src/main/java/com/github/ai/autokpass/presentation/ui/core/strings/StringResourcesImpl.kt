@@ -5,83 +5,34 @@ import java.util.ResourceBundle
 
 class StringResourcesImpl : StringResources {
 
-    private val resources: ResourceBundle = ResourceBundle.getBundle("strings", Locale.getDefault())
+    private val resourceMap = ResourceBundleMap(
+        resources = ResourceBundle.getBundle("strings", Locale.getDefault())
+    )
 
-    override val appName: String
-        get() = resources.getString("appName")
-
-    override val cancel: String
-        get() = resources.getString("cancel")
-
-    override val password: String
-        get() = resources.getString("password")
-
-    override val unlock: String
-        get() = resources.getString("unlock")
-
-    override val exit: String
-        get() = resources.getString("exit")
-
-    override val selectPattern: String
-        get() = resources.getString("selectPattern")
-
-    override val selectEntry: String
-        get() = resources.getString("selectEntry")
-
-    override val autotyping: String
-        get() = resources.getString("autotyping")
-
-    override val autotypeSelectWindowMessage: String
-        get() = resources.getString("autotypeSelectWindowMessage")
-
-    override val autotypeCountDownMessage: String
-        get() = resources.getString("autotypeCountDownMessage")
-
-    override val invalidCredentialsMessage: String
-        get() = resources.getString("invalidCredentialsMessage")
-
-    override val greetingsMessage: String
-        get() = resources.getString("greetingsMessage")
-
-    override val noEntriesInDatabase: String
-        get() = resources.getString("noEntriesInDatabase")
-
-    override val errorFailedToDetermineOsType: String
-        get() = resources.getString("errorFailedToDetermineOsType")
-
-    override val errorFailedToCompileAutotypeSequence: String
-        get() = resources.getString("errorFailedToCompileAutotypeSequence")
-
-    override val errorHasBeenOccurred: String
-        get() = resources.getString("errorHasBeenOccurred")
-
-    override val errorFailedToGetWindowName: String
-        get() = resources.getString("errorFailedToGetWindowName")
-
-    override val errorFailedToGetWindowFocus: String
-        get() = resources.getString("errorFailedToGetWindowFocus")
-
-    override val errorWindowFocusAwaitTimeout: String
-        get() = resources.getString("errorWindowFocusAwaitTimeout")
-
-    override val errorFailedToParseConfigFile: String
-        get() = resources.getString("errorFailedToParseConfigFile")
-
-    override val errorNoArgumentsWereSpecified: String
-        get() = resources.getString("errorNoArgumentsWereSpecified")
-
-    override val errorOptionCanNotBeEmpty: String
-        get() = resources.getString("errorOptionCanNotBeEmpty")
-
-    override val errorFileDoesNotExist: String
-        get() = resources.getString("errorFileDoesNotExist")
-
-    override val errorFileIsNotFile: String
-        get() = resources.getString("errorFileIsNotFile")
-
-    override val errorFailedToParseArgument: String
-        get() = resources.getString("errorFailedToParseArgument")
-
-    override val errorFailedToGetEnvironmentVariable: String
-        get() = resources.getString("errorFailedToGetEnvironmentVariable")
+    override val appName: String by resourceMap
+    override val cancel: String by resourceMap
+    override val password: String by resourceMap
+    override val unlock: String by resourceMap
+    override val exit: String by resourceMap
+    override val selectPattern: String by resourceMap
+    override val selectEntry: String by resourceMap
+    override val autotyping: String by resourceMap
+    override val autotypeSelectWindowMessage: String by resourceMap
+    override val autotypeCountDownMessage: String by resourceMap
+    override val invalidCredentialsMessage: String by resourceMap
+    override val greetingsMessage: String by resourceMap
+    override val noEntriesInDatabase: String by resourceMap
+    override val errorFailedToDetermineOsType: String by resourceMap
+    override val errorFailedToCompileAutotypeSequence: String by resourceMap
+    override val errorHasBeenOccurred: String by resourceMap
+    override val errorFailedToGetWindowName: String by resourceMap
+    override val errorFailedToGetWindowFocus: String by resourceMap
+    override val errorWindowFocusAwaitTimeout: String by resourceMap
+    override val errorFailedToParseConfigFile: String by resourceMap
+    override val errorNoArgumentsWereSpecified: String by resourceMap
+    override val errorOptionCanNotBeEmpty: String by resourceMap
+    override val errorFileDoesNotExist: String by resourceMap
+    override val errorFileIsNotFile: String by resourceMap
+    override val errorFailedToParseArgument: String by resourceMap
+    override val errorFailedToGetEnvironmentVariable: String by resourceMap
 }
