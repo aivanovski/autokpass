@@ -43,6 +43,9 @@ class StringResourcesImpl : StringResources {
     override val greetingsMessage: String
         get() = resources.getString("greetingsMessage")
 
+    override val noEntriesInDatabase: String
+        get() = resources.getString("noEntriesInDatabase")
+
     override val errorFailedToDetermineOsType: String
         get() = resources.getString("errorFailedToDetermineOsType")
 
