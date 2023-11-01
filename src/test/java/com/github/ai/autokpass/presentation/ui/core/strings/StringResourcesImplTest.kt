@@ -1,24 +1,28 @@
 package com.github.ai.autokpass.presentation.ui.core.strings
 
-import com.github.ai.autokpass.utils.resourceAsString
+import com.github.ai.autokpass.utils.resourceAsStream
 import io.kotest.matchers.shouldBe
 import java.lang.reflect.Method
+import java.util.Properties
 import org.junit.jupiter.api.Test
 
 internal class StringResourcesImplTest {
 
     @Test
-    fun `strings should be correct`() {
+    fun `all strings should be correct`() {
+        // arrange
         val strings = StringResourcesImpl()
-        val parsedResourcesMap = parseStringResources()
+        val expectedResources = loadStringResources()
 
-        val type = StringResources::class.java
-        for (method in type.declaredMethods) {
-            val resourceKey = formatResourceName(method)
-            val resourceValue = method.invoke(strings)
+        // act
+        val actualResources = StringResources::class.java.declaredMethods
+            .associate { method ->
+                val resourceKey = formatResourceName(method)
+                resourceKey to method.invoke(strings)
+            }
 
-            resourceValue shouldBe parsedResourcesMap[resourceKey]
-        }
+        // assert
+        actualResources shouldBe expectedResources
     }
 
     private fun formatResourceName(method: Method): String {
@@ -28,31 +32,12 @@ internal class StringResourcesImplTest {
         return name.replaceFirst(firstLetter, firstLetter.lowercaseChar(), ignoreCase = false)
     }
 
-    private fun parseStringResources(): Map<String, String> {
-        return resourceAsString("strings.properties")
-            .split("\n")
-            .mapNotNull { line -> parseStringResourceLine(line) }
-            .toMap()
-    }
-
-    private fun parseStringResourceLine(line: String): Pair<String, String>? {
-        val trimmed = line.trim()
-        if (trimmed.isEmpty()) {
-            return null
-        }
-
-        val splitIdx = trimmed.indexOf("=")
-        if (splitIdx == -1) {
-            return null
-        }
-
-        val key = line.substring(0, splitIdx)
-        val value = line.substring(splitIdx + 1, line.length)
-
-        return if (key.isNotBlank() && value.isNotBlank()) {
-            Pair(key, value)
-        } else {
-            null
-        }
+    @Suppress("UNCHECKED_CAST")
+    private fun loadStringResources(): Map<String, String> {
+        return Properties()
+            .apply {
+                load(resourceAsStream("strings.properties"))
+            }
+            .toMap() as Map<String, String>
     }
 }
