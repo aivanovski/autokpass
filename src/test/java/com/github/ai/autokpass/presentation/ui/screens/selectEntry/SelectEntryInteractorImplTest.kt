@@ -52,7 +52,7 @@ class SelectEntryInteractorImplTest {
             result shouldBe Result.Success(
                 Pair(
                     expectedEntries,
-                    expectedEntries.formatAsText()
+                    expectedEntries.formatToText()
                 )
             )
         }
@@ -83,7 +83,7 @@ class SelectEntryInteractorImplTest {
             val interactor = newInteractor()
 
             // act
-            val result = interactor.filterEntries(ENTRIES, ENTRIES.formatAsText(), "")
+            val result = interactor.filterEntries(ENTRIES, ENTRIES.formatToText(), "")
 
             // assert
             result shouldBe Result.Success(ENTRIES.toSearchItems())
@@ -102,7 +102,7 @@ class SelectEntryInteractorImplTest {
             // act
             val result = interactor.filterEntries(
                 ENTRIES,
-                ENTRIES.formatAsText(),
+                ENTRIES.formatToText(),
                 matchedEntry.title
             )
 
@@ -133,7 +133,7 @@ class SelectEntryInteractorImplTest {
         }
     }
 
-    private fun List<KeepassEntry>.formatAsText(): List<String> {
+    private fun List<KeepassEntry>.formatToText(): List<String> {
         return this.map { entry -> formatter.format(entry) }
     }
 

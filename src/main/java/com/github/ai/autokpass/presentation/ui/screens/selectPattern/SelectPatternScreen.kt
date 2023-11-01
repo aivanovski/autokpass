@@ -7,9 +7,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.github.ai.autokpass.di.GlobalInjector.get
 import com.github.ai.autokpass.extensions.collectAsStateImmediately
+import com.github.ai.autokpass.presentation.ui.core.CenteredBox
+import com.github.ai.autokpass.presentation.ui.core.EmptyStateView
+import com.github.ai.autokpass.presentation.ui.core.ProgressBar
 import com.github.ai.autokpass.presentation.ui.core.SelectorView
 import com.github.ai.autokpass.presentation.ui.core.strings.StringResources
-import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.ScreenState
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnDownKeyPressed
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnEnterPressed
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnMouseClicked
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnQueryInputChanged
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnStartSearch
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternIntent.OnUpKeyPressed
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel.SelectPatternState
 
 @Composable
 fun SelectPatternScreen(viewModel: SelectPatternViewModel) {
@@ -19,18 +28,29 @@ fun SelectPatternScreen(viewModel: SelectPatternViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
         with(state) {
             when (this) {
-                is ScreenState.Data -> {
+                is SelectPatternState.Loading -> {
+                    CenteredBox { ProgressBar() }
+                }
+
+                is SelectPatternState.Empty -> {
+                    CenteredBox { EmptyStateView(message) }
+                }
+
+                is SelectPatternState.Data -> {
                     SelectorView(
                         title = strings.selectPattern,
                         query = query,
                         entries = items,
                         highlights = highlights,
                         selectedIndex = selectedIndex,
-                        onInputTextChanged = { text -> viewModel.onQueryInputChanged(text) },
-                        onItemClicked = { index -> viewModel.onItemClicked(index) },
-                        onDownKeyPressed = { viewModel.moveSelectionDown() },
-                        onUpKeyPressed = { viewModel.moveSelectionUp() },
-                        onEnterKeyPressed = { viewModel.navigateToAutotypeScreen() }
+                        onInputTextChanged = { text ->
+                            viewModel.sendIntent(OnQueryInputChanged(text))
+                            viewModel.sendIntent(OnStartSearch(text))
+                        },
+                        onItemClicked = { index -> viewModel.sendIntent(OnMouseClicked(index)) },
+                        onDownKeyPressed = { viewModel.sendIntent(OnDownKeyPressed) },
+                        onUpKeyPressed = { viewModel.sendIntent(OnUpKeyPressed) },
+                        onEnterKeyPressed = { viewModel.sendIntent(OnEnterPressed) }
                     )
                 }
             }

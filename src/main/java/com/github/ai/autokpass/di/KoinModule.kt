@@ -46,6 +46,7 @@ import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryIn
 import com.github.ai.autokpass.presentation.ui.screens.selectEntry.SelectEntryViewModel
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternArgs
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractor
+import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternInteractorImpl
 import com.github.ai.autokpass.presentation.ui.screens.selectPattern.SelectPatternViewModel
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractor
 import com.github.ai.autokpass.presentation.ui.screens.unlock.UnlockInteractorImpl
@@ -90,7 +91,7 @@ object KoinModule {
         single { StartInteractor(get(), get()) }
         single<UnlockInteractor> { UnlockInteractorImpl(get(), get(), get()) }
         single<SelectEntryInteractor> { SelectEntryInteractorImpl(get(), get(), get(), get()) }
-        single { SelectPatternInteractor(get(), get(), get(), get()) }
+        single<SelectPatternInteractor> { SelectPatternInteractorImpl(get(), get(), get(), get()) }
         single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
@@ -114,6 +115,7 @@ object KoinModule {
         }
         factory { (router: Router, args: SelectPatternArgs) ->
             SelectPatternViewModel(
+                get(),
                 get(),
                 get(),
                 router,
