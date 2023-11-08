@@ -11,7 +11,7 @@ plugins {
     jacoco
 }
 
-val appVersion = "1.0.0"
+val appVersion = "1.1.0"
 
 group = "com.github.ai.autokpass"
 version = appVersion
