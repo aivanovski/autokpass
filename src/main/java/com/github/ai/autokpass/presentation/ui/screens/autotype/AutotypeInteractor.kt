@@ -55,7 +55,7 @@ class AutotypeInteractor(
 
         val isXorgEnvironment = (osType == OSType.LINUX && desktopType == DesktopType.XORG)
         val isAbleToAwait = (isXorgEnvironment && autotypeType == null) ||
-                autotypeType == AutotypeExecutorType.XDOTOOL
+            autotypeType == AutotypeExecutorType.XDOTOOL
 
         return Result.Success(isAbleToAwait)
     }
