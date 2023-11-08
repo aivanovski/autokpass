@@ -22,6 +22,7 @@ import com.github.ai.autokpass.domain.formatter.EntryFormatter
 import com.github.ai.autokpass.domain.fuzzySearch.FuzzyMatcher
 import com.github.ai.autokpass.domain.fuzzySearch.Fzf4jFuzzyMatcher
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
+import com.github.ai.autokpass.domain.usecases.DetermineDesktopUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.usecases.GetVisibleEntriesUseCase
 import com.github.ai.autokpass.domain.usecases.PrintGreetingsUseCase
@@ -86,13 +87,14 @@ object KoinModule {
         single { GetOSTypeUseCase(get(), get()) }
         single { DetermineAutotypeExecutorTypeUseCase(get()) }
         single { KeepassDatabaseFactoryProvider(get(), get(), get()) }
+        single { DetermineDesktopUseCase(get()) }
 
         // interactors
         single { StartInteractor(get(), get()) }
         single<UnlockInteractor> { UnlockInteractorImpl(get(), get(), get()) }
         single<SelectEntryInteractor> { SelectEntryInteractorImpl(get(), get(), get(), get()) }
         single<SelectPatternInteractor> { SelectPatternInteractorImpl(get(), get(), get(), get()) }
-        single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get()) }
+        single { AutotypeInteractor(get(), get(), get(), get(), get(), get(), get(), get()) }
 
         // View Models
         factory { (router: Router) ->
