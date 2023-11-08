@@ -5,11 +5,13 @@ import com.github.ai.autokpass.domain.autotype.AutotypeSequenceFactory
 import com.github.ai.autokpass.domain.coroutine.Dispatchers
 import com.github.ai.autokpass.domain.exception.AutokpassException
 import com.github.ai.autokpass.domain.usecases.DetermineAutotypeExecutorTypeUseCase
+import com.github.ai.autokpass.domain.usecases.DetermineDesktopUseCase
 import com.github.ai.autokpass.domain.usecases.GetOSTypeUseCase
 import com.github.ai.autokpass.domain.window.FocusedWindowProvider
 import com.github.ai.autokpass.model.AutotypeExecutorType
 import com.github.ai.autokpass.model.AutotypePattern
 import com.github.ai.autokpass.model.AutotypeState
+import com.github.ai.autokpass.model.DesktopType
 import com.github.ai.autokpass.model.KeepassEntry
 import com.github.ai.autokpass.model.OSType
 import com.github.ai.autokpass.model.ParsedConfig
@@ -31,6 +33,7 @@ class AutotypeInteractor(
     private val sequenceFactory: AutotypeSequenceFactory,
     private val getOSTypeUseCase: GetOSTypeUseCase,
     private val determineExecutorTypeUseCase: DetermineAutotypeExecutorTypeUseCase,
+    private val determineDesktopTypeUseCase: DetermineDesktopUseCase,
     private val strings: StringResources
 ) {
 
@@ -42,9 +45,16 @@ class AutotypeInteractor(
             return getOsTypeResult.asErrorOrThrow()
         }
 
-        val osType = getOsTypeResult.getDataOrNull()
+        val getDesktopTypeResult = determineDesktopTypeUseCase.getDesktopType()
+        if (getDesktopTypeResult.isFailed()) {
+            return getDesktopTypeResult.asErrorOrThrow()
+        }
 
-        val isAbleToAwait = (osType == OSType.LINUX && autotypeType == null) ||
+        val osType = getOsTypeResult.getDataOrNull()
+        val desktopType = getDesktopTypeResult.getDataOrNull()
+
+        val isXorgEnvironment = (osType == OSType.LINUX && desktopType == DesktopType.XORG)
+        val isAbleToAwait = (isXorgEnvironment && autotypeType == null) ||
             autotypeType == AutotypeExecutorType.XDOTOOL
 
         return Result.Success(isAbleToAwait)
